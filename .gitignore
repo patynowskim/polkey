@@ -23,4 +23,8 @@ hw/accel/ref/pq/golden87
 hw/accel/ref/pq/verify
 # Sipeed binaries: fetch with hw/bl616/fetch_sipeed.sh (hash-verified)
 hw/bl616/polkey/*.bin
+hw/bl616/fidokey/*.bin
 hw/bl616/recovery/*.bin
+# BL616 firmware build outputs and the SDK checkout (symlinked, cloned separately)
+hw/bl616/*/build/
+hw/bl616/*/bouffalo_sdk

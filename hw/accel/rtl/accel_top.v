@@ -2,19 +2,25 @@
 // Tang Nano 20k crypto accelerator top: framed UART command link + Root of Trust.
 // Profiles (chparam at build time), freely combinable:  HAS_SYM=1 -> SHA-256/HMAC/PBKDF2;  HAS_AES=1 -> sym incl. AES-256 CBC/GCM (implies HAS_SYM);
 //   HAS_ECC=1 -> asym (P-256/Ed25519/SHA-512);  HAS_PQ=1 -> ML-DSA-44/65/87 + RSA-2048 (needs rtl_pq/).
-module accel_top #(parameter CPB = 18, parameter HAS_AES = 1, parameter HAS_SYM = 0, parameter HAS_ECC = 0, parameter HAS_PQ = 0)(      // 27 MHz / 1.5 Mbaud = 18
-    input  wire clk,
-    input  wire btn_s1,            // active high
+module accel_core #(parameter CPB = 18, parameter HAS_AES = 1, parameter HAS_SYM = 0, parameter HAS_ECC = 0, parameter HAS_PQ = 0, parameter FSYS_MHZ = 27)(      // CPB = clock / 1.5 Mbaud (27 MHz: 18)
+    input  wire clk,               // system clock (PLL output or the 27 MHz board clock)
+    input  wire pll_lock,          // 0 holds the core in reset until the clock is stable
+    input  wire [5:0] diag_in,     // diagnostic value shown in the button status byte
+    input  wire btn_s1,            // active high (reset)
+    input  wire btn_s2,            // active high (user presence)
     output wire led0, led1, led2,  // active low
     output wire uart_tx_pin,
     input  wire uart_rx_pin,
     // SPI slave link (ESP32 = master, mode 0)
-    input  wire spi_sck, input wire spi_mosi, input wire spi_cs_n, output wire spi_miso
+    input  wire spi_sck, input wire spi_mosi, input wire spi_cs_n, output wire spi_miso,
+    // peripherals bridged for the MCU: fingerprint sensor UART, SSD1306 OLED SPI
+    output wire fp_tx, input wire fp_rx,
+    output wire oled_sck, output wire oled_mosi, output wire oled_cs_n, output wire oled_dc, output wire oled_res_n
 );
 // power-on reset (or S1 held)
 reg [16:0] por = 17'd0;
 always @(posedge clk) begin
-    if (btn_s1) por <= 17'd0; else if (!por[16]) por <= por + 17'd1;
+    if (btn_s1 || !pll_lock) por <= 17'd0; else if (!por[16]) por <= por + 17'd1;
 end
 wire rst_n = por[16];
 
@@ -62,27 +68,35 @@ wire a_done, e_done, a_busy, e_busy; wire [7:0] a_status, e_status; wire [15:0] 
 wire q_done, q_busy; wire [7:0] q_status; wire [15:0] q_len;
 wire [12:0] q_rx_ra, q_rx_wa, q_tx_wa, q_tx_ra; wire q_rx_we, q_tx_we; wire [7:0] q_rx_wd, q_tx_wd;
 
+wire pf_we, pf_done, pf_busy; wire [12:0] pf_wa, pf_mem_a; wire [7:0] pf_wd, pf_status; wire [15:0] pf_len;
+wire ux_we, ux_done, ux_busy; wire [12:0] ux_wa; wire [7:0] ux_wd, ux_status, led_ctl; wire [15:0] ux_len;
 // ---- command classes: 0x0_ info, 0x1_/0x2_ symmetric, 0x3_..0x5_ asymmetric (ECC), 0x6_/0x7_ ML-DSA + RSA ----
 // Info commands (ping/uid/rand) are answered by one processor: PQ if present, else ECC, else symmetric.
-wire cls_info = (f_cmd[7:4] == 4'h0);
+wire is_ux    = (f_cmd == 8'h04) || (f_cmd == 8'h05);          // user presence button / LEDs: every profile
+wire is_pf    = (f_cmd == 8'h06) || (f_cmd == 8'h07);          // fingerprint UART / OLED SPI bridge: every profile
+wire cls_info = (f_cmd[7:4] == 4'h0) && !is_ux && !is_pf;
 wire cls_sym  = (f_cmd[7:4] == 4'h1) || (f_cmd[7:4] == 4'h2);
 wire cls_ecc  = (f_cmd[7:4] == 4'h3) || (f_cmd[7:4] == 4'h4) || (f_cmd[7:4] == 4'h5);
-wire cls_pq   = (f_cmd[7:4] == 4'h6) || (f_cmd[7:4] == 4'h7);
+wire cls_pq   = (f_cmd[7:4] == 4'h6) || (f_cmd[7:4] == 4'h7) || (f_cmd[7:4] == 4'h8) || (f_cmd[7:4] == 4'h9);   // ML-DSA, RSA (0x6x, 0x7x), ML-KEM (0x8x, 0x9x)
 wire go_q = frame_ok && HAS_PQ && (cls_pq || cls_info);
 wire go_e = frame_ok && HAS_ECC && (cls_ecc || (cls_info && !HAS_PQ));
 localparam SYM_ON = (HAS_SYM != 0) || (HAS_AES != 0);
 wire go_a = frame_ok && SYM_ON && (cls_sym || (cls_info && !HAS_PQ && !HAS_ECC));
 // frames for a class that is not built in are answered by the processor owning the info commands (BAD_CMD)
-wire go_none = frame_ok && !go_q && !go_e && !go_a;
+wire go_ux = frame_ok && is_ux;
+wire go_pf = frame_ok && is_pf;
+wire go_none = frame_ok && !go_q && !go_e && !go_a && !go_ux && !go_pf;
 reg  none_pend;
-reg  act_q, act_e, act_a;
+reg  act_q, act_e, act_a, act_ux, act_pf;
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin act_q <= 0; act_e <= 0; act_a <= 0; none_pend <= 0; end
+    if (!rst_n) begin act_q <= 0; act_e <= 0; act_a <= 0; act_ux <= 0; act_pf <= 0; none_pend <= 0; end
     else begin
         none_pend <= go_none;
         if (go_q) act_q <= 1; else if (q_done) act_q <= 0;
         if (go_e) act_e <= 1; else if (e_done) act_e <= 0;
         if (go_a) act_a <= 1; else if (a_done) act_a <= 0;
+        if (go_ux) act_ux <= 1; else if (ux_done) act_ux <= 0;
+        if (go_pf) act_pf <= 1; else if (pf_done) act_pf <= 0;
     end
 end
 
@@ -173,18 +187,30 @@ end else begin : g_nosym
     assign ah_mode = 2'd0; assign ah_iters = 32'd0; assign ah_idx = 32'd0; assign ah_key_byte = 8'd0; assign ah_in_byte = 8'd0; assign ah_dgra = 3'd0;
 end endgenerate
 
+// ---- user presence: button S2 + LED control (any profile) ----
+`ifdef NO_PF
+assign pf_we=1'b0; assign pf_wa=13'd0; assign pf_wd=8'd0; assign pf_done=1'b0; assign pf_status=8'd0; assign pf_len=16'd0; assign pf_busy=1'b0; assign pf_mem_a=13'd0;
+assign fp_tx=1'b1; assign oled_sck=1'b0; assign oled_mosi=1'b0; assign oled_cs_n=1'b1; assign oled_dc=1'b0; assign oled_res_n=1'b1;
+`else
+pf_unit #(.FSYS_MHZ(FSYS_MHZ)) u_pf (.clk(clk), .rst_n(rst_n), .go(go_pf), .cmd(f_cmd), .len(f_len), .mem_a(pf_mem_a), .mem_q(mem_q),
+              .tx_we(pf_we), .tx_wa(pf_wa), .tx_wd(pf_wd), .done(pf_done), .status(pf_status), .tx_len(pf_len), .busy(pf_busy),
+              .fp_tx(fp_tx), .fp_rx(fp_rx), .oled_sck(oled_sck), .oled_mosi(oled_mosi), .oled_cs_n(oled_cs_n), .oled_dc(oled_dc), .oled_res_n(oled_res_n));
+`endif
+ux_unit #(.DEB_BITS(19), .LATCH_MAX(3000000 * FSYS_MHZ)) u_ux (.clk(clk), .rst_n(rst_n), .btn(btn_s2), .go(go_ux), .cmd(f_cmd), .len(f_len), .mem_a(), .mem_q(mem_q),
+              .tx_we(ux_we), .tx_wa(ux_wa), .tx_wd(ux_wd), .done(ux_done), .status(ux_status), .tx_len(ux_len), .busy(ux_busy), .led_ctl(led_ctl), .diag(diag_in));
+
 // frames of an absent class are rejected with BAD_CMD by the top level itself
 reg none_done;
 always @(posedge clk or negedge rst_n) begin if (!rst_n) none_done <= 1'b0; else none_done <= none_pend; end
 
-assign cmd_busy = a_busy | e_busy | q_busy | none_pend | none_done;
-assign mem_a = act_q ? q_rx_ra : act_e ? e_mem_a : a_mem_a;
-wire tx_we = a_we | e_we | q_tx_we;
-wire [12:0] tx_wa = q_tx_we ? q_tx_wa : e_we ? e_wa : a_wa;
-wire [7:0] tx_wd = q_tx_we ? q_tx_wd : e_we ? e_wd : a_wd;
-wire c_done = a_done | e_done | q_done | none_done;
-wire [7:0] c_status = q_done ? q_status : e_done ? e_status : a_done ? a_status : 8'd1;
-wire [15:0] c_len = q_done ? q_len : e_done ? e_len : a_done ? a_len : 16'd0;
+assign cmd_busy = a_busy | e_busy | q_busy | ux_busy | pf_busy | none_pend | none_done;
+assign mem_a = act_q ? q_rx_ra : act_e ? e_mem_a : act_ux ? 13'd0 : act_pf ? pf_mem_a : a_mem_a;
+wire tx_we = a_we | e_we | q_tx_we | ux_we | pf_we;
+wire [12:0] tx_wa = q_tx_we ? q_tx_wa : e_we ? e_wa : ux_we ? ux_wa : pf_we ? pf_wa : a_wa;
+wire [7:0] tx_wd = q_tx_we ? q_tx_wd : e_we ? e_wd : ux_we ? ux_wd : pf_we ? pf_wd : a_wd;
+wire c_done = a_done | e_done | q_done | ux_done | pf_done | none_done;
+wire [7:0] c_status = q_done ? q_status : e_done ? e_status : ux_done ? ux_status : pf_done ? pf_status : a_done ? a_status : 8'd1;
+wire [15:0] c_len = q_done ? q_len : e_done ? e_len : ux_done ? ux_len : pf_done ? pf_len : a_done ? a_len : 16'd0;
 // the PQ engine decrypts its key in place in the payload RAM and re-reads the response RAM while it works
 wire rx_we_m = act_q ? q_rx_we : rx_we;
 wire [12:0] rx_wa_m = act_q ? q_rx_wa : rx_wa;
@@ -219,8 +245,134 @@ always @(posedge clk) begin
     hb <= hb + 1;
     if (c_done) err <= (c_status != 8'd0);
 end
-assign led0 = ~(cmd_busy | tx_busy);
-assign led1 = ~hb[24];
-assign led2 = ~err;
+// the host can force LEDs on (blinking with led_ctl[7]) to ask for a touch
+wire ux_on = led_ctl[7] ? hb[22] : 1'b1;
+assign led0 = ~((cmd_busy | tx_busy) | (led_ctl[0] & ux_on));
+assign led1 = ~(hb[24] | (led_ctl[1] & ux_on));
+assign led2 = ~(err | (led_ctl[2] & ux_on));
+endmodule
+
+// ---- top level: optional PLL in front of the core ----
+// PLL_MUL = 1: the 27 MHz board clock drives the core directly (simulation, safe default).
+// PLL_MUL / PLL_DIV: Gowin rPLL, f = 27 MHz * MUL / DIV (e.g. 3/1 = 81, 4/1 = 108, 8/3 = 72 MHz); the VCO is kept in 500..1250 MHz.
+// CPB = f / 1.5 MHz must be an integer for the 1.5 Mbaud link (the build script computes it).
+module accel_top #(parameter CPB = 18, parameter HAS_AES = 1, parameter HAS_SYM = 0, parameter HAS_ECC = 0, parameter HAS_PQ = 0, parameter PLL_MUL = 1, parameter PLL_DIV = 1)(
+    input  wire clk,
+    input  wire btn_s1,            // active high (reset)
+    input  wire btn_s2,            // active high (user presence)
+    output wire led0, led1, led2,  // active low
+    output wire uart_tx_pin,
+    input  wire uart_rx_pin,
+    input  wire spi_sck, input wire spi_mosi, input wire spi_cs_n, output wire spi_miso,
+    // peripherals bridged for the MCU: fingerprint sensor UART, SSD1306 OLED SPI
+    output wire fp_tx, input wire fp_rx,
+    output wire oled_sck, output wire oled_mosi, output wire oled_cs_n, output wire oled_dc, output wire oled_res_n
+);
+wire led1_core;
+wire sclk, lock;
+`ifdef BURN
+wire burn_o; lut_burner #(.N(`BURN)) u_burn (.clk(sclk), .o(burn_o));
+wire led_burn = burn_o;
+`else
+wire led_burn = 1'b0;
+`endif
+assign led1 = led1_core ^ led_burn;     // keeps the burner (BURN builds only)
+wire [5:0] diag;
+`ifdef PLL_PROBE
+// Diagnostic build: the core stays on the 27 MHz board clock; a PLL runs beside it and its frequency is measured against
+// the 27 MHz clock. {LOCK, ratio * 4 (PLL cycles per 27 MHz cycle)} is shown in bits 7..2 of the button status byte (UX_STATE / BENCH report it).
+wire pclk, plock;
+`ifdef PLL_DEV_ALT
+localparam PDEV = "GW2A-18C";
+`else
+localparam PDEV = "GW2AR-18C";
+`endif
+`ifdef PLL_PRESET
+reg [7:0] prc = 0; always @(posedge clk) if (!(&prc)) prc <= prc + 1'b1;
+wire prst = !(&prc);
+`else
+wire prst = 1'b0;
+`endif
+localparam PF = 27 * PLL_MUL / PLL_DIV;
+`ifdef PLL_IN_BUFG
+wire clk_pi; BUFG u_pll_in (.I(clk), .O(clk_pi));
+`endif
+wire pclk_raw;
+`ifdef PLL_FB_EXT
+wire pfb = pclk_raw;
+`else
+wire pfb = 1'b0;
+`endif
+rPLL #(.FCLKIN("27"), .DEVICE(PDEV), .DYN_IDIV_SEL("false"), .IDIV_SEL(PLL_DIV - 1), .DYN_FBDIV_SEL("false"), .FBDIV_SEL(PLL_MUL - 1),
+       .DYN_ODIV_SEL("false"), .ODIV_SEL(PF * 2 >= 500 ? 2 : PF * 4 >= 500 ? 4 : PF * 8 >= 500 ? 8 : 16), .PSDA_SEL("0000"), .DYN_DA_EN("false"), .DUTYDA_SEL("1000"),
+       .CLKOUT_FT_DIR(1'b1), .CLKOUTP_FT_DIR(1'b1), .CLKOUT_DLY_STEP(0), .CLKOUTP_DLY_STEP(0), `ifdef PLL_FB_EXT
+       .CLKFB_SEL("external"),
+`else
+       .CLKFB_SEL("internal"),
+`endif
+       .CLKOUT_BYPASS("false"), .CLKOUTP_BYPASS("false"), .CLKOUTD_BYPASS("false"), .DYN_SDIV_SEL(2),
+       .CLKOUTD_SRC("CLKOUT"), .CLKOUTD3_SRC("CLKOUT")) u_probe_pll (
+`ifdef PLL_IN_BUFG
+    .CLKIN(clk_pi), .CLKFB(1'b0), .RESET(prst), .RESET_P(1'b0), .FBDSEL(6'd0), .IDSEL(6'd0), .ODSEL(6'd0),
+`else
+    .CLKIN(clk), .CLKFB(pfb), .RESET(prst), .RESET_P(1'b0), .FBDSEL(6'd0), .IDSEL(6'd0), .ODSEL(6'd0),
+`endif
+    .PSDA(4'd0), .DUTYDA(4'd0), .FDLY(4'd0), .CLKOUT(pclk_raw), .LOCK(plock), .CLKOUTP(), .CLKOUTD(), .CLKOUTD3());
+`ifdef PLL_OUT_BUFG
+BUFG u_pll_out (.I(pclk_raw), .O(pclk));
+`elsif PLL_METER_SELFTEST
+assign pclk = clk;                      // meter self test: measures the board clock itself (expect ratio 1.00)
+`else
+assign pclk = pclk_raw;
+`endif
+reg [15:0] gcnt = 0; always @(posedge clk) gcnt <= gcnt + 1'b1;               // gate: 2^15 cycles high, 2^15 low (27 MHz domain)
+reg g1 = 0, g2 = 0, g3 = 0; always @(posedge pclk) begin g1 <= gcnt[15]; g2 <= g1; g3 <= g2; end
+reg [17:0] pc = 0; reg [17:0] pres = 0;
+always @(posedge pclk) begin
+    if (g2 && !g3) pc <= 18'd1;                                                  // gate opens
+    else if (g2) pc <= pc + 1'b1;
+    if (!g2 && g3) pres <= pc;                                                   // gate closes: pc = ratio * 32768
+end
+reg [5:0] d1 = 0, d2 = 0; always @(posedge clk) begin d1 <= {plock, pres[17:13]}; d2 <= d1; end   // bit 5 = LOCK, bits 4..0 = ratio * 4 measured against 27 MHz
+assign diag = d2;
+assign sclk = clk;
+assign lock = 1'b1;
+`else
+assign diag = 6'd0;
+generate if (PLL_MUL == PLL_DIV) begin : g_nopll
+    assign sclk = clk;
+    assign lock = 1'b1;
+end else begin : g_pll
+    localparam FOUT = 27 * PLL_MUL / PLL_DIV;
+    localparam ODIV = (FOUT * 2 >= 500) ? 2 : (FOUT * 4 >= 500) ? 4 : (FOUT * 8 >= 500) ? 8 : (FOUT * 16 >= 500) ? 16 : 32;   // VCO = f * ODIV within 500..1250 MHz
+    rPLL #(.FCLKIN("27"), .DEVICE("GW2AR-18C"), .DYN_IDIV_SEL("false"), .IDIV_SEL(PLL_DIV - 1), .DYN_FBDIV_SEL("false"), .FBDIV_SEL(PLL_MUL - 1),
+           .DYN_ODIV_SEL("false"), .ODIV_SEL(ODIV), .PSDA_SEL("0000"), .DYN_DA_EN("false"), .DUTYDA_SEL("1000"),
+           .CLKOUT_FT_DIR(1'b1), .CLKOUTP_FT_DIR(1'b1), .CLKOUT_DLY_STEP(0), .CLKOUTP_DLY_STEP(0), .CLKFB_SEL("internal"),
+           .CLKOUT_BYPASS("false"), .CLKOUTP_BYPASS("false"), .CLKOUTD_BYPASS("false"), .DYN_SDIV_SEL(2),
+           .CLKOUTD_SRC("CLKOUT"), .CLKOUTD3_SRC("CLKOUT")) u_pll (
+        .CLKIN(clk), .CLKFB(1'b0), .RESET(1'b0), .RESET_P(1'b0), .FBDSEL(6'd0), .IDSEL(6'd0), .ODSEL(6'd0),
+        `ifdef PLL_FDLY15
+        .PSDA(4'd0), .DUTYDA(4'd0), .FDLY(4'b1111), .CLKOUT(sclk)
+`else
+        .PSDA(4'd0), .DUTYDA(4'd0), .FDLY(4'd0), .CLKOUT(sclk)
+`endif, .LOCK(lock), .CLKOUTP(), .CLKOUTD(), .CLKOUTD3());
+end endgenerate
+`endif
+
+`ifdef PLL_NOLOCK
+wire lock_use = 1'b1;                    // diagnostic build: do not wait for the PLL LOCK output
+`else
+wire lock_use = lock;
+`endif
+`ifdef PLL_PROBE
+localparam CORE_CPB = 18, CORE_MHZ = 27;
+`else
+localparam CORE_CPB = CPB, CORE_MHZ = 27 * PLL_MUL / PLL_DIV;
+`endif
+accel_core #(.CPB(CORE_CPB), .HAS_AES(HAS_AES), .HAS_SYM(HAS_SYM), .HAS_ECC(HAS_ECC), .HAS_PQ(HAS_PQ), .FSYS_MHZ(CORE_MHZ)) u_core (
+    .clk(sclk), .pll_lock(lock_use), .diag_in(diag), .btn_s1(btn_s1), .btn_s2(btn_s2), .led0(led0), .led1(led1_core), .led2(led2),
+    .uart_tx_pin(uart_tx_pin), .uart_rx_pin(uart_rx_pin),
+    .spi_sck(spi_sck), .spi_mosi(spi_mosi), .spi_cs_n(spi_cs_n), .spi_miso(spi_miso),
+    .fp_tx(fp_tx), .fp_rx(fp_rx), .oled_sck(oled_sck), .oled_mosi(oled_mosi), .oled_cs_n(oled_cs_n), .oled_dc(oled_dc), .oled_res_n(oled_res_n));
 endmodule
 `default_nettype wire

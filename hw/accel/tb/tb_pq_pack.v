@@ -3229,6 +3229,2794 @@ initial begin #30 rst_n=1; #30; hk_clr=1; @(negedge clk); hk_clr=0;
   if (bm[1*8192+505] !== 8'h9f) begin fails=fails+1; $display("FAIL pkh pos 5"); end
   if (bm[1*8192+506] !== 8'ha3) begin fails=fails+1; $display("FAIL pkh pos 6"); end
   if (bm[1*8192+522] !== 8'd7) begin fails=fails+1; $display("FAIL pkh count"); end
+  expv = 8192'h000000080000090d0000042d0000099200000239000009c600000c2d000006c80000042d00000a1800000a950000043b000009af000000ac00000479000003f10000095400000c5b00000c82000006a1000008c80000017b0000097200000cac000007e3000005180000084a00000822000009790000078b00000bb70000094c000005d500000c8000000a3e0000087100000076000006b5000002720000058c000000de00000bb90000062600000b1f000000640000054600000bdc000004c3000003eb00000550000006bc0000097f00000af1000002eb000001ec000002bf0000057300000bd6000006ae00000a4600000adc000008e800000b4800000244000007d4000001f4000009ec00000ab5000006b200000a47000000a3000000770000077e000008cd000007be000004fa00000bea000008ad000004910000049e00000b83000006b5000001ac0000080600000abf00000775000002f9000007d6000001240000070b0000025000000c9a00000321000006fd000006b300000ca1000008410000088500000744000005b200000608000000d2000007380000012a000009cf0000095d0000010700000720000003cc00000341000000790000016100000534000000cb000008b1000007750000039b000001a9000006460000066c0000000b000000bf0000006e000002e4000005860000025f000004e100000701000003da000003890000070b0000091900000b180000070e00000889000001a300000c720000017400000c3c000000fa000008d9000001c70000077c0000097b000001fd0000073b000008fe00000cbe00000309000007bc00000a020000031300000503000009a10000078d00000aac00000370000007760000029300000c1e000000df00000076000008150000067d00000c470000005300000b76000003ac000001d300000c26000007d200000580000008250000017200000c0800000ad3000003f1000001270000081400000bc90000011f00000b2f0000078f000009a6000001040000030600000234000008640000057c000008ce00000c4100000b09000006ba00000052000003c300000a890000013300000069000002f1000003a300000076000004ea00000018000001ab0000095b00000bb5000005150000093a000003bc000000920000053200000bfa000006cd000003f30000087300000761000004e800000b3e0000075d00000a690000041f000008ef00000c8d00000476000003a100000bd400000ca70000027000000886000009b000000b0800000090000004e600000787000003e800000a2b000002c000000cc000000bc9000005350000035c00000782000008080000063700000a5e000005e200000c750000067c000001610000048f0000010e000008f5000001db0000068100000d0000000000;
+  for (i=0;i<256;i=i+1) pm.mem[3*256+i] = expv[32*i +: 32];
+  go(10,3,2,20,0,0,0,1,1); $display("kpk_c1: %0d clk", cyc-c0); n=n+1;
+  if (bm[2*8192+20] !== 8'h54) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 0"); end
+  if (bm[2*8192+21] !== 8'hf5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 1"); end
+  if (bm[2*8192+22] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 2"); end
+  if (bm[2*8192+23] !== 8'h8c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 3"); end
+  if (bm[2*8192+24] !== 8'had) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 4"); end
+  if (bm[2*8192+25] !== 8'haf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 5"); end
+  if (bm[2*8192+26] !== 8'h4b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 6"); end
+  if (bm[2*8192+27] !== 8'ha1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 7"); end
+  if (bm[2*8192+28] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 8"); end
+  if (bm[2*8192+29] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 9"); end
+  if (bm[2*8192+30] !== 8'h38) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 10"); end
+  if (bm[2*8192+31] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 11"); end
+  if (bm[2*8192+32] !== 8'hec) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 12"); end
+  if (bm[2*8192+33] !== 8'h64) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 13"); end
+  if (bm[2*8192+34] !== 8'h0b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 14"); end
+  if (bm[2*8192+35] !== 8'hf6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 15"); end
+  if (bm[2*8192+36] !== 8'h0b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 16"); end
+  if (bm[2*8192+37] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 17"); end
+  if (bm[2*8192+38] !== 8'h5c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 18"); end
+  if (bm[2*8192+39] !== 8'hfa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 19"); end
+  if (bm[2*8192+40] !== 8'h46) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 20"); end
+  if (bm[2*8192+41] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 21"); end
+  if (bm[2*8192+42] !== 8'hf7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 22"); end
+  if (bm[2*8192+43] !== 8'h88) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 23"); end
+  if (bm[2*8192+44] !== 8'ha4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 24"); end
+  if (bm[2*8192+45] !== 8'hf0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 25"); end
+  if (bm[2*8192+46] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 26"); end
+  if (bm[2*8192+47] !== 8'h95) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 27"); end
+  if (bm[2*8192+48] !== 8'hfd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 28"); end
+  if (bm[2*8192+49] !== 8'h9a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 29"); end
+  if (bm[2*8192+50] !== 8'h9b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 30"); end
+  if (bm[2*8192+51] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c1 byte 31"); end
+  bm[0*8192+9] = 8'ha3;
+  bm[0*8192+10] = 8'h0e;
+  bm[0*8192+11] = 8'he4;
+  bm[0*8192+12] = 8'h8c;
+  bm[0*8192+13] = 8'hee;
+  bm[0*8192+14] = 8'h28;
+  bm[0*8192+15] = 8'h9f;
+  bm[0*8192+16] = 8'h4c;
+  bm[0*8192+17] = 8'h14;
+  bm[0*8192+18] = 8'hc9;
+  bm[0*8192+19] = 8'h5c;
+  bm[0*8192+20] = 8'h2e;
+  bm[0*8192+21] = 8'h8e;
+  bm[0*8192+22] = 8'h1b;
+  bm[0*8192+23] = 8'hcb;
+  bm[0*8192+24] = 8'h1a;
+  bm[0*8192+25] = 8'hc9;
+  bm[0*8192+26] = 8'hb4;
+  bm[0*8192+27] = 8'h7f;
+  bm[0*8192+28] = 8'h12;
+  bm[0*8192+29] = 8'h59;
+  bm[0*8192+30] = 8'he3;
+  bm[0*8192+31] = 8'hc4;
+  bm[0*8192+32] = 8'h7a;
+  bm[0*8192+33] = 8'h7f;
+  bm[0*8192+34] = 8'h74;
+  bm[0*8192+35] = 8'h33;
+  bm[0*8192+36] = 8'h77;
+  bm[0*8192+37] = 8'ha6;
+  bm[0*8192+38] = 8'h68;
+  bm[0*8192+39] = 8'hd9;
+  bm[0*8192+40] = 8'hb3;
+  go(11,5,0,9,0,0,0,1,1); $display("kupk_dc1: %0d clk", cyc-c0); n=n+1;
+  expv = 8192'h00000681000000000000068100000681000000000000000000000681000006810000068100000681000000000000068100000681000000000000000000000681000000000000068100000681000000000000068100000000000000000000000000000681000000000000068100000000000000000000068100000681000000000000000000000681000006810000068100000000000006810000068100000681000000000000000000000681000006810000000000000000000006810000068100000000000006810000068100000681000000000000068100000000000000000000000000000681000006810000068100000681000006810000068100000681000000000000068100000681000006810000068100000000000006810000000000000681000006810000000000000000000000000000068100000000000000000000068100000681000006810000000000000000000000000000068100000681000000000000068100000000000006810000068100000000000000000000068100000000000000000000000000000681000000000000000000000681000000000000000000000681000006810000068100000681000006810000068100000681000006810000000000000681000006810000000000000681000000000000000000000681000006810000000000000000000006810000000000000000000006810000000000000000000000000000068100000681000000000000068100000000000006810000068100000000000000000000068100000000000006810000068100000000000000000000000000000681000006810000000000000681000006810000068100000000000000000000000000000681000006810000068100000000000000000000000000000681000000000000068100000681000006810000000000000000000006810000000000000681000006810000068100000000000000000000068100000681000000000000000000000681000000000000000000000681000000000000000000000000000006810000000000000681000000000000000000000000000006810000000000000000000006810000068100000000000000000000068100000000000000000000068100000681000006810000068100000681000000000000000000000681000000000000068100000000000000000000000000000681000006810000068100000000000006810000068100000681000000000000068100000000000000000000000000000681000006810000000000000000000006810000068100000681000000000000000000000681000000000000000000000000000000000000000000000000000006810000068100000681000000000000068100000000000006810000000000000000000000000000068100000681;
+  for (i=0;i<256;i=i+1) if (pm.mem[5*256+i] !== expv[32*i +: 32]) begin fails=fails+1; if (fails<6) $display("FAIL kupk_dc1 coeff %0d got %h exp %h", i, pm.mem[5*256+i], expv[32*i +: 32]); end
+  expv = 8192'h00000c210000052c0000054d000007a1000005120000019c0000027f0000069a00000afc00000a13000002f00000052c000001a3000003c6000004b70000083e00000cfc000002f100000c7e0000019800000cb00000063d000001f2000004580000042900000c7b00000bdf00000af00000054e0000017a000001510000088f000002ae000005a7000005ca0000093d0000008f000004e000000be40000033200000a2800000bda000007d60000088300000037000002b3000001e3000004820000095900000c3c000002cb000003050000019c00000c35000009a5000009f500000392000000ca00000ae10000045000000c9100000bd5000007070000072300000ce20000043d000003ac0000043200000b1a0000089e00000a6400000bba000000bd00000ce800000c9e00000bd200000057000008d3000004a500000598000004ce00000a0e0000048700000c4a00000336000001c3000007c2000002870000088f00000870000002e0000001f3000005ac00000739000004e600000a8b0000037500000a94000006eb00000996000004f8000008cc00000418000003f900000234000002340000009900000688000005ef00000905000009df000006f3000005f200000373000003af0000059c0000017100000900000004fd00000678000009e100000470000002f800000ac9000007d500000038000006a200000a7a0000018c000006400000060900000be500000abb000002fa000008710000038a000001ca00000211000003f6000004d2000008ed0000097d000002bb000002ac0000026b0000051a000009d0000002d200000a09000002a500000cf3000006830000093a00000c6f00000c0b000009b7000000a2000008d2000008a90000008f00000abc000004cd00000b6100000a3c000009480000058d0000018e0000038800000bf10000012e000002de00000b6000000189000006e8000002a900000805000003f1000001460000015e000000ca000001aa00000a5400000cc9000005fb00000c7f000003b600000232000002fc000005fb0000032c0000037600000097000001360000045800000c4100000321000006c700000b77000008b500000948000003bd00000b590000084e000003ba000003680000086200000ce500000cb4000009f700000adf00000541000004df00000472000005930000043f00000c5a0000085000000090000007f6000001940000055900000aaf000001ac0000094800000ce50000074000000c7c000008500000073700000219000002c40000074d0000005800000430000009e00000079200000bf8000005f40000020e000004fa000001ee00000b4500000ab700000538000008a30000038100000879000004dd00000bdd0000088e0000068f00000cd600000a500000068100000d0000000000;
+  for (i=0;i<256;i=i+1) pm.mem[3*256+i] = expv[32*i +: 32];
+  go(10,3,2,20,0,0,0,4,1); $display("kpk_c4: %0d clk", cyc-c0); n=n+1;
+  if (bm[2*8192+20] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 0"); end
+  if (bm[2*8192+21] !== 8'hd8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 1"); end
+  if (bm[2*8192+22] !== 8'h80) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 2"); end
+  if (bm[2*8192+23] !== 8'hfb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 3"); end
+  if (bm[2*8192+24] !== 8'ha6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 4"); end
+  if (bm[2*8192+25] !== 8'hb4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 5"); end
+  if (bm[2*8192+26] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 6"); end
+  if (bm[2*8192+27] !== 8'h2e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 7"); end
+  if (bm[2*8192+28] !== 8'h36) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 8"); end
+  if (bm[2*8192+29] !== 8'hf7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 9"); end
+  if (bm[2*8192+30] !== 8'hc9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 10"); end
+  if (bm[2*8192+31] !== 8'h05) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 11"); end
+  if (bm[2*8192+32] !== 8'h39) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 12"); end
+  if (bm[2*8192+33] !== 8'h93) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 13"); end
+  if (bm[2*8192+34] !== 8'hfa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 14"); end
+  if (bm[2*8192+35] !== 8'h09) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 15"); end
+  if (bm[2*8192+36] !== 8'h2b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 16"); end
+  if (bm[2*8192+37] !== 8'h7d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 17"); end
+  if (bm[2*8192+38] !== 8'ha2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 18"); end
+  if (bm[2*8192+39] !== 8'ha1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 19"); end
+  if (bm[2*8192+40] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 20"); end
+  if (bm[2*8192+41] !== 8'h57) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 21"); end
+  if (bm[2*8192+42] !== 8'h66) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 22"); end
+  if (bm[2*8192+43] !== 8'hcd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 23"); end
+  if (bm[2*8192+44] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 24"); end
+  if (bm[2*8192+45] !== 8'h4a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 25"); end
+  if (bm[2*8192+46] !== 8'ha5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 26"); end
+  if (bm[2*8192+47] !== 8'h5e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 27"); end
+  if (bm[2*8192+48] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 28"); end
+  if (bm[2*8192+49] !== 8'h8e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 29"); end
+  if (bm[2*8192+50] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 30"); end
+  if (bm[2*8192+51] !== 8'h15) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 31"); end
+  if (bm[2*8192+52] !== 8'h41) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 32"); end
+  if (bm[2*8192+53] !== 8'h74) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 33"); end
+  if (bm[2*8192+54] !== 8'h34) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 34"); end
+  if (bm[2*8192+55] !== 8'hf5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 35"); end
+  if (bm[2*8192+56] !== 8'h07) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 36"); end
+  if (bm[2*8192+57] !== 8'h2d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 37"); end
+  if (bm[2*8192+58] !== 8'h21) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 38"); end
+  if (bm[2*8192+59] !== 8'h52) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 39"); end
+  if (bm[2*8192+60] !== 8'h3a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 40"); end
+  if (bm[2*8192+61] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 41"); end
+  if (bm[2*8192+62] !== 8'h4e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 42"); end
+  if (bm[2*8192+63] !== 8'hf1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 43"); end
+  if (bm[2*8192+64] !== 8'h24) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 44"); end
+  if (bm[2*8192+65] !== 8'hb7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 45"); end
+  if (bm[2*8192+66] !== 8'hed) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 46"); end
+  if (bm[2*8192+67] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 47"); end
+  if (bm[2*8192+68] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 48"); end
+  if (bm[2*8192+69] !== 8'h1b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 49"); end
+  if (bm[2*8192+70] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 50"); end
+  if (bm[2*8192+71] !== 8'hbf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 51"); end
+  if (bm[2*8192+72] !== 8'h08) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 52"); end
+  if (bm[2*8192+73] !== 8'hc3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 53"); end
+  if (bm[2*8192+74] !== 8'hc3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 54"); end
+  if (bm[2*8192+75] !== 8'h36) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 55"); end
+  if (bm[2*8192+76] !== 8'h33) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 56"); end
+  if (bm[2*8192+77] !== 8'hbc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 57"); end
+  if (bm[2*8192+78] !== 8'h56) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 58"); end
+  if (bm[2*8192+79] !== 8'h23) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 59"); end
+  if (bm[2*8192+80] !== 8'ha4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 60"); end
+  if (bm[2*8192+81] !== 8'hd4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 61"); end
+  if (bm[2*8192+82] !== 8'h7f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 62"); end
+  if (bm[2*8192+83] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 63"); end
+  if (bm[2*8192+84] !== 8'h8d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 64"); end
+  if (bm[2*8192+85] !== 8'ha0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 65"); end
+  if (bm[2*8192+86] !== 8'h4d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 66"); end
+  if (bm[2*8192+87] !== 8'hc5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 67"); end
+  if (bm[2*8192+88] !== 8'h68) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 68"); end
+  if (bm[2*8192+89] !== 8'h2b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 69"); end
+  if (bm[2*8192+90] !== 8'h57) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 70"); end
+  if (bm[2*8192+91] !== 8'h74) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 71"); end
+  if (bm[2*8192+92] !== 8'hc9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 72"); end
+  if (bm[2*8192+93] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 73"); end
+  if (bm[2*8192+94] !== 8'h18) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 74"); end
+  if (bm[2*8192+95] !== 8'h33) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 75"); end
+  if (bm[2*8192+96] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 76"); end
+  if (bm[2*8192+97] !== 8'h6b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 77"); end
+  if (bm[2*8192+98] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 78"); end
+  if (bm[2*8192+99] !== 8'h4d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 79"); end
+  if (bm[2*8192+100] !== 8'h6d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 80"); end
+  if (bm[2*8192+101] !== 8'h79) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 81"); end
+  if (bm[2*8192+102] !== 8'h42) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 82"); end
+  if (bm[2*8192+103] !== 8'hba) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 83"); end
+  if (bm[2*8192+104] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 84"); end
+  if (bm[2*8192+105] !== 8'h42) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 85"); end
+  if (bm[2*8192+106] !== 8'h6f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 86"); end
+  if (bm[2*8192+107] !== 8'h6c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 87"); end
+  if (bm[2*8192+108] !== 8'h67) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 88"); end
+  if (bm[2*8192+109] !== 8'h0b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 89"); end
+  if (bm[2*8192+110] !== 8'h0f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 90"); end
+  if (bm[2*8192+111] !== 8'h10) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 91"); end
+  if (bm[2*8192+112] !== 8'hde) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 92"); end
+  if (bm[2*8192+113] !== 8'heb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 93"); end
+  if (bm[2*8192+114] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 94"); end
+  if (bm[2*8192+115] !== 8'h05) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 95"); end
+  if (bm[2*8192+116] !== 8'h99) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 96"); end
+  if (bm[2*8192+117] !== 8'hff) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 97"); end
+  if (bm[2*8192+118] !== 8'hd5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 98"); end
+  if (bm[2*8192+119] !== 8'h41) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 99"); end
+  if (bm[2*8192+120] !== 8'hcc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 100"); end
+  if (bm[2*8192+121] !== 8'h2f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 101"); end
+  if (bm[2*8192+122] !== 8'h34) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 102"); end
+  if (bm[2*8192+123] !== 8'hcf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 103"); end
+  if (bm[2*8192+124] !== 8'h26) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 104"); end
+  if (bm[2*8192+125] !== 8'h03) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 105"); end
+  if (bm[2*8192+126] !== 8'haa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 106"); end
+  if (bm[2*8192+127] !== 8'hcf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 107"); end
+  if (bm[2*8192+128] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 108"); end
+  if (bm[2*8192+129] !== 8'h16) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 109"); end
+  if (bm[2*8192+130] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 110"); end
+  if (bm[2*8192+131] !== 8'h37) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 111"); end
+  if (bm[2*8192+132] !== 8'h2b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 112"); end
+  if (bm[2*8192+133] !== 8'h72) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 113"); end
+  if (bm[2*8192+134] !== 8'hfd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 114"); end
+  if (bm[2*8192+135] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 115"); end
+  if (bm[2*8192+136] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 116"); end
+  if (bm[2*8192+137] !== 8'h08) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 117"); end
+  if (bm[2*8192+138] !== 8'hf2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 118"); end
+  if (bm[2*8192+139] !== 8'h04) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 119"); end
+  if (bm[2*8192+140] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 120"); end
+  if (bm[2*8192+141] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 121"); end
+  if (bm[2*8192+142] !== 8'h46) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 122"); end
+  if (bm[2*8192+143] !== 8'hec) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 123"); end
+  if (bm[2*8192+144] !== 8'h38) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 124"); end
+  if (bm[2*8192+145] !== 8'h62) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 125"); end
+  if (bm[2*8192+146] !== 8'h79) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 126"); end
+  if (bm[2*8192+147] !== 8'hf6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c4 byte 127"); end
+  bm[0*8192+9] = 8'hb4;
+  bm[0*8192+10] = 8'h5f;
+  bm[0*8192+11] = 8'h92;
+  bm[0*8192+12] = 8'hc7;
+  bm[0*8192+13] = 8'h60;
+  bm[0*8192+14] = 8'hb6;
+  bm[0*8192+15] = 8'h4a;
+  bm[0*8192+16] = 8'he8;
+  bm[0*8192+17] = 8'h91;
+  bm[0*8192+18] = 8'he3;
+  bm[0*8192+19] = 8'hd3;
+  bm[0*8192+20] = 8'h49;
+  bm[0*8192+21] = 8'he9;
+  bm[0*8192+22] = 8'hef;
+  bm[0*8192+23] = 8'hba;
+  bm[0*8192+24] = 8'h20;
+  bm[0*8192+25] = 8'h19;
+  bm[0*8192+26] = 8'hc5;
+  bm[0*8192+27] = 8'h3f;
+  bm[0*8192+28] = 8'ha2;
+  bm[0*8192+29] = 8'h95;
+  bm[0*8192+30] = 8'h70;
+  bm[0*8192+31] = 8'h0f;
+  bm[0*8192+32] = 8'hf7;
+  bm[0*8192+33] = 8'hd0;
+  bm[0*8192+34] = 8'h95;
+  bm[0*8192+35] = 8'h1f;
+  bm[0*8192+36] = 8'h8b;
+  bm[0*8192+37] = 8'hb1;
+  bm[0*8192+38] = 8'hd3;
+  bm[0*8192+39] = 8'h9f;
+  bm[0*8192+40] = 8'h78;
+  bm[0*8192+41] = 8'h0b;
+  bm[0*8192+42] = 8'h46;
+  bm[0*8192+43] = 8'hc9;
+  bm[0*8192+44] = 8'ha8;
+  bm[0*8192+45] = 8'he6;
+  bm[0*8192+46] = 8'hd5;
+  bm[0*8192+47] = 8'h2d;
+  bm[0*8192+48] = 8'hb8;
+  bm[0*8192+49] = 8'hd3;
+  bm[0*8192+50] = 8'h6d;
+  bm[0*8192+51] = 8'had;
+  bm[0*8192+52] = 8'h58;
+  bm[0*8192+53] = 8'h0c;
+  bm[0*8192+54] = 8'hc1;
+  bm[0*8192+55] = 8'hfe;
+  bm[0*8192+56] = 8'h43;
+  bm[0*8192+57] = 8'h8b;
+  bm[0*8192+58] = 8'h5e;
+  bm[0*8192+59] = 8'he6;
+  bm[0*8192+60] = 8'h00;
+  bm[0*8192+61] = 8'h5f;
+  bm[0*8192+62] = 8'hb6;
+  bm[0*8192+63] = 8'h36;
+  bm[0*8192+64] = 8'hb7;
+  bm[0*8192+65] = 8'h29;
+  bm[0*8192+66] = 8'hf4;
+  bm[0*8192+67] = 8'hf3;
+  bm[0*8192+68] = 8'h3d;
+  bm[0*8192+69] = 8'h56;
+  bm[0*8192+70] = 8'h5a;
+  bm[0*8192+71] = 8'h58;
+  bm[0*8192+72] = 8'hc0;
+  bm[0*8192+73] = 8'h82;
+  bm[0*8192+74] = 8'h44;
+  bm[0*8192+75] = 8'ha7;
+  bm[0*8192+76] = 8'h40;
+  bm[0*8192+77] = 8'hd6;
+  bm[0*8192+78] = 8'hc5;
+  bm[0*8192+79] = 8'h7d;
+  bm[0*8192+80] = 8'h76;
+  bm[0*8192+81] = 8'hb2;
+  bm[0*8192+82] = 8'hd4;
+  bm[0*8192+83] = 8'hdf;
+  bm[0*8192+84] = 8'h8e;
+  bm[0*8192+85] = 8'h34;
+  bm[0*8192+86] = 8'hd8;
+  bm[0*8192+87] = 8'hb9;
+  bm[0*8192+88] = 8'h29;
+  bm[0*8192+89] = 8'hde;
+  bm[0*8192+90] = 8'hbb;
+  bm[0*8192+91] = 8'hb3;
+  bm[0*8192+92] = 8'h6a;
+  bm[0*8192+93] = 8'h0e;
+  bm[0*8192+94] = 8'had;
+  bm[0*8192+95] = 8'h58;
+  bm[0*8192+96] = 8'hdc;
+  bm[0*8192+97] = 8'h06;
+  bm[0*8192+98] = 8'h96;
+  bm[0*8192+99] = 8'h6a;
+  bm[0*8192+100] = 8'h80;
+  bm[0*8192+101] = 8'h0c;
+  bm[0*8192+102] = 8'ha8;
+  bm[0*8192+103] = 8'hcd;
+  bm[0*8192+104] = 8'hf1;
+  bm[0*8192+105] = 8'h6f;
+  bm[0*8192+106] = 8'h95;
+  bm[0*8192+107] = 8'h43;
+  bm[0*8192+108] = 8'h06;
+  bm[0*8192+109] = 8'h2f;
+  bm[0*8192+110] = 8'hbf;
+  bm[0*8192+111] = 8'he4;
+  bm[0*8192+112] = 8'h8a;
+  bm[0*8192+113] = 8'h22;
+  bm[0*8192+114] = 8'h31;
+  bm[0*8192+115] = 8'hf5;
+  bm[0*8192+116] = 8'hdf;
+  bm[0*8192+117] = 8'h8e;
+  bm[0*8192+118] = 8'ha5;
+  bm[0*8192+119] = 8'hff;
+  bm[0*8192+120] = 8'hb9;
+  bm[0*8192+121] = 8'h33;
+  bm[0*8192+122] = 8'h66;
+  bm[0*8192+123] = 8'h2a;
+  bm[0*8192+124] = 8'hb6;
+  bm[0*8192+125] = 8'h61;
+  bm[0*8192+126] = 8'h12;
+  bm[0*8192+127] = 8'h78;
+  bm[0*8192+128] = 8'hf6;
+  bm[0*8192+129] = 8'hce;
+  bm[0*8192+130] = 8'h94;
+  bm[0*8192+131] = 8'h72;
+  bm[0*8192+132] = 8'hac;
+  bm[0*8192+133] = 8'h73;
+  bm[0*8192+134] = 8'hf4;
+  bm[0*8192+135] = 8'h72;
+  bm[0*8192+136] = 8'hfa;
+  go(11,5,0,9,0,0,0,4,1); $display("kupk_dc4: %0d clk", cyc-c0); n=n+1;
+  expv = 8192'h00000c3100000821000005b0000001a000000c3100000340000005b00000027000000821000009c1000005b0000001a00000075100000340000009c100000b6100000c31000004e0000005b000000681000000d0000001a0000004e0000000d0000008f1000004e0000001a000000821000004e0000004e00000027000000270000008f10000075100000c3100000c3100000821000004100000068100000b6100000a9100000c3100000c310000041000000270000000d0000001a0000001a0000006810000082100000b6100000340000008f100000c31000001a000000c3100000000000004e000000340000002700000075100000410000004e000000c3100000c31000000d0000009c100000a91000008210000068100000000000009c10000068100000000000004e00000082100000751000004e000000000000004e000000a91000009c100000410000006810000082100000a910000000000000b61000004e000000821000008f100000270000008f1000008f100000a9100000b61000001a000000751000008f10000075100000a910000068100000270000003400000068100000b6100000a9100000c3100000a9100000340000008f1000001a0000005b0000004e0000005b000000a91000009c10000041000000a91000004e0000003400000000000000821000005b0000003400000034000000681000001a0000009c1000000000000041000000681000004100000082100000410000004e00000027000000a9100000c310000027000000c3100000340000001a000000751000008f1000005b000000270000004e0000008f1000004e00000041000000c31000000000000000000000b61000004e00000041000000b6100000681000008f1000003400000027000000c3100000b61000009c1000000d000000000000009c100000410000006810000082100000a91000004e000000a9100000a9100000270000008f100000681000001a000000a9100000a910000041000000b61000004e00000082100000681000009c10000075100000340000004e000000000000008f1000005b0000006810000075100000c3100000a9100000270000008f1000000d000000681000008f1000000d000000c31000007510000041000000a910000000000000c31000005b00000000000000c31000005b000000000000007510000041000000821000001a00000027000000c31000009c100000410000000d000000751000001a000000000000008f10000082100000b6100000c3100000b6100000751000003400000075100000a910000027000000b610000027000000751000000d000000b61000006810000034000000821000008f1000004e0000004e000000000000009c1000005b000000751000001a00000041000000c31000008f100000340;
+  for (i=0;i<256;i=i+1) if (pm.mem[5*256+i] !== expv[32*i +: 32]) begin fails=fails+1; if (fails<6) $display("FAIL kupk_dc4 coeff %0d got %h exp %h", i, pm.mem[5*256+i], expv[32*i +: 32]); end
+  expv = 8192'h00000264000006e000000b0f0000070000000512000001f6000007d8000001df000001c500000246000000b7000007b400000958000000b800000058000002c8000009cb000006b200000583000000db000003a30000083500000400000008cb0000055300000c10000002e0000001d300000a0e000007bf000009a600000a350000092b0000093c0000086d0000025d0000088600000981000005610000071c000001d6000009cc0000033c0000064b00000b3600000857000004fc00000024000008b900000949000002680000052a0000093e0000066d00000974000006290000084d00000ae1000009470000010300000377000001720000009700000378000006ad00000407000007a90000012500000aea0000087b000004330000043b0000067e000001fa000009440000021600000b21000006aa00000b42000005b4000001910000083e000002ac000006b80000081400000651000006fc00000c21000003980000088d000005470000080400000a1e0000067b00000382000009a1000001c600000900000003cd0000079c000008f3000005cc000004fb00000b640000091b00000a0a000006320000049d000002d7000009420000023500000a450000085000000b510000053f00000c230000046d000009ce000005e90000046e000009070000048100000ab100000c6800000330000007c80000088800000a4c00000ad400000c7900000946000000270000002c0000023c000000540000050e000006d200000c8b00000b2000000b210000097f00000245000001b1000004d400000c79000004c5000006ca00000733000005a400000c8c0000006e000001a3000001c500000c0f0000065100000708000001c40000006600000964000008c90000015200000b6800000a2c0000028f000008c400000a920000062b00000b43000006da00000bb20000061000000369000002ea00000a96000004f600000326000007c300000a3100000797000007a6000007da0000036a00000634000006c20000057f0000051c000005c500000bdb00000c1c000009150000080900000b5500000aab000009b70000097d00000ac3000002b80000033d00000c330000018f00000ba700000482000005b1000005a9000004d60000097d000003f3000009d70000044e00000b5000000513000007e3000005c7000002c7000001310000071100000b9200000289000007f0000005af0000043c000004d1000007ac0000064b000006670000086b00000c8c000009a800000595000008f0000009860000058a00000630000000ce0000087a0000030100000636000008aa00000bff00000b320000072a000009730000068300000b770000035f0000086b0000057d0000087e00000a1c000001f70000036700000b850000080f0000068100000d0000000000;
+  for (i=0;i<256;i=i+1) pm.mem[3*256+i] = expv[32*i +: 32];
+  go(10,3,2,20,0,0,0,5,1); $display("kpk_c5: %0d clk", cyc-c0); n=n+1;
+  if (bm[2*8192+20] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 0"); end
+  if (bm[2*8192+21] !== 8'h40) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 1"); end
+  if (bm[2*8192+22] !== 8'hca) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 2"); end
+  if (bm[2*8192+23] !== 8'h51) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 3"); end
+  if (bm[2*8192+24] !== 8'hc9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 4"); end
+  if (bm[2*8192+25] !== 8'hd5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 5"); end
+  if (bm[2*8192+26] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 6"); end
+  if (bm[2*8192+27] !== 8'hc4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 7"); end
+  if (bm[2*8192+28] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 8"); end
+  if (bm[2*8192+29] !== 8'h95) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 9"); end
+  if (bm[2*8192+30] !== 8'hdc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 10"); end
+  if (bm[2*8192+31] !== 8'hd7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 11"); end
+  if (bm[2*8192+32] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 12"); end
+  if (bm[2*8192+33] !== 8'haa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 13"); end
+  if (bm[2*8192+34] !== 8'h78) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 14"); end
+  if (bm[2*8192+35] !== 8'hee) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 15"); end
+  if (bm[2*8192+36] !== 8'h5a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 16"); end
+  if (bm[2*8192+37] !== 8'h87) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 17"); end
+  if (bm[2*8192+38] !== 8'h7f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 18"); end
+  if (bm[2*8192+39] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 19"); end
+  if (bm[2*8192+40] !== 8'h6f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 20"); end
+  if (bm[2*8192+41] !== 8'h32) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 21"); end
+  if (bm[2*8192+42] !== 8'he5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 22"); end
+  if (bm[2*8192+43] !== 8'ha8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 23"); end
+  if (bm[2*8192+44] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 24"); end
+  if (bm[2*8192+45] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 25"); end
+  if (bm[2*8192+46] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 26"); end
+  if (bm[2*8192+47] !== 8'h37) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 27"); end
+  if (bm[2*8192+48] !== 8'h19) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 28"); end
+  if (bm[2*8192+49] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 29"); end
+  if (bm[2*8192+50] !== 8'h58) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 30"); end
+  if (bm[2*8192+51] !== 8'h5d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 31"); end
+  if (bm[2*8192+52] !== 8'he6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 32"); end
+  if (bm[2*8192+53] !== 8'hdc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 33"); end
+  if (bm[2*8192+54] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 34"); end
+  if (bm[2*8192+55] !== 8'hc4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 35"); end
+  if (bm[2*8192+56] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 36"); end
+  if (bm[2*8192+57] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 37"); end
+  if (bm[2*8192+58] !== 8'h2f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 38"); end
+  if (bm[2*8192+59] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 39"); end
+  if (bm[2*8192+60] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 40"); end
+  if (bm[2*8192+61] !== 8'h5a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 41"); end
+  if (bm[2*8192+62] !== 8'hdf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 42"); end
+  if (bm[2*8192+63] !== 8'h5d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 43"); end
+  if (bm[2*8192+64] !== 8'h73) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 44"); end
+  if (bm[2*8192+65] !== 8'hf1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 45"); end
+  if (bm[2*8192+66] !== 8'ha1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 46"); end
+  if (bm[2*8192+67] !== 8'h39) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 47"); end
+  if (bm[2*8192+68] !== 8'h67) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 48"); end
+  if (bm[2*8192+69] !== 8'h9e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 49"); end
+  if (bm[2*8192+70] !== 8'h88) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 50"); end
+  if (bm[2*8192+71] !== 8'he9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 51"); end
+  if (bm[2*8192+72] !== 8'h83) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 52"); end
+  if (bm[2*8192+73] !== 8'h5e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 53"); end
+  if (bm[2*8192+74] !== 8'h8f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 54"); end
+  if (bm[2*8192+75] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 55"); end
+  if (bm[2*8192+76] !== 8'h69) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 56"); end
+  if (bm[2*8192+77] !== 8'h6b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 57"); end
+  if (bm[2*8192+78] !== 8'h32) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 58"); end
+  if (bm[2*8192+79] !== 8'h1f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 59"); end
+  if (bm[2*8192+80] !== 8'hf6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 60"); end
+  if (bm[2*8192+81] !== 8'h06) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 61"); end
+  if (bm[2*8192+82] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 62"); end
+  if (bm[2*8192+83] !== 8'ha1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 63"); end
+  if (bm[2*8192+84] !== 8'h27) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 64"); end
+  if (bm[2*8192+85] !== 8'h24) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 65"); end
+  if (bm[2*8192+86] !== 8'h7c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 66"); end
+  if (bm[2*8192+87] !== 8'h27) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 67"); end
+  if (bm[2*8192+88] !== 8'h23) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 68"); end
+  if (bm[2*8192+89] !== 8'hfb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 69"); end
+  if (bm[2*8192+90] !== 8'h8c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 70"); end
+  if (bm[2*8192+91] !== 8'h98) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 71"); end
+  if (bm[2*8192+92] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 72"); end
+  if (bm[2*8192+93] !== 8'hf7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 73"); end
+  if (bm[2*8192+94] !== 8'h8f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 74"); end
+  if (bm[2*8192+95] !== 8'h2c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 75"); end
+  if (bm[2*8192+96] !== 8'h14) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 76"); end
+  if (bm[2*8192+97] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 77"); end
+  if (bm[2*8192+98] !== 8'hee) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 78"); end
+  if (bm[2*8192+99] !== 8'hdf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 79"); end
+  if (bm[2*8192+100] !== 8'hb9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 80"); end
+  if (bm[2*8192+101] !== 8'h4e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 81"); end
+  if (bm[2*8192+102] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 82"); end
+  if (bm[2*8192+103] !== 8'hf5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 83"); end
+  if (bm[2*8192+104] !== 8'hb2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 84"); end
+  if (bm[2*8192+105] !== 8'heb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 85"); end
+  if (bm[2*8192+106] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 86"); end
+  if (bm[2*8192+107] !== 8'he5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 87"); end
+  if (bm[2*8192+108] !== 8'h1b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 88"); end
+  if (bm[2*8192+109] !== 8'ha7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 89"); end
+  if (bm[2*8192+110] !== 8'hb9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 90"); end
+  if (bm[2*8192+111] !== 8'hdc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 91"); end
+  if (bm[2*8192+112] !== 8'hb3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 92"); end
+  if (bm[2*8192+113] !== 8'h5e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 93"); end
+  if (bm[2*8192+114] !== 8'hb6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 94"); end
+  if (bm[2*8192+115] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 95"); end
+  if (bm[2*8192+116] !== 8'h39) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 96"); end
+  if (bm[2*8192+117] !== 8'h3b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 97"); end
+  if (bm[2*8192+118] !== 8'h93) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 98"); end
+  if (bm[2*8192+119] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 99"); end
+  if (bm[2*8192+120] !== 8'h38) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 100"); end
+  if (bm[2*8192+121] !== 8'hc1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 101"); end
+  if (bm[2*8192+122] !== 8'h4c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 102"); end
+  if (bm[2*8192+123] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 103"); end
+  if (bm[2*8192+124] !== 8'h4d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 104"); end
+  if (bm[2*8192+125] !== 8'h3e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 105"); end
+  if (bm[2*8192+126] !== 8'h42) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 106"); end
+  if (bm[2*8192+127] !== 8'h1a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 107"); end
+  if (bm[2*8192+128] !== 8'h0f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 108"); end
+  if (bm[2*8192+129] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 109"); end
+  if (bm[2*8192+130] !== 8'h8e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 110"); end
+  if (bm[2*8192+131] !== 8'hc3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 111"); end
+  if (bm[2*8192+132] !== 8'h5d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 112"); end
+  if (bm[2*8192+133] !== 8'h6e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 113"); end
+  if (bm[2*8192+134] !== 8'h81) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 114"); end
+  if (bm[2*8192+135] !== 8'h4a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 115"); end
+  if (bm[2*8192+136] !== 8'hd5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 116"); end
+  if (bm[2*8192+137] !== 8'h3d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 117"); end
+  if (bm[2*8192+138] !== 8'ha6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 118"); end
+  if (bm[2*8192+139] !== 8'h82) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 119"); end
+  if (bm[2*8192+140] !== 8'h29) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 120"); end
+  if (bm[2*8192+141] !== 8'h90) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 121"); end
+  if (bm[2*8192+142] !== 8'h24) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 122"); end
+  if (bm[2*8192+143] !== 8'hee) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 123"); end
+  if (bm[2*8192+144] !== 8'ha6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 124"); end
+  if (bm[2*8192+145] !== 8'hef) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 125"); end
+  if (bm[2*8192+146] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 126"); end
+  if (bm[2*8192+147] !== 8'hdb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 127"); end
+  if (bm[2*8192+148] !== 8'hcc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 128"); end
+  if (bm[2*8192+149] !== 8'had) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 129"); end
+  if (bm[2*8192+150] !== 8'h80) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 130"); end
+  if (bm[2*8192+151] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 131"); end
+  if (bm[2*8192+152] !== 8'hfe) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 132"); end
+  if (bm[2*8192+153] !== 8'h10) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 133"); end
+  if (bm[2*8192+154] !== 8'h2e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 134"); end
+  if (bm[2*8192+155] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 135"); end
+  if (bm[2*8192+156] !== 8'hdd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 136"); end
+  if (bm[2*8192+157] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 137"); end
+  if (bm[2*8192+158] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 138"); end
+  if (bm[2*8192+159] !== 8'hbd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 139"); end
+  if (bm[2*8192+160] !== 8'h19) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 140"); end
+  if (bm[2*8192+161] !== 8'hcf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 141"); end
+  if (bm[2*8192+162] !== 8'h4c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 142"); end
+  if (bm[2*8192+163] !== 8'h8e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 143"); end
+  if (bm[2*8192+164] !== 8'h6f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 144"); end
+  if (bm[2*8192+165] !== 8'h56) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 145"); end
+  if (bm[2*8192+166] !== 8'hd1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 146"); end
+  if (bm[2*8192+167] !== 8'h24) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 147"); end
+  if (bm[2*8192+168] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 148"); end
+  if (bm[2*8192+169] !== 8'hc4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 149"); end
+  if (bm[2*8192+170] !== 8'h27) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 150"); end
+  if (bm[2*8192+171] !== 8'h88) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 151"); end
+  if (bm[2*8192+172] !== 8'h3b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 152"); end
+  if (bm[2*8192+173] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 153"); end
+  if (bm[2*8192+174] !== 8'h21) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 154"); end
+  if (bm[2*8192+175] !== 8'h65) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 155"); end
+  if (bm[2*8192+176] !== 8'h16) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 156"); end
+  if (bm[2*8192+177] !== 8'h16) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 157"); end
+  if (bm[2*8192+178] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 158"); end
+  if (bm[2*8192+179] !== 8'h34) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c5 byte 159"); end
+  bm[0*8192+9] = 8'h6e;
+  bm[0*8192+10] = 8'h60;
+  bm[0*8192+11] = 8'h73;
+  bm[0*8192+12] = 8'ha0;
+  bm[0*8192+13] = 8'h69;
+  bm[0*8192+14] = 8'hb8;
+  bm[0*8192+15] = 8'h8b;
+  bm[0*8192+16] = 8'h28;
+  bm[0*8192+17] = 8'hfa;
+  bm[0*8192+18] = 8'hcf;
+  bm[0*8192+19] = 8'hfd;
+  bm[0*8192+20] = 8'h6c;
+  bm[0*8192+21] = 8'hbf;
+  bm[0*8192+22] = 8'h6b;
+  bm[0*8192+23] = 8'h30;
+  bm[0*8192+24] = 8'h41;
+  bm[0*8192+25] = 8'h8a;
+  bm[0*8192+26] = 8'h44;
+  bm[0*8192+27] = 8'h72;
+  bm[0*8192+28] = 8'h98;
+  bm[0*8192+29] = 8'hd0;
+  bm[0*8192+30] = 8'h52;
+  bm[0*8192+31] = 8'h25;
+  bm[0*8192+32] = 8'hb7;
+  bm[0*8192+33] = 8'h57;
+  bm[0*8192+34] = 8'h01;
+  bm[0*8192+35] = 8'h1b;
+  bm[0*8192+36] = 8'hef;
+  bm[0*8192+37] = 8'hbf;
+  bm[0*8192+38] = 8'hb3;
+  bm[0*8192+39] = 8'h65;
+  bm[0*8192+40] = 8'hb7;
+  bm[0*8192+41] = 8'h1a;
+  bm[0*8192+42] = 8'hd9;
+  bm[0*8192+43] = 8'hc6;
+  bm[0*8192+44] = 8'hd1;
+  bm[0*8192+45] = 8'h12;
+  bm[0*8192+46] = 8'h86;
+  bm[0*8192+47] = 8'hec;
+  bm[0*8192+48] = 8'ha7;
+  bm[0*8192+49] = 8'h82;
+  bm[0*8192+50] = 8'h4e;
+  bm[0*8192+51] = 8'h3c;
+  bm[0*8192+52] = 8'hc9;
+  bm[0*8192+53] = 8'h14;
+  bm[0*8192+54] = 8'h35;
+  bm[0*8192+55] = 8'hdd;
+  bm[0*8192+56] = 8'ha7;
+  bm[0*8192+57] = 8'h07;
+  bm[0*8192+58] = 8'hbb;
+  bm[0*8192+59] = 8'hca;
+  bm[0*8192+60] = 8'h08;
+  bm[0*8192+61] = 8'he2;
+  bm[0*8192+62] = 8'h65;
+  bm[0*8192+63] = 8'h5c;
+  bm[0*8192+64] = 8'h07;
+  bm[0*8192+65] = 8'h60;
+  bm[0*8192+66] = 8'h0c;
+  bm[0*8192+67] = 8'h91;
+  bm[0*8192+68] = 8'hcd;
+  bm[0*8192+69] = 8'ha1;
+  bm[0*8192+70] = 8'h64;
+  bm[0*8192+71] = 8'h7f;
+  bm[0*8192+72] = 8'h87;
+  bm[0*8192+73] = 8'h4a;
+  bm[0*8192+74] = 8'h5e;
+  bm[0*8192+75] = 8'h0d;
+  bm[0*8192+76] = 8'h04;
+  bm[0*8192+77] = 8'h48;
+  bm[0*8192+78] = 8'hf0;
+  bm[0*8192+79] = 8'hc0;
+  bm[0*8192+80] = 8'hc1;
+  bm[0*8192+81] = 8'h58;
+  bm[0*8192+82] = 8'he7;
+  bm[0*8192+83] = 8'h66;
+  bm[0*8192+84] = 8'h94;
+  bm[0*8192+85] = 8'hf1;
+  bm[0*8192+86] = 8'h64;
+  bm[0*8192+87] = 8'hdc;
+  bm[0*8192+88] = 8'h53;
+  bm[0*8192+89] = 8'hbb;
+  bm[0*8192+90] = 8'h65;
+  bm[0*8192+91] = 8'h28;
+  bm[0*8192+92] = 8'h8a;
+  bm[0*8192+93] = 8'hb1;
+  bm[0*8192+94] = 8'h47;
+  bm[0*8192+95] = 8'h20;
+  bm[0*8192+96] = 8'h16;
+  bm[0*8192+97] = 8'hed;
+  bm[0*8192+98] = 8'h55;
+  bm[0*8192+99] = 8'h45;
+  bm[0*8192+100] = 8'h15;
+  bm[0*8192+101] = 8'hce;
+  bm[0*8192+102] = 8'hbb;
+  bm[0*8192+103] = 8'h7a;
+  bm[0*8192+104] = 8'h2c;
+  bm[0*8192+105] = 8'hc1;
+  bm[0*8192+106] = 8'hb2;
+  bm[0*8192+107] = 8'h6b;
+  bm[0*8192+108] = 8'hda;
+  bm[0*8192+109] = 8'h1a;
+  bm[0*8192+110] = 8'h10;
+  bm[0*8192+111] = 8'h6a;
+  bm[0*8192+112] = 8'h92;
+  bm[0*8192+113] = 8'h50;
+  bm[0*8192+114] = 8'hd5;
+  bm[0*8192+115] = 8'h5d;
+  bm[0*8192+116] = 8'h0f;
+  bm[0*8192+117] = 8'hb5;
+  bm[0*8192+118] = 8'hee;
+  bm[0*8192+119] = 8'h6f;
+  bm[0*8192+120] = 8'h1c;
+  bm[0*8192+121] = 8'h95;
+  bm[0*8192+122] = 8'haf;
+  bm[0*8192+123] = 8'h56;
+  bm[0*8192+124] = 8'h81;
+  bm[0*8192+125] = 8'h03;
+  bm[0*8192+126] = 8'h1f;
+  bm[0*8192+127] = 8'hdd;
+  bm[0*8192+128] = 8'h79;
+  bm[0*8192+129] = 8'hde;
+  bm[0*8192+130] = 8'h2b;
+  bm[0*8192+131] = 8'h19;
+  bm[0*8192+132] = 8'ha8;
+  bm[0*8192+133] = 8'h25;
+  bm[0*8192+134] = 8'h87;
+  bm[0*8192+135] = 8'h0c;
+  bm[0*8192+136] = 8'h1b;
+  bm[0*8192+137] = 8'ha5;
+  bm[0*8192+138] = 8'h4e;
+  bm[0*8192+139] = 8'h07;
+  bm[0*8192+140] = 8'h25;
+  bm[0*8192+141] = 8'h62;
+  bm[0*8192+142] = 8'hc3;
+  bm[0*8192+143] = 8'h11;
+  bm[0*8192+144] = 8'h5f;
+  bm[0*8192+145] = 8'hd7;
+  bm[0*8192+146] = 8'h77;
+  bm[0*8192+147] = 8'h2d;
+  bm[0*8192+148] = 8'he6;
+  bm[0*8192+149] = 8'h53;
+  bm[0*8192+150] = 8'h8f;
+  bm[0*8192+151] = 8'h1e;
+  bm[0*8192+152] = 8'h91;
+  bm[0*8192+153] = 8'hb2;
+  bm[0*8192+154] = 8'h1f;
+  bm[0*8192+155] = 8'h8e;
+  bm[0*8192+156] = 8'hec;
+  bm[0*8192+157] = 8'h59;
+  bm[0*8192+158] = 8'hce;
+  bm[0*8192+159] = 8'h66;
+  bm[0*8192+160] = 8'h8c;
+  bm[0*8192+161] = 8'h80;
+  bm[0*8192+162] = 8'h87;
+  bm[0*8192+163] = 8'he9;
+  bm[0*8192+164] = 8'hc7;
+  bm[0*8192+165] = 8'hcc;
+  bm[0*8192+166] = 8'h8e;
+  bm[0*8192+167] = 8'hec;
+  bm[0*8192+168] = 8'haf;
+  go(11,5,0,9,0,0,0,5,1); $display("kupk_dc5: %0d clk", cyc-c0); n=n+1;
+  expv = 8192'h0000088900000c99000008f10000034000000bc9000007b900000270000002d800000bc90000027000000138000009c10000006800000138000001380000027000000a2900000a29000004e000000c3100000a29000001380000068100000c99000008f10000041000000340000006e900000bc90000013800000a91000007b900000b61000009c1000008f100000959000006180000088900000a9100000c99000000d0000002d800000068000008f1000001a0000003a800000340000002d8000003a800000a9100000751000006e9000008f100000138000001a0000002d8000001a0000008f10000082100000068000007510000041000000c3100000c3100000618000002d8000005b0000006e900000c310000000000000b61000000680000041000000a910000095900000a2900000410000002d8000001380000061800000bc900000a9100000a910000068100000c3100000959000005b00000088900000410000000d0000003a80000027000000821000001a00000000000000a9100000af9000003a80000088900000af90000020800000681000003a8000004e0000006180000041000000bc900000b6100000b610000020800000410000002080000041000000959000008f1000006e9000004e000000340000000d0000002d8000008f10000027000000208000000d00000068100000a290000054800000af90000041000000618000005b000000270000003a800000b61000004e000000821000004e000000af9000007b900000889000006e900000681000005b00000000000000c3100000068000001a00000000000000340000001380000041000000c31000003a800000410000001380000095900000c3100000a29000002080000006800000a29000008f10000034000000681000009c1000009c100000000000002d800000478000006e90000075100000c31000001a0000000d0000002700000041000000959000004e00000013800000a910000061800000959000003a800000889000000d0000007b9000001a0000007b9000009c1000007b900000821000000d00000082100000c99000008f100000340000004e0000001a0000008f1000006e9000009c100000af9000004e0000006e9000008890000054800000af900000208000008f1000005b000000c9900000c3100000c3100000270000009c1000000680000041000000c3100000af9000007510000041000000821000008f100000681000007b90000006800000a29000001a0000003a8000000d0000007510000006800000270000000680000088900000af900000c3100000af9000002d800000bc900000a2900000c9900000bc9000000d0000006e9000000d000000bc9000009c1000005480000027000000681000002d800000270000009c100000138000005b0;
+  for (i=0;i<256;i=i+1) if (pm.mem[5*256+i] !== expv[32*i +: 32]) begin fails=fails+1; if (fails<6) $display("FAIL kupk_dc5 coeff %0d got %h exp %h", i, pm.mem[5*256+i], expv[32*i +: 32]); end
+  expv = 8192'h0000081f000003d3000003600000057200000ae000000cd700000457000007040000017700000278000001e800000a9100000bc800000afc000005f900000c26000007f300000bf300000531000002ae0000013a000009b60000074d0000023c0000048100000c45000000bf000002400000084f00000605000003c00000015800000516000003da0000083d000004d8000005c6000005cc00000b5e00000138000007280000038e000008ca0000087a00000b0b000009eb000001a00000044f00000395000004f2000001910000064b0000079300000ca30000048500000969000004f20000066c000002a900000c36000005c6000001ae000008c40000033d000007ea0000076d00000abb000006e90000031900000b50000003850000073b000003cf000009750000089400000040000003ad0000097200000090000004d00000066f00000ac100000639000007cf000009720000078e00000113000002190000037a0000075600000a54000005ec00000810000008f200000a18000000ae00000bf40000051e000000ea000008f3000007580000063d000004100000070a000004560000019a0000072a00000834000009c000000c8900000afc00000153000008e2000003ef000008b30000039b000008f700000b5600000aa3000007330000049a00000a60000005740000025700000c3f00000149000001a700000135000001f7000008eb000002560000097300000279000000ab0000068e0000078b000004f8000008b700000a0800000b55000006ec0000090800000adf0000023700000223000008e40000033b000008420000047a000007a900000c4e00000b750000004300000b450000038900000b100000018d00000c0800000968000002bb000008c80000058b0000025d00000af5000002b30000032700000cc30000097000000a5800000c2e000008ec00000afc0000065600000c55000002c4000001ce000000db00000b4100000a6600000a5e00000cce000003d200000525000004260000094800000997000006c6000006bc0000022700000bf100000216000002d70000009c0000076e000002b200000ca90000088a000003080000007100000a9d0000019300000aaa000004c100000a4c000008750000035b0000047900000270000005300000066800000a3f0000012c0000076400000a5600000150000004a900000121000001a80000072f00000bab000003d300000c5a0000079c000000b1000005ee00000c6d0000076b0000006300000616000004930000016d0000075a00000c1d0000036800000a7f000002eb00000ccc000005c1000006410000010100000a5100000a440000047500000b1a000007a5000001d1000002e90000040a000006b2000005eb0000066a0000094a000008af0000068100000d0000000000;
+  for (i=0;i<256;i=i+1) pm.mem[3*256+i] = expv[32*i +: 32];
+  go(10,3,2,20,0,0,0,10,1); $display("kpk_c10: %0d clk", cyc-c0); n=n+1;
+  if (bm[2*8192+20] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 0"); end
+  if (bm[2*8192+21] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 1"); end
+  if (bm[2*8192+22] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 2"); end
+  if (bm[2*8192+23] !== 8'h20) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 3"); end
+  if (bm[2*8192+24] !== 8'hab) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 4"); end
+  if (bm[2*8192+25] !== 8'hdb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 5"); end
+  if (bm[2*8192+26] !== 8'he6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 6"); end
+  if (bm[2*8192+27] !== 8'h27) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 7"); end
+  if (bm[2*8192+28] !== 8'hdd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 8"); end
+  if (bm[2*8192+29] !== 8'h83) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 9"); end
+  if (bm[2*8192+30] !== 8'h3e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 10"); end
+  if (bm[2*8192+31] !== 8'h95) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 11"); end
+  if (bm[2*8192+32] !== 8'hf3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 12"); end
+  if (bm[2*8192+33] !== 8'h88) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 13"); end
+  if (bm[2*8192+34] !== 8'h96) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 14"); end
+  if (bm[2*8192+35] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 15"); end
+  if (bm[2*8192+36] !== 8'h7f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 16"); end
+  if (bm[2*8192+37] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 17"); end
+  if (bm[2*8192+38] !== 8'h32) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 18"); end
+  if (bm[2*8192+39] !== 8'hcb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 19"); end
+  if (bm[2*8192+40] !== 8'h4f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 20"); end
+  if (bm[2*8192+41] !== 8'hb0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 21"); end
+  if (bm[2*8192+42] !== 8'h57) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 22"); end
+  if (bm[2*8192+43] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 23"); end
+  if (bm[2*8192+44] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 24"); end
+  if (bm[2*8192+45] !== 8'he6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 25"); end
+  if (bm[2*8192+46] !== 8'hec) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 26"); end
+  if (bm[2*8192+47] !== 8'hcc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 27"); end
+  if (bm[2*8192+48] !== 8'h90) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 28"); end
+  if (bm[2*8192+49] !== 8'hee) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 29"); end
+  if (bm[2*8192+50] !== 8'h43) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 30"); end
+  if (bm[2*8192+51] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 31"); end
+  if (bm[2*8192+52] !== 8'h81) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 32"); end
+  if (bm[2*8192+53] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 33"); end
+  if (bm[2*8192+54] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 34"); end
+  if (bm[2*8192+55] !== 8'h1e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 35"); end
+  if (bm[2*8192+56] !== 8'h20) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 36"); end
+  if (bm[2*8192+57] !== 8'h29) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 37"); end
+  if (bm[2*8192+58] !== 8'hfd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 38"); end
+  if (bm[2*8192+59] !== 8'h74) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 39"); end
+  if (bm[2*8192+60] !== 8'h36) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 40"); end
+  if (bm[2*8192+61] !== 8'h5c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 41"); end
+  if (bm[2*8192+62] !== 8'hd9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 42"); end
+  if (bm[2*8192+63] !== 8'h7c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 43"); end
+  if (bm[2*8192+64] !== 8'h4b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 44"); end
+  if (bm[2*8192+65] !== 8'h97) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 45"); end
+  if (bm[2*8192+66] !== 8'hdb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 46"); end
+  if (bm[2*8192+67] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 47"); end
+  if (bm[2*8192+68] !== 8'h48) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 48"); end
+  if (bm[2*8192+69] !== 8'h16) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 49"); end
+  if (bm[2*8192+70] !== 8'h6f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 50"); end
+  if (bm[2*8192+71] !== 8'h9d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 51"); end
+  if (bm[2*8192+72] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 52"); end
+  if (bm[2*8192+73] !== 8'hb2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 53"); end
+  if (bm[2*8192+74] !== 8'h91) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 54"); end
+  if (bm[2*8192+75] !== 8'h5c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 55"); end
+  if (bm[2*8192+76] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 56"); end
+  if (bm[2*8192+77] !== 8'h8c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 57"); end
+  if (bm[2*8192+78] !== 8'h1f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 58"); end
+  if (bm[2*8192+79] !== 8'h66) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 59"); end
+  if (bm[2*8192+80] !== 8'hc0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 60"); end
+  if (bm[2*8192+81] !== 8'h80) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 61"); end
+  if (bm[2*8192+82] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 62"); end
+  if (bm[2*8192+83] !== 8'h90) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 63"); end
+  if (bm[2*8192+84] !== 8'ha6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 64"); end
+  if (bm[2*8192+85] !== 8'h2b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 65"); end
+  if (bm[2*8192+86] !== 8'hdb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 66"); end
+  if (bm[2*8192+87] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 67"); end
+  if (bm[2*8192+88] !== 8'h34) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 68"); end
+  if (bm[2*8192+89] !== 8'h1f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 69"); end
+  if (bm[2*8192+90] !== 8'h44) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 70"); end
+  if (bm[2*8192+91] !== 8'h8f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 71"); end
+  if (bm[2*8192+92] !== 8'hf0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 72"); end
+  if (bm[2*8192+93] !== 8'h0e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 73"); end
+  if (bm[2*8192+94] !== 8'ha8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 74"); end
+  if (bm[2*8192+95] !== 8'he5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 75"); end
+  if (bm[2*8192+96] !== 8'h53) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 76"); end
+  if (bm[2*8192+97] !== 8'h93) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 77"); end
+  if (bm[2*8192+98] !== 8'h24) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 78"); end
+  if (bm[2*8192+99] !== 8'h0c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 79"); end
+  if (bm[2*8192+100] !== 8'he0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 80"); end
+  if (bm[2*8192+101] !== 8'h90) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 81"); end
+  if (bm[2*8192+102] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 82"); end
+  if (bm[2*8192+103] !== 8'h7a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 83"); end
+  if (bm[2*8192+104] !== 8'h2a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 84"); end
+  if (bm[2*8192+105] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 85"); end
+  if (bm[2*8192+106] !== 8'h56) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 86"); end
+  if (bm[2*8192+107] !== 8'h38) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 87"); end
+  if (bm[2*8192+108] !== 8'hef) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 88"); end
+  if (bm[2*8192+109] !== 8'hb6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 89"); end
+  if (bm[2*8192+110] !== 8'h47) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 90"); end
+  if (bm[2*8192+111] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 91"); end
+  if (bm[2*8192+112] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 92"); end
+  if (bm[2*8192+113] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 93"); end
+  if (bm[2*8192+114] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 94"); end
+  if (bm[2*8192+115] !== 8'h30) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 95"); end
+  if (bm[2*8192+116] !== 8'hcf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 96"); end
+  if (bm[2*8192+117] !== 8'h6c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 97"); end
+  if (bm[2*8192+118] !== 8'hf7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 98"); end
+  if (bm[2*8192+119] !== 8'h10) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 99"); end
+  if (bm[2*8192+120] !== 8'h8e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 100"); end
+  if (bm[2*8192+121] !== 8'h68) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 101"); end
+  if (bm[2*8192+122] !== 8'hb3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 102"); end
+  if (bm[2*8192+123] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 103"); end
+  if (bm[2*8192+124] !== 8'h7c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 104"); end
+  if (bm[2*8192+125] !== 8'h61) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 105"); end
+  if (bm[2*8192+126] !== 8'hff) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 106"); end
+  if (bm[2*8192+127] !== 8'hfa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 107"); end
+  if (bm[2*8192+128] !== 8'hfb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 108"); end
+  if (bm[2*8192+129] !== 8'hcb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 109"); end
+  if (bm[2*8192+130] !== 8'he7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 110"); end
+  if (bm[2*8192+131] !== 8'hb6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 111"); end
+  if (bm[2*8192+132] !== 8'h8f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 112"); end
+  if (bm[2*8192+133] !== 8'h4f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 113"); end
+  if (bm[2*8192+134] !== 8'h35) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 114"); end
+  if (bm[2*8192+135] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 115"); end
+  if (bm[2*8192+136] !== 8'heb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 116"); end
+  if (bm[2*8192+137] !== 8'h42) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 117"); end
+  if (bm[2*8192+138] !== 8'hdb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 118"); end
+  if (bm[2*8192+139] !== 8'hac) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 119"); end
+  if (bm[2*8192+140] !== 8'hd7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 120"); end
+  if (bm[2*8192+141] !== 8'h94) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 121"); end
+  if (bm[2*8192+142] !== 8'h3b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 122"); end
+  if (bm[2*8192+143] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 123"); end
+  if (bm[2*8192+144] !== 8'h1e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 124"); end
+  if (bm[2*8192+145] !== 8'h67) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 125"); end
+  if (bm[2*8192+146] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 126"); end
+  if (bm[2*8192+147] !== 8'h74) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 127"); end
+  if (bm[2*8192+148] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 128"); end
+  if (bm[2*8192+149] !== 8'h05) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 129"); end
+  if (bm[2*8192+150] !== 8'h86) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 130"); end
+  if (bm[2*8192+151] !== 8'h27) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 131"); end
+  if (bm[2*8192+152] !== 8'hbf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 132"); end
+  if (bm[2*8192+153] !== 8'h65) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 133"); end
+  if (bm[2*8192+154] !== 8'h58) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 134"); end
+  if (bm[2*8192+155] !== 8'h8a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 135"); end
+  if (bm[2*8192+156] !== 8'hfa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 136"); end
+  if (bm[2*8192+157] !== 8'hc3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 137"); end
+  if (bm[2*8192+158] !== 8'h2b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 138"); end
+  if (bm[2*8192+159] !== 8'h2a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 139"); end
+  if (bm[2*8192+160] !== 8'hae) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 140"); end
+  if (bm[2*8192+161] !== 8'h60) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 141"); end
+  if (bm[2*8192+162] !== 8'h7d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 142"); end
+  if (bm[2*8192+163] !== 8'h6c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 143"); end
+  if (bm[2*8192+164] !== 8'h88) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 144"); end
+  if (bm[2*8192+165] !== 8'h7c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 145"); end
+  if (bm[2*8192+166] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 146"); end
+  if (bm[2*8192+167] !== 8'hec) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 147"); end
+  if (bm[2*8192+168] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 148"); end
+  if (bm[2*8192+169] !== 8'h61) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 149"); end
+  if (bm[2*8192+170] !== 8'h52) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 150"); end
+  if (bm[2*8192+171] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 151"); end
+  if (bm[2*8192+172] !== 8'h58) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 152"); end
+  if (bm[2*8192+173] !== 8'hc3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 153"); end
+  if (bm[2*8192+174] !== 8'h30) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 154"); end
+  if (bm[2*8192+175] !== 8'he8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 155"); end
+  if (bm[2*8192+176] !== 8'he2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 156"); end
+  if (bm[2*8192+177] !== 8'he2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 157"); end
+  if (bm[2*8192+178] !== 8'heb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 158"); end
+  if (bm[2*8192+179] !== 8'h26) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 159"); end
+  if (bm[2*8192+180] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 160"); end
+  if (bm[2*8192+181] !== 8'h08) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 161"); end
+  if (bm[2*8192+182] !== 8'h52) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 162"); end
+  if (bm[2*8192+183] !== 8'h06) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 163"); end
+  if (bm[2*8192+184] !== 8'hf1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 164"); end
+  if (bm[2*8192+185] !== 8'hb8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 165"); end
+  if (bm[2*8192+186] !== 8'hb4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 166"); end
+  if (bm[2*8192+187] !== 8'h16) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 167"); end
+  if (bm[2*8192+188] !== 8'hb3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 168"); end
+  if (bm[2*8192+189] !== 8'h5a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 169"); end
+  if (bm[2*8192+190] !== 8'h37) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 170"); end
+  if (bm[2*8192+191] !== 8'h1a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 171"); end
+  if (bm[2*8192+192] !== 8'hdd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 172"); end
+  if (bm[2*8192+193] !== 8'hb7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 173"); end
+  if (bm[2*8192+194] !== 8'hb0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 174"); end
+  if (bm[2*8192+195] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 175"); end
+  if (bm[2*8192+196] !== 8'hb5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 176"); end
+  if (bm[2*8192+197] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 177"); end
+  if (bm[2*8192+198] !== 8'hd3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 178"); end
+  if (bm[2*8192+199] !== 8'hae) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 179"); end
+  if (bm[2*8192+200] !== 8'h68) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 180"); end
+  if (bm[2*8192+201] !== 8'h84) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 181"); end
+  if (bm[2*8192+202] !== 8'hbd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 182"); end
+  if (bm[2*8192+203] !== 8'h3d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 183"); end
+  if (bm[2*8192+204] !== 8'hc0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 184"); end
+  if (bm[2*8192+205] !== 8'h86) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 185"); end
+  if (bm[2*8192+206] !== 8'hd2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 186"); end
+  if (bm[2*8192+207] !== 8'he8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 187"); end
+  if (bm[2*8192+208] !== 8'h47) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 188"); end
+  if (bm[2*8192+209] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 189"); end
+  if (bm[2*8192+210] !== 8'h2a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 190"); end
+  if (bm[2*8192+211] !== 8'h02) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 191"); end
+  if (bm[2*8192+212] !== 8'hb5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 192"); end
+  if (bm[2*8192+213] !== 8'h9e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 193"); end
+  if (bm[2*8192+214] !== 8'h90) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 194"); end
+  if (bm[2*8192+215] !== 8'hc1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 195"); end
+  if (bm[2*8192+216] !== 8'h22) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 196"); end
+  if (bm[2*8192+217] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 197"); end
+  if (bm[2*8192+218] !== 8'h59) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 198"); end
+  if (bm[2*8192+219] !== 8'heb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 199"); end
+  if (bm[2*8192+220] !== 8'h36) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 200"); end
+  if (bm[2*8192+221] !== 8'h6c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 201"); end
+  if (bm[2*8192+222] !== 8'h0c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 202"); end
+  if (bm[2*8192+223] !== 8'hec) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 203"); end
+  if (bm[2*8192+224] !== 8'h9e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 204"); end
+  if (bm[2*8192+225] !== 8'hd2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 205"); end
+  if (bm[2*8192+226] !== 8'hb5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 206"); end
+  if (bm[2*8192+227] !== 8'h2c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 207"); end
+  if (bm[2*8192+228] !== 8'ha4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 208"); end
+  if (bm[2*8192+229] !== 8'h44) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 209"); end
+  if (bm[2*8192+230] !== 8'ha5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 210"); end
+  if (bm[2*8192+231] !== 8'h54) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 211"); end
+  if (bm[2*8192+232] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 212"); end
+  if (bm[2*8192+233] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 213"); end
+  if (bm[2*8192+234] !== 8'hba) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 214"); end
+  if (bm[2*8192+235] !== 8'h67) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 215"); end
+  if (bm[2*8192+236] !== 8'haa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 216"); end
+  if (bm[2*8192+237] !== 8'hf7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 217"); end
+  if (bm[2*8192+238] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 218"); end
+  if (bm[2*8192+239] !== 8'h7e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 219"); end
+  if (bm[2*8192+240] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 220"); end
+  if (bm[2*8192+241] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 221"); end
+  if (bm[2*8192+242] !== 8'h80) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 222"); end
+  if (bm[2*8192+243] !== 8'h6e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 223"); end
+  if (bm[2*8192+244] !== 8'h48) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 224"); end
+  if (bm[2*8192+245] !== 8'h14) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 225"); end
+  if (bm[2*8192+246] !== 8'h8c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 226"); end
+  if (bm[2*8192+247] !== 8'h9a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 227"); end
+  if (bm[2*8192+248] !== 8'h2e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 228"); end
+  if (bm[2*8192+249] !== 8'h4b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 229"); end
+  if (bm[2*8192+250] !== 8'h39) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 230"); end
+  if (bm[2*8192+251] !== 8'h56) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 231"); end
+  if (bm[2*8192+252] !== 8'hb4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 232"); end
+  if (bm[2*8192+253] !== 8'h37) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 233"); end
+  if (bm[2*8192+254] !== 8'h3d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 234"); end
+  if (bm[2*8192+255] !== 8'h20) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 235"); end
+  if (bm[2*8192+256] !== 8'h36) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 236"); end
+  if (bm[2*8192+257] !== 8'h9d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 237"); end
+  if (bm[2*8192+258] !== 8'he4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 238"); end
+  if (bm[2*8192+259] !== 8'h9b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 239"); end
+  if (bm[2*8192+260] !== 8'hff) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 240"); end
+  if (bm[2*8192+261] !== 8'hc8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 241"); end
+  if (bm[2*8192+262] !== 8'h4a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 242"); end
+  if (bm[2*8192+263] !== 8'hc8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 243"); end
+  if (bm[2*8192+264] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 244"); end
+  if (bm[2*8192+265] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 245"); end
+  if (bm[2*8192+266] !== 8'h47) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 246"); end
+  if (bm[2*8192+267] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 247"); end
+  if (bm[2*8192+268] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 248"); end
+  if (bm[2*8192+269] !== 8'h61) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 249"); end
+  if (bm[2*8192+270] !== 8'he5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 250"); end
+  if (bm[2*8192+271] !== 8'h92) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 251"); end
+  if (bm[2*8192+272] !== 8'h35) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 252"); end
+  if (bm[2*8192+273] !== 8'h3e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 253"); end
+  if (bm[2*8192+274] !== 8'h95) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 254"); end
+  if (bm[2*8192+275] !== 8'hf0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 255"); end
+  if (bm[2*8192+276] !== 8'hed) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 256"); end
+  if (bm[2*8192+277] !== 8'h51) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 257"); end
+  if (bm[2*8192+278] !== 8'h98) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 258"); end
+  if (bm[2*8192+279] !== 8'h46) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 259"); end
+  if (bm[2*8192+280] !== 8'h53) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 260"); end
+  if (bm[2*8192+281] !== 8'h01) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 261"); end
+  if (bm[2*8192+282] !== 8'hd2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 262"); end
+  if (bm[2*8192+283] !== 8'hb0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 263"); end
+  if (bm[2*8192+284] !== 8'hd9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 264"); end
+  if (bm[2*8192+285] !== 8'h9b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 265"); end
+  if (bm[2*8192+286] !== 8'hd2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 266"); end
+  if (bm[2*8192+287] !== 8'h8a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 267"); end
+  if (bm[2*8192+288] !== 8'h11) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 268"); end
+  if (bm[2*8192+289] !== 8'h8d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 269"); end
+  if (bm[2*8192+290] !== 8'h60) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 270"); end
+  if (bm[2*8192+291] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 271"); end
+  if (bm[2*8192+292] !== 8'h8d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 272"); end
+  if (bm[2*8192+293] !== 8'hdc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 273"); end
+  if (bm[2*8192+294] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 274"); end
+  if (bm[2*8192+295] !== 8'h7d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 275"); end
+  if (bm[2*8192+296] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 276"); end
+  if (bm[2*8192+297] !== 8'hfa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 277"); end
+  if (bm[2*8192+298] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 278"); end
+  if (bm[2*8192+299] !== 8'h64) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 279"); end
+  if (bm[2*8192+300] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 280"); end
+  if (bm[2*8192+301] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 281"); end
+  if (bm[2*8192+302] !== 8'ha4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 282"); end
+  if (bm[2*8192+303] !== 8'h9d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 283"); end
+  if (bm[2*8192+304] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 284"); end
+  if (bm[2*8192+305] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 285"); end
+  if (bm[2*8192+306] !== 8'hec) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 286"); end
+  if (bm[2*8192+307] !== 8'h60) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 287"); end
+  if (bm[2*8192+308] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 288"); end
+  if (bm[2*8192+309] !== 8'h58) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 289"); end
+  if (bm[2*8192+310] !== 8'hb0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 290"); end
+  if (bm[2*8192+311] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 291"); end
+  if (bm[2*8192+312] !== 8'hd8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 292"); end
+  if (bm[2*8192+313] !== 8'h6f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 293"); end
+  if (bm[2*8192+314] !== 8'h18) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 294"); end
+  if (bm[2*8192+315] !== 8'hd3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 295"); end
+  if (bm[2*8192+316] !== 8'h64) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 296"); end
+  if (bm[2*8192+317] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 297"); end
+  if (bm[2*8192+318] !== 8'hba) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 298"); end
+  if (bm[2*8192+319] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 299"); end
+  if (bm[2*8192+320] !== 8'hbd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 300"); end
+  if (bm[2*8192+321] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 301"); end
+  if (bm[2*8192+322] !== 8'h17) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 302"); end
+  if (bm[2*8192+323] !== 8'h36) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 303"); end
+  if (bm[2*8192+324] !== 8'he8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 304"); end
+  if (bm[2*8192+325] !== 8'h40) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 305"); end
+  if (bm[2*8192+326] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 306"); end
+  if (bm[2*8192+327] !== 8'h22) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 307"); end
+  if (bm[2*8192+328] !== 8'hcc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 308"); end
+  if (bm[2*8192+329] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 309"); end
+  if (bm[2*8192+330] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 310"); end
+  if (bm[2*8192+331] !== 8'h5a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 311"); end
+  if (bm[2*8192+332] !== 8'h35) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 312"); end
+  if (bm[2*8192+333] !== 8'h3f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 313"); end
+  if (bm[2*8192+334] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 314"); end
+  if (bm[2*8192+335] !== 8'had) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 315"); end
+  if (bm[2*8192+336] !== 8'h29) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 316"); end
+  if (bm[2*8192+337] !== 8'hd4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 317"); end
+  if (bm[2*8192+338] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 318"); end
+  if (bm[2*8192+339] !== 8'ha0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c10 byte 319"); end
+  bm[0*8192+9] = 8'hc5;
+  bm[0*8192+10] = 8'hc9;
+  bm[0*8192+11] = 8'hb7;
+  bm[0*8192+12] = 8'h36;
+  bm[0*8192+13] = 8'h16;
+  bm[0*8192+14] = 8'h82;
+  bm[0*8192+15] = 8'h97;
+  bm[0*8192+16] = 8'h54;
+  bm[0*8192+17] = 8'hdb;
+  bm[0*8192+18] = 8'h51;
+  bm[0*8192+19] = 8'h13;
+  bm[0*8192+20] = 8'h33;
+  bm[0*8192+21] = 8'h85;
+  bm[0*8192+22] = 8'hd8;
+  bm[0*8192+23] = 8'hf2;
+  bm[0*8192+24] = 8'h1a;
+  bm[0*8192+25] = 8'h96;
+  bm[0*8192+26] = 8'h09;
+  bm[0*8192+27] = 8'h09;
+  bm[0*8192+28] = 8'h28;
+  bm[0*8192+29] = 8'h66;
+  bm[0*8192+30] = 8'h12;
+  bm[0*8192+31] = 8'h83;
+  bm[0*8192+32] = 8'hc1;
+  bm[0*8192+33] = 8'hc4;
+  bm[0*8192+34] = 8'hf4;
+  bm[0*8192+35] = 8'hb9;
+  bm[0*8192+36] = 8'h37;
+  bm[0*8192+37] = 8'h88;
+  bm[0*8192+38] = 8'hf7;
+  bm[0*8192+39] = 8'hb0;
+  bm[0*8192+40] = 8'he4;
+  bm[0*8192+41] = 8'h98;
+  bm[0*8192+42] = 8'h35;
+  bm[0*8192+43] = 8'h00;
+  bm[0*8192+44] = 8'h9a;
+  bm[0*8192+45] = 8'hdb;
+  bm[0*8192+46] = 8'hf6;
+  bm[0*8192+47] = 8'hab;
+  bm[0*8192+48] = 8'hf0;
+  bm[0*8192+49] = 8'h25;
+  bm[0*8192+50] = 8'hc4;
+  bm[0*8192+51] = 8'ha9;
+  bm[0*8192+52] = 8'h2f;
+  bm[0*8192+53] = 8'h30;
+  bm[0*8192+54] = 8'h62;
+  bm[0*8192+55] = 8'hab;
+  bm[0*8192+56] = 8'he1;
+  bm[0*8192+57] = 8'h1c;
+  bm[0*8192+58] = 8'hc5;
+  bm[0*8192+59] = 8'h4a;
+  bm[0*8192+60] = 8'h99;
+  bm[0*8192+61] = 8'ha6;
+  bm[0*8192+62] = 8'he4;
+  bm[0*8192+63] = 8'h52;
+  bm[0*8192+64] = 8'h3b;
+  bm[0*8192+65] = 8'hd6;
+  bm[0*8192+66] = 8'h1b;
+  bm[0*8192+67] = 8'hfb;
+  bm[0*8192+68] = 8'ha6;
+  bm[0*8192+69] = 8'h12;
+  bm[0*8192+70] = 8'hfd;
+  bm[0*8192+71] = 8'h0b;
+  bm[0*8192+72] = 8'he9;
+  bm[0*8192+73] = 8'h77;
+  bm[0*8192+74] = 8'h01;
+  bm[0*8192+75] = 8'hf2;
+  bm[0*8192+76] = 8'h4d;
+  bm[0*8192+77] = 8'h9b;
+  bm[0*8192+78] = 8'he5;
+  bm[0*8192+79] = 8'hc5;
+  bm[0*8192+80] = 8'h3c;
+  bm[0*8192+81] = 8'hc3;
+  bm[0*8192+82] = 8'h7a;
+  bm[0*8192+83] = 8'hf5;
+  bm[0*8192+84] = 8'hff;
+  bm[0*8192+85] = 8'h06;
+  bm[0*8192+86] = 8'ha3;
+  bm[0*8192+87] = 8'h29;
+  bm[0*8192+88] = 8'h99;
+  bm[0*8192+89] = 8'h8c;
+  bm[0*8192+90] = 8'h4a;
+  bm[0*8192+91] = 8'h75;
+  bm[0*8192+92] = 8'h2e;
+  bm[0*8192+93] = 8'ha5;
+  bm[0*8192+94] = 8'h0d;
+  bm[0*8192+95] = 8'h69;
+  bm[0*8192+96] = 8'hac;
+  bm[0*8192+97] = 8'h9f;
+  bm[0*8192+98] = 8'h94;
+  bm[0*8192+99] = 8'h42;
+  bm[0*8192+100] = 8'h9c;
+  bm[0*8192+101] = 8'hd3;
+  bm[0*8192+102] = 8'hcb;
+  bm[0*8192+103] = 8'h99;
+  bm[0*8192+104] = 8'h33;
+  bm[0*8192+105] = 8'hb0;
+  bm[0*8192+106] = 8'hc9;
+  bm[0*8192+107] = 8'h4d;
+  bm[0*8192+108] = 8'hce;
+  bm[0*8192+109] = 8'h8b;
+  bm[0*8192+110] = 8'h80;
+  bm[0*8192+111] = 8'hea;
+  bm[0*8192+112] = 8'h2a;
+  bm[0*8192+113] = 8'h68;
+  bm[0*8192+114] = 8'h49;
+  bm[0*8192+115] = 8'h85;
+  bm[0*8192+116] = 8'h13;
+  bm[0*8192+117] = 8'h0d;
+  bm[0*8192+118] = 8'hf7;
+  bm[0*8192+119] = 8'h08;
+  bm[0*8192+120] = 8'he0;
+  bm[0*8192+121] = 8'hc9;
+  bm[0*8192+122] = 8'h65;
+  bm[0*8192+123] = 8'h0a;
+  bm[0*8192+124] = 8'h0b;
+  bm[0*8192+125] = 8'h5f;
+  bm[0*8192+126] = 8'hcd;
+  bm[0*8192+127] = 8'hea;
+  bm[0*8192+128] = 8'h10;
+  bm[0*8192+129] = 8'h8a;
+  bm[0*8192+130] = 8'hb4;
+  bm[0*8192+131] = 8'h4e;
+  bm[0*8192+132] = 8'h27;
+  bm[0*8192+133] = 8'h49;
+  bm[0*8192+134] = 8'hbb;
+  bm[0*8192+135] = 8'h9a;
+  bm[0*8192+136] = 8'h69;
+  bm[0*8192+137] = 8'h02;
+  bm[0*8192+138] = 8'hec;
+  bm[0*8192+139] = 8'h20;
+  bm[0*8192+140] = 8'h43;
+  bm[0*8192+141] = 8'hb7;
+  bm[0*8192+142] = 8'h00;
+  bm[0*8192+143] = 8'h48;
+  bm[0*8192+144] = 8'h63;
+  bm[0*8192+145] = 8'h0c;
+  bm[0*8192+146] = 8'h42;
+  bm[0*8192+147] = 8'hfe;
+  bm[0*8192+148] = 8'h9b;
+  bm[0*8192+149] = 8'h61;
+  bm[0*8192+150] = 8'h8c;
+  bm[0*8192+151] = 8'h07;
+  bm[0*8192+152] = 8'h92;
+  bm[0*8192+153] = 8'h03;
+  bm[0*8192+154] = 8'haa;
+  bm[0*8192+155] = 8'h0d;
+  bm[0*8192+156] = 8'h26;
+  bm[0*8192+157] = 8'h79;
+  bm[0*8192+158] = 8'ha8;
+  bm[0*8192+159] = 8'hc6;
+  bm[0*8192+160] = 8'ha2;
+  bm[0*8192+161] = 8'h14;
+  bm[0*8192+162] = 8'h8c;
+  bm[0*8192+163] = 8'h4b;
+  bm[0*8192+164] = 8'hfd;
+  bm[0*8192+165] = 8'hfa;
+  bm[0*8192+166] = 8'hbe;
+  bm[0*8192+167] = 8'h26;
+  bm[0*8192+168] = 8'h18;
+  bm[0*8192+169] = 8'h37;
+  bm[0*8192+170] = 8'ha4;
+  bm[0*8192+171] = 8'hc2;
+  bm[0*8192+172] = 8'h6b;
+  bm[0*8192+173] = 8'hcd;
+  bm[0*8192+174] = 8'ha0;
+  bm[0*8192+175] = 8'h1a;
+  bm[0*8192+176] = 8'h6f;
+  bm[0*8192+177] = 8'h08;
+  bm[0*8192+178] = 8'h24;
+  bm[0*8192+179] = 8'h8e;
+  bm[0*8192+180] = 8'h2a;
+  bm[0*8192+181] = 8'h6f;
+  bm[0*8192+182] = 8'h4b;
+  bm[0*8192+183] = 8'hdd;
+  bm[0*8192+184] = 8'h87;
+  bm[0*8192+185] = 8'hbe;
+  bm[0*8192+186] = 8'h51;
+  bm[0*8192+187] = 8'ha3;
+  bm[0*8192+188] = 8'h48;
+  bm[0*8192+189] = 8'h9e;
+  bm[0*8192+190] = 8'h37;
+  bm[0*8192+191] = 8'h65;
+  bm[0*8192+192] = 8'h28;
+  bm[0*8192+193] = 8'h6f;
+  bm[0*8192+194] = 8'hf5;
+  bm[0*8192+195] = 8'h70;
+  bm[0*8192+196] = 8'h7d;
+  bm[0*8192+197] = 8'h3b;
+  bm[0*8192+198] = 8'h84;
+  bm[0*8192+199] = 8'hfc;
+  bm[0*8192+200] = 8'h10;
+  bm[0*8192+201] = 8'h77;
+  bm[0*8192+202] = 8'h29;
+  bm[0*8192+203] = 8'h0c;
+  bm[0*8192+204] = 8'h97;
+  bm[0*8192+205] = 8'h43;
+  bm[0*8192+206] = 8'h18;
+  bm[0*8192+207] = 8'hcd;
+  bm[0*8192+208] = 8'h24;
+  bm[0*8192+209] = 8'ha3;
+  bm[0*8192+210] = 8'he7;
+  bm[0*8192+211] = 8'h07;
+  bm[0*8192+212] = 8'hb1;
+  bm[0*8192+213] = 8'hc1;
+  bm[0*8192+214] = 8'h59;
+  bm[0*8192+215] = 8'h0d;
+  bm[0*8192+216] = 8'haf;
+  bm[0*8192+217] = 8'h5d;
+  bm[0*8192+218] = 8'h5e;
+  bm[0*8192+219] = 8'hd4;
+  bm[0*8192+220] = 8'h6a;
+  bm[0*8192+221] = 8'hd3;
+  bm[0*8192+222] = 8'h36;
+  bm[0*8192+223] = 8'h32;
+  bm[0*8192+224] = 8'hf0;
+  bm[0*8192+225] = 8'hb1;
+  bm[0*8192+226] = 8'hd8;
+  bm[0*8192+227] = 8'h5e;
+  bm[0*8192+228] = 8'h54;
+  bm[0*8192+229] = 8'h17;
+  bm[0*8192+230] = 8'hd9;
+  bm[0*8192+231] = 8'hc1;
+  bm[0*8192+232] = 8'h4a;
+  bm[0*8192+233] = 8'h55;
+  bm[0*8192+234] = 8'h9e;
+  bm[0*8192+235] = 8'hba;
+  bm[0*8192+236] = 8'h4f;
+  bm[0*8192+237] = 8'h35;
+  bm[0*8192+238] = 8'h52;
+  bm[0*8192+239] = 8'h80;
+  bm[0*8192+240] = 8'hf9;
+  bm[0*8192+241] = 8'h7e;
+  bm[0*8192+242] = 8'ha0;
+  bm[0*8192+243] = 8'h49;
+  bm[0*8192+244] = 8'hcb;
+  bm[0*8192+245] = 8'h78;
+  bm[0*8192+246] = 8'hf1;
+  bm[0*8192+247] = 8'h71;
+  bm[0*8192+248] = 8'h01;
+  bm[0*8192+249] = 8'hba;
+  bm[0*8192+250] = 8'he7;
+  bm[0*8192+251] = 8'hd5;
+  bm[0*8192+252] = 8'h7d;
+  bm[0*8192+253] = 8'hc9;
+  bm[0*8192+254] = 8'hca;
+  bm[0*8192+255] = 8'h56;
+  bm[0*8192+256] = 8'h0e;
+  bm[0*8192+257] = 8'h0e;
+  bm[0*8192+258] = 8'h15;
+  bm[0*8192+259] = 8'h68;
+  bm[0*8192+260] = 8'h6a;
+  bm[0*8192+261] = 8'hd8;
+  bm[0*8192+262] = 8'h45;
+  bm[0*8192+263] = 8'h06;
+  bm[0*8192+264] = 8'hd1;
+  bm[0*8192+265] = 8'h41;
+  bm[0*8192+266] = 8'h74;
+  bm[0*8192+267] = 8'he7;
+  bm[0*8192+268] = 8'h3f;
+  bm[0*8192+269] = 8'h13;
+  bm[0*8192+270] = 8'hc3;
+  bm[0*8192+271] = 8'h96;
+  bm[0*8192+272] = 8'h26;
+  bm[0*8192+273] = 8'hcb;
+  bm[0*8192+274] = 8'h21;
+  bm[0*8192+275] = 8'h9a;
+  bm[0*8192+276] = 8'hf0;
+  bm[0*8192+277] = 8'h4f;
+  bm[0*8192+278] = 8'h35;
+  bm[0*8192+279] = 8'h1c;
+  bm[0*8192+280] = 8'had;
+  bm[0*8192+281] = 8'hcf;
+  bm[0*8192+282] = 8'h78;
+  bm[0*8192+283] = 8'hbc;
+  bm[0*8192+284] = 8'h21;
+  bm[0*8192+285] = 8'h53;
+  bm[0*8192+286] = 8'h67;
+  bm[0*8192+287] = 8'hdd;
+  bm[0*8192+288] = 8'hee;
+  bm[0*8192+289] = 8'h5b;
+  bm[0*8192+290] = 8'h44;
+  bm[0*8192+291] = 8'h60;
+  bm[0*8192+292] = 8'h6e;
+  bm[0*8192+293] = 8'hc8;
+  bm[0*8192+294] = 8'haa;
+  bm[0*8192+295] = 8'hca;
+  bm[0*8192+296] = 8'hf3;
+  bm[0*8192+297] = 8'hac;
+  bm[0*8192+298] = 8'h10;
+  bm[0*8192+299] = 8'h98;
+  bm[0*8192+300] = 8'h7b;
+  bm[0*8192+301] = 8'h06;
+  bm[0*8192+302] = 8'hf6;
+  bm[0*8192+303] = 8'h5d;
+  bm[0*8192+304] = 8'h8b;
+  bm[0*8192+305] = 8'h00;
+  bm[0*8192+306] = 8'h67;
+  bm[0*8192+307] = 8'h8e;
+  bm[0*8192+308] = 8'hc5;
+  bm[0*8192+309] = 8'h39;
+  bm[0*8192+310] = 8'hee;
+  bm[0*8192+311] = 8'h1f;
+  bm[0*8192+312] = 8'ha3;
+  bm[0*8192+313] = 8'h3c;
+  bm[0*8192+314] = 8'h49;
+  bm[0*8192+315] = 8'h93;
+  bm[0*8192+316] = 8'hff;
+  bm[0*8192+317] = 8'h76;
+  bm[0*8192+318] = 8'h2f;
+  bm[0*8192+319] = 8'h2a;
+  bm[0*8192+320] = 8'h94;
+  bm[0*8192+321] = 8'h80;
+  bm[0*8192+322] = 8'h7a;
+  bm[0*8192+323] = 8'hc7;
+  bm[0*8192+324] = 8'h8f;
+  bm[0*8192+325] = 8'h42;
+  bm[0*8192+326] = 8'h90;
+  bm[0*8192+327] = 8'h78;
+  bm[0*8192+328] = 8'heb;
+  go(11,5,0,9,0,0,0,10,1); $display("kupk_dc10: %0d clk", cyc-c0); n=n+1;
+  expv = 8192'h00000bf300000b7e000000340000085100000a1f00000be300000078000000890000026600000b2a00000ca600000aae000003130000072000000cf10000073a00000a08000002ec000005b0000001c4000004c300000af90000054200000baf000000d70000092100000313000008a900000a2c0000096c000000370000012800000c21000005f8000005f100000a2c0000099000000b8800000cbd0000039b000002b40000033d0000007c000006ec00000a50000007d60000057c000009ff0000033d0000080300000374000005e8000000510000012e000006d5000007d300000111000002d800000ba50000091100000a3900000c8f000004ca00000c1d0000001000000a260000013200000294000003bc0000069700000c2a000004e00000042a00000ad200000cc600000882000004550000022f000001800000038b0000044800000643000007100000064c0000028a00000b23000002c500000932000004ca0000060500000c3b00000462000009d4000009f50000066a00000bd3000001de000002a7000006b500000bac0000009c0000086b000005bd00000333000006b500000c1400000aec0000031c000005a3000008340000043b00000bc2000003af0000072d000001690000083700000b3d0000025000000c510000084e000001d4000001b400000c440000088900000a6d000008e400000225000000b300000138000007dc00000c2a000009b7000003d600000273000003c2000009040000088c00000b9b000004ea000005690000002e000003a8000006220000013b000007e900000ca6000001aa00000142000003a800000024000005e400000a2900000bfd0000007c000007cc000008e0000003b5000007fa00000bf3000001c1000000da000008b000000adc000009e500000085000007ac000008070000001a00000c8c000002a7000002db0000042e00000548000008b600000889000001c400000a7a000002cb000007e0000000a6000007cf00000266000002ef000000d70000078b0000066d00000a150000036b000008620000096f0000044b00000848000007c60000087500000273000009bd00000c7500000bf0000002a10000028000000ba80000058900000b54000006840000061500000855000009bd0000037b0000087800000c000000099d0000074000000434000007710000055c0000043100000a02000005de0000015900000aff00000270000009ad000007f00000007800000c37000008ed0000059000000bb50000000000000ae20000073a0000023c00000c92000001aa0000064600000659000009ff0000004e0000027d000007cc00000208000001d4000007c9000006d500000c55000004fa00000437000009ff000004270000058d000003b900000b670000011e00000b1d00000653000005c1;
+  for (i=0;i<256;i=i+1) if (pm.mem[5*256+i] !== expv[32*i +: 32]) begin fails=fails+1; if (fails<6) $display("FAIL kupk_dc10 coeff %0d got %h exp %h", i, pm.mem[5*256+i], expv[32*i +: 32]); end
+  expv = 8192'h0000012400000459000004cc00000ad100000013000005bb000009cc00000be60000027c000000250000079d000002f100000cb1000006b00000024a000000340000046100000148000002df00000441000008470000073d000005d2000006a00000023c00000cc3000008a5000002f5000000f100000310000005350000068f00000a1e000007ea00000a1c0000040e00000b5d00000317000009a200000ae1000002180000034c00000b7a00000ad9000000f90000085200000630000008bd00000156000002110000002500000bcf0000027b0000027e000001990000046f00000c24000002c4000008c00000064a0000053b000007c70000060c000009da0000051400000c150000068500000b27000000bb0000058100000cc20000066d00000816000003d6000004b00000083700000cb1000004e1000003b700000c6d00000c94000006ae000006d9000001ab0000059300000645000000d500000a3e0000024a00000178000009e9000003dd00000c7b0000012a000001d200000cfb0000034c000007de000008300000078b0000086700000b1f000003a2000008ee0000045c000008a000000c6600000c1300000cba0000027a000004f700000131000005c800000b2600000ba2000005020000029b0000003f00000b520000083f00000a7c00000b5a00000266000002e0000000ce0000049200000a47000004980000051400000825000004f100000286000001f400000c7700000abf00000ad3000008a500000a53000009a50000059f0000043c0000044b0000035f0000016e00000b6d0000041d0000056200000be200000c6700000525000006220000051b00000a1e000003db00000ba100000123000008a7000006e80000030a000004250000062c0000044d00000b3b0000057100000017000000d00000063c000009de0000040a0000029c000004d500000ba60000025800000c5200000ad80000036d000004090000056e000007ee00000acc00000494000001df0000062f00000c550000064b000003380000084400000886000008b6000009240000090a00000ce7000000aa000003a200000a290000073400000bd50000058d0000089400000624000005660000014e000001f1000005f50000053d00000bba0000019100000cc200000b8b0000004800000cc900000979000007810000026e00000a3b000005a40000064800000bd000000815000005a7000005f200000ae300000b8500000214000006020000098a0000070f00000456000004dd000004960000047e00000a5f000008ba00000a140000038500000b44000006300000084b00000166000004240000038b000008ff000006c900000af800000cca000001210000002d00000a24000001e400000593000008c9000000420000090a0000068100000d0000000000;
+  for (i=0;i<256;i=i+1) pm.mem[3*256+i] = expv[32*i +: 32];
+  go(10,3,2,20,0,0,0,11,1); $display("kpk_c11: %0d clk", cyc-c0); n=n+1;
+  if (bm[2*8192+20] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 0"); end
+  if (bm[2*8192+21] !== 8'hf8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 1"); end
+  if (bm[2*8192+22] !== 8'h3f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 2"); end
+  if (bm[2*8192+23] !== 8'h00) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 3"); end
+  if (bm[2*8192+24] !== 8'h21) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 4"); end
+  if (bm[2*8192+25] !== 8'h9b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 5"); end
+  if (bm[2*8192+26] !== 8'h02) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 6"); end
+  if (bm[2*8192+27] !== 8'hb4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 7"); end
+  if (bm[2*8192+28] !== 8'hba) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 8"); end
+  if (bm[2*8192+29] !== 8'h4d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 9"); end
+  if (bm[2*8192+30] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 10"); end
+  if (bm[2*8192+31] !== 8'h3d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 11"); end
+  if (bm[2*8192+32] !== 8'he6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 12"); end
+  if (bm[2*8192+33] !== 8'h80) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 13"); end
+  if (bm[2*8192+34] !== 8'h2c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 14"); end
+  if (bm[2*8192+35] !== 8'hbc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 15"); end
+  if (bm[2*8192+36] !== 8'hff) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 16"); end
+  if (bm[2*8192+37] !== 8'heb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 17"); end
+  if (bm[2*8192+38] !== 8'h16) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 18"); end
+  if (bm[2*8192+39] !== 8'h26) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 19"); end
+  if (bm[2*8192+40] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 20"); end
+  if (bm[2*8192+41] !== 8'h45) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 21"); end
+  if (bm[2*8192+42] !== 8'h8c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 22"); end
+  if (bm[2*8192+43] !== 8'he2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 23"); end
+  if (bm[2*8192+44] !== 8'h86) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 24"); end
+  if (bm[2*8192+45] !== 8'h46) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 25"); end
+  if (bm[2*8192+46] !== 8'h9d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 26"); end
+  if (bm[2*8192+47] !== 8'he7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 27"); end
+  if (bm[2*8192+48] !== 8'h6e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 28"); end
+  if (bm[2*8192+49] !== 8'h15) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 29"); end
+  if (bm[2*8192+50] !== 8'hcd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 30"); end
+  if (bm[2*8192+51] !== 8'hd8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 31"); end
+  if (bm[2*8192+52] !== 8'hab) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 32"); end
+  if (bm[2*8192+53] !== 8'h61) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 33"); end
+  if (bm[2*8192+54] !== 8'h1e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 34"); end
+  if (bm[2*8192+55] !== 8'h96) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 35"); end
+  if (bm[2*8192+56] !== 8'hb4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 36"); end
+  if (bm[2*8192+57] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 37"); end
+  if (bm[2*8192+58] !== 8'hb5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 38"); end
+  if (bm[2*8192+59] !== 8'h2a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 39"); end
+  if (bm[2*8192+60] !== 8'h2c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 40"); end
+  if (bm[2*8192+61] !== 8'h7a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 41"); end
+  if (bm[2*8192+62] !== 8'h57) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 42"); end
+  if (bm[2*8192+63] !== 8'h76) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 43"); end
+  if (bm[2*8192+64] !== 8'h47) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 44"); end
+  if (bm[2*8192+65] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 45"); end
+  if (bm[2*8192+66] !== 8'hf8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 46"); end
+  if (bm[2*8192+67] !== 8'hac) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 47"); end
+  if (bm[2*8192+68] !== 8'h51) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 48"); end
+  if (bm[2*8192+69] !== 8'ha7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 49"); end
+  if (bm[2*8192+70] !== 8'hb7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 50"); end
+  if (bm[2*8192+71] !== 8'h7c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 51"); end
+  if (bm[2*8192+72] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 52"); end
+  if (bm[2*8192+73] !== 8'hbd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 53"); end
+  if (bm[2*8192+74] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 54"); end
+  if (bm[2*8192+75] !== 8'h78) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 55"); end
+  if (bm[2*8192+76] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 56"); end
+  if (bm[2*8192+77] !== 8'hf2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 57"); end
+  if (bm[2*8192+78] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 58"); end
+  if (bm[2*8192+79] !== 8'h3c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 59"); end
+  if (bm[2*8192+80] !== 8'h49) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 60"); end
+  if (bm[2*8192+81] !== 8'h5d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 61"); end
+  if (bm[2*8192+82] !== 8'hef) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 62"); end
+  if (bm[2*8192+83] !== 8'hb3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 63"); end
+  if (bm[2*8192+84] !== 8'h40) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 64"); end
+  if (bm[2*8192+85] !== 8'he3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 65"); end
+  if (bm[2*8192+86] !== 8'hd9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 66"); end
+  if (bm[2*8192+87] !== 8'hbf) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 67"); end
+  if (bm[2*8192+88] !== 8'hc7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 68"); end
+  if (bm[2*8192+89] !== 8'hcd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 69"); end
+  if (bm[2*8192+90] !== 8'h73) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 70"); end
+  if (bm[2*8192+91] !== 8'ha6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 71"); end
+  if (bm[2*8192+92] !== 8'h3a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 72"); end
+  if (bm[2*8192+93] !== 8'h99) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 73"); end
+  if (bm[2*8192+94] !== 8'h34) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 74"); end
+  if (bm[2*8192+95] !== 8'h43) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 75"); end
+  if (bm[2*8192+96] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 76"); end
+  if (bm[2*8192+97] !== 8'hc7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 77"); end
+  if (bm[2*8192+98] !== 8'h3b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 78"); end
+  if (bm[2*8192+99] !== 8'haa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 79"); end
+  if (bm[2*8192+100] !== 8'hda) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 80"); end
+  if (bm[2*8192+101] !== 8'h8e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 81"); end
+  if (bm[2*8192+102] !== 8'hee) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 82"); end
+  if (bm[2*8192+103] !== 8'h46) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 83"); end
+  if (bm[2*8192+104] !== 8'h20) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 84"); end
+  if (bm[2*8192+105] !== 8'hf3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 85"); end
+  if (bm[2*8192+106] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 86"); end
+  if (bm[2*8192+107] !== 8'h0d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 87"); end
+  if (bm[2*8192+108] !== 8'hf0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 88"); end
+  if (bm[2*8192+109] !== 8'h87) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 89"); end
+  if (bm[2*8192+110] !== 8'h2c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 90"); end
+  if (bm[2*8192+111] !== 8'h68) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 91"); end
+  if (bm[2*8192+112] !== 8'hb9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 92"); end
+  if (bm[2*8192+113] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 93"); end
+  if (bm[2*8192+114] !== 8'h53) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 94"); end
+  if (bm[2*8192+115] !== 8'h8b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 95"); end
+  if (bm[2*8192+116] !== 8'hee) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 96"); end
+  if (bm[2*8192+117] !== 8'he7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 97"); end
+  if (bm[2*8192+118] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 98"); end
+  if (bm[2*8192+119] !== 8'h96) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 99"); end
+  if (bm[2*8192+120] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 100"); end
+  if (bm[2*8192+121] !== 8'hde) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 101"); end
+  if (bm[2*8192+122] !== 8'h49) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 102"); end
+  if (bm[2*8192+123] !== 8'ha2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 103"); end
+  if (bm[2*8192+124] !== 8'h45) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 104"); end
+  if (bm[2*8192+125] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 105"); end
+  if (bm[2*8192+126] !== 8'h70) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 106"); end
+  if (bm[2*8192+127] !== 8'h5e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 107"); end
+  if (bm[2*8192+128] !== 8'h8d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 108"); end
+  if (bm[2*8192+129] !== 8'h4f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 109"); end
+  if (bm[2*8192+130] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 110"); end
+  if (bm[2*8192+131] !== 8'h62) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 111"); end
+  if (bm[2*8192+132] !== 8'h35) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 112"); end
+  if (bm[2*8192+133] !== 8'he5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 113"); end
+  if (bm[2*8192+134] !== 8'he3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 114"); end
+  if (bm[2*8192+135] !== 8'hb2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 115"); end
+  if (bm[2*8192+136] !== 8'hf2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 116"); end
+  if (bm[2*8192+137] !== 8'h7c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 117"); end
+  if (bm[2*8192+138] !== 8'h6d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 118"); end
+  if (bm[2*8192+139] !== 8'h86) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 119"); end
+  if (bm[2*8192+140] !== 8'h4f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 120"); end
+  if (bm[2*8192+141] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 121"); end
+  if (bm[2*8192+142] !== 8'hb6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 122"); end
+  if (bm[2*8192+143] !== 8'h1e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 123"); end
+  if (bm[2*8192+144] !== 8'h20) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 124"); end
+  if (bm[2*8192+145] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 125"); end
+  if (bm[2*8192+146] !== 8'h90) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 126"); end
+  if (bm[2*8192+147] !== 8'hb5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 127"); end
+  if (bm[2*8192+148] !== 8'h74) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 128"); end
+  if (bm[2*8192+149] !== 8'h97) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 129"); end
+  if (bm[2*8192+150] !== 8'h8a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 130"); end
+  if (bm[2*8192+151] !== 8'h79) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 131"); end
+  if (bm[2*8192+152] !== 8'h8d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 132"); end
+  if (bm[2*8192+153] !== 8'hfa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 133"); end
+  if (bm[2*8192+154] !== 8'h0e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 134"); end
+  if (bm[2*8192+155] !== 8'h10) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 135"); end
+  if (bm[2*8192+156] !== 8'ha7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 136"); end
+  if (bm[2*8192+157] !== 8'h3a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 137"); end
+  if (bm[2*8192+158] !== 8'h8b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 138"); end
+  if (bm[2*8192+159] !== 8'h93) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 139"); end
+  if (bm[2*8192+160] !== 8'h7f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 140"); end
+  if (bm[2*8192+161] !== 8'h29) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 141"); end
+  if (bm[2*8192+162] !== 8'hc7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 142"); end
+  if (bm[2*8192+163] !== 8'h24) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 143"); end
+  if (bm[2*8192+164] !== 8'h33) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 144"); end
+  if (bm[2*8192+165] !== 8'h9e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 145"); end
+  if (bm[2*8192+166] !== 8'hca) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 146"); end
+  if (bm[2*8192+167] !== 8'h42) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 147"); end
+  if (bm[2*8192+168] !== 8'hff) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 148"); end
+  if (bm[2*8192+169] !== 8'h74) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 149"); end
+  if (bm[2*8192+170] !== 8'ha8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 150"); end
+  if (bm[2*8192+171] !== 8'h21) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 151"); end
+  if (bm[2*8192+172] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 152"); end
+  if (bm[2*8192+173] !== 8'he0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 153"); end
+  if (bm[2*8192+174] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 154"); end
+  if (bm[2*8192+175] !== 8'h98) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 155"); end
+  if (bm[2*8192+176] !== 8'h10) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 156"); end
+  if (bm[2*8192+177] !== 8'ha9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 157"); end
+  if (bm[2*8192+178] !== 8'h36) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 158"); end
+  if (bm[2*8192+179] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 159"); end
+  if (bm[2*8192+180] !== 8'hb7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 160"); end
+  if (bm[2*8192+181] !== 8'hf7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 161"); end
+  if (bm[2*8192+182] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 162"); end
+  if (bm[2*8192+183] !== 8'h39) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 163"); end
+  if (bm[2*8192+184] !== 8'haa) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 164"); end
+  if (bm[2*8192+185] !== 8'ha9) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 165"); end
+  if (bm[2*8192+186] !== 8'he6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 166"); end
+  if (bm[2*8192+187] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 167"); end
+  if (bm[2*8192+188] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 168"); end
+  if (bm[2*8192+189] !== 8'h69) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 169"); end
+  if (bm[2*8192+190] !== 8'hd2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 170"); end
+  if (bm[2*8192+191] !== 8'h18) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 171"); end
+  if (bm[2*8192+192] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 172"); end
+  if (bm[2*8192+193] !== 8'h0d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 173"); end
+  if (bm[2*8192+194] !== 8'h14) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 174"); end
+  if (bm[2*8192+195] !== 8'h64) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 175"); end
+  if (bm[2*8192+196] !== 8'hd3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 176"); end
+  if (bm[2*8192+197] !== 8'h9a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 177"); end
+  if (bm[2*8192+198] !== 8'h32) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 178"); end
+  if (bm[2*8192+199] !== 8'hb4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 179"); end
+  if (bm[2*8192+200] !== 8'hfe) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 180"); end
+  if (bm[2*8192+201] !== 8'h50) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 181"); end
+  if (bm[2*8192+202] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 182"); end
+  if (bm[2*8192+203] !== 8'hbd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 183"); end
+  if (bm[2*8192+204] !== 8'hf0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 184"); end
+  if (bm[2*8192+205] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 185"); end
+  if (bm[2*8192+206] !== 8'hce) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 186"); end
+  if (bm[2*8192+207] !== 8'h13) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 187"); end
+  if (bm[2*8192+208] !== 8'hbd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 188"); end
+  if (bm[2*8192+209] !== 8'hf7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 189"); end
+  if (bm[2*8192+210] !== 8'h09) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 190"); end
+  if (bm[2*8192+211] !== 8'h34) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 191"); end
+  if (bm[2*8192+212] !== 8'h53) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 192"); end
+  if (bm[2*8192+213] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 193"); end
+  if (bm[2*8192+214] !== 8'h94) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 194"); end
+  if (bm[2*8192+215] !== 8'h73) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 195"); end
+  if (bm[2*8192+216] !== 8'hdb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 196"); end
+  if (bm[2*8192+217] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 197"); end
+  if (bm[2*8192+218] !== 8'hbc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 198"); end
+  if (bm[2*8192+219] !== 8'h70) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 199"); end
+  if (bm[2*8192+220] !== 8'h98) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 200"); end
+  if (bm[2*8192+221] !== 8'h61) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 201"); end
+  if (bm[2*8192+222] !== 8'ha8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 202"); end
+  if (bm[2*8192+223] !== 8'hef) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 203"); end
+  if (bm[2*8192+224] !== 8'hf6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 204"); end
+  if (bm[2*8192+225] !== 8'hd0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 205"); end
+  if (bm[2*8192+226] !== 8'h3b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 206"); end
+  if (bm[2*8192+227] !== 8'hf5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 207"); end
+  if (bm[2*8192+228] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 208"); end
+  if (bm[2*8192+229] !== 8'h7e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 209"); end
+  if (bm[2*8192+230] !== 8'he5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 210"); end
+  if (bm[2*8192+231] !== 8'hd1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 211"); end
+  if (bm[2*8192+232] !== 8'hb5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 212"); end
+  if (bm[2*8192+233] !== 8'h57) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 213"); end
+  if (bm[2*8192+234] !== 8'h4a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 214"); end
+  if (bm[2*8192+235] !== 8'hca) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 215"); end
+  if (bm[2*8192+236] !== 8'h84) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 216"); end
+  if (bm[2*8192+237] !== 8'h5e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 217"); end
+  if (bm[2*8192+238] !== 8'hf3) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 218"); end
+  if (bm[2*8192+239] !== 8'h40) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 219"); end
+  if (bm[2*8192+240] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 220"); end
+  if (bm[2*8192+241] !== 8'hff) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 221"); end
+  if (bm[2*8192+242] !== 8'hc8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 222"); end
+  if (bm[2*8192+243] !== 8'h2d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 223"); end
+  if (bm[2*8192+244] !== 8'h5c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 224"); end
+  if (bm[2*8192+245] !== 8'h0f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 225"); end
+  if (bm[2*8192+246] !== 8'ha6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 226"); end
+  if (bm[2*8192+247] !== 8'h0c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 227"); end
+  if (bm[2*8192+248] !== 8'h9f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 228"); end
+  if (bm[2*8192+249] !== 8'h23) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 229"); end
+  if (bm[2*8192+250] !== 8'h2d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 230"); end
+  if (bm[2*8192+251] !== 8'h4d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 231"); end
+  if (bm[2*8192+252] !== 8'h1e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 232"); end
+  if (bm[2*8192+253] !== 8'hc4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 233"); end
+  if (bm[2*8192+254] !== 8'hf6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 234"); end
+  if (bm[2*8192+255] !== 8'hdc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 235"); end
+  if (bm[2*8192+256] !== 8'h76) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 236"); end
+  if (bm[2*8192+257] !== 8'h10) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 237"); end
+  if (bm[2*8192+258] !== 8'h1b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 238"); end
+  if (bm[2*8192+259] !== 8'h72) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 239"); end
+  if (bm[2*8192+260] !== 8'hb0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 240"); end
+  if (bm[2*8192+261] !== 8'hf7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 241"); end
+  if (bm[2*8192+262] !== 8'ha5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 242"); end
+  if (bm[2*8192+263] !== 8'h4f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 243"); end
+  if (bm[2*8192+264] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 244"); end
+  if (bm[2*8192+265] !== 8'hc0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 245"); end
+  if (bm[2*8192+266] !== 8'h9e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 246"); end
+  if (bm[2*8192+267] !== 8'hef) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 247"); end
+  if (bm[2*8192+268] !== 8'h50) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 248"); end
+  if (bm[2*8192+269] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 249"); end
+  if (bm[2*8192+270] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 250"); end
+  if (bm[2*8192+271] !== 8'h29) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 251"); end
+  if (bm[2*8192+272] !== 8'h9f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 252"); end
+  if (bm[2*8192+273] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 253"); end
+  if (bm[2*8192+274] !== 8'hcb) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 254"); end
+  if (bm[2*8192+275] !== 8'hfe) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 255"); end
+  if (bm[2*8192+276] !== 8'hd8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 256"); end
+  if (bm[2*8192+277] !== 8'he6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 257"); end
+  if (bm[2*8192+278] !== 8'hc0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 258"); end
+  if (bm[2*8192+279] !== 8'hed) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 259"); end
+  if (bm[2*8192+280] !== 8'h01) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 260"); end
+  if (bm[2*8192+281] !== 8'hbe) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 261"); end
+  if (bm[2*8192+282] !== 8'h1d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 262"); end
+  if (bm[2*8192+283] !== 8'h64) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 263"); end
+  if (bm[2*8192+284] !== 8'h10) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 264"); end
+  if (bm[2*8192+285] !== 8'hc6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 265"); end
+  if (bm[2*8192+286] !== 8'h5d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 266"); end
+  if (bm[2*8192+287] !== 8'h32) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 267"); end
+  if (bm[2*8192+288] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 268"); end
+  if (bm[2*8192+289] !== 8'he6) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 269"); end
+  if (bm[2*8192+290] !== 8'h3d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 270"); end
+  if (bm[2*8192+291] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 271"); end
+  if (bm[2*8192+292] !== 8'hd2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 272"); end
+  if (bm[2*8192+293] !== 8'h06) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 273"); end
+  if (bm[2*8192+294] !== 8'hef) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 274"); end
+  if (bm[2*8192+295] !== 8'hba) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 275"); end
+  if (bm[2*8192+296] !== 8'he2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 276"); end
+  if (bm[2*8192+297] !== 8'h07) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 277"); end
+  if (bm[2*8192+298] !== 8'h62) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 278"); end
+  if (bm[2*8192+299] !== 8'h0e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 279"); end
+  if (bm[2*8192+300] !== 8'h43) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 280"); end
+  if (bm[2*8192+301] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 281"); end
+  if (bm[2*8192+302] !== 8'h0b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 282"); end
+  if (bm[2*8192+303] !== 8'h14) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 283"); end
+  if (bm[2*8192+304] !== 8'h45) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 284"); end
+  if (bm[2*8192+305] !== 8'h1a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 285"); end
+  if (bm[2*8192+306] !== 8'h60) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 286"); end
+  if (bm[2*8192+307] !== 8'h75) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 287"); end
+  if (bm[2*8192+308] !== 8'h9e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 288"); end
+  if (bm[2*8192+309] !== 8'h47) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 289"); end
+  if (bm[2*8192+310] !== 8'h33) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 290"); end
+  if (bm[2*8192+311] !== 8'hc1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 291"); end
+  if (bm[2*8192+312] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 292"); end
+  if (bm[2*8192+313] !== 8'h87) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 293"); end
+  if (bm[2*8192+314] !== 8'h1f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 294"); end
+  if (bm[2*8192+315] !== 8'h48) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 295"); end
+  if (bm[2*8192+316] !== 8'h29) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 296"); end
+  if (bm[2*8192+317] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 297"); end
+  if (bm[2*8192+318] !== 8'h6e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 298"); end
+  if (bm[2*8192+319] !== 8'hef) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 299"); end
+  if (bm[2*8192+320] !== 8'h79) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 300"); end
+  if (bm[2*8192+321] !== 8'hfc) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 301"); end
+  if (bm[2*8192+322] !== 8'hfd) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 302"); end
+  if (bm[2*8192+323] !== 8'h27) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 303"); end
+  if (bm[2*8192+324] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 304"); end
+  if (bm[2*8192+325] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 305"); end
+  if (bm[2*8192+326] !== 8'h33) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 306"); end
+  if (bm[2*8192+327] !== 8'hc7) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 307"); end
+  if (bm[2*8192+328] !== 8'h09) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 308"); end
+  if (bm[2*8192+329] !== 8'ha4) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 309"); end
+  if (bm[2*8192+330] !== 8'h99) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 310"); end
+  if (bm[2*8192+331] !== 8'h78) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 311"); end
+  if (bm[2*8192+332] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 312"); end
+  if (bm[2*8192+333] !== 8'h21) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 313"); end
+  if (bm[2*8192+334] !== 8'h9d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 314"); end
+  if (bm[2*8192+335] !== 8'ha8) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 315"); end
+  if (bm[2*8192+336] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 316"); end
+  if (bm[2*8192+337] !== 8'h1f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 317"); end
+  if (bm[2*8192+338] !== 8'h2c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 318"); end
+  if (bm[2*8192+339] !== 8'h13) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 319"); end
+  if (bm[2*8192+340] !== 8'hac) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 320"); end
+  if (bm[2*8192+341] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 321"); end
+  if (bm[2*8192+342] !== 8'h1d) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 322"); end
+  if (bm[2*8192+343] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 323"); end
+  if (bm[2*8192+344] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 324"); end
+  if (bm[2*8192+345] !== 8'h29) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 325"); end
+  if (bm[2*8192+346] !== 8'he2) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 326"); end
+  if (bm[2*8192+347] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 327"); end
+  if (bm[2*8192+348] !== 8'h43) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 328"); end
+  if (bm[2*8192+349] !== 8'h56) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 329"); end
+  if (bm[2*8192+350] !== 8'h20) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 330"); end
+  if (bm[2*8192+351] !== 8'h48) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 331"); end
+  if (bm[2*8192+352] !== 8'h4b) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 332"); end
+  if (bm[2*8192+353] !== 8'h07) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 333"); end
+  if (bm[2*8192+354] !== 8'h9f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 334"); end
+  if (bm[2*8192+355] !== 8'hff) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 335"); end
+  if (bm[2*8192+356] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 336"); end
+  if (bm[2*8192+357] !== 8'h57) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 337"); end
+  if (bm[2*8192+358] !== 8'h5e) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 338"); end
+  if (bm[2*8192+359] !== 8'he0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 339"); end
+  if (bm[2*8192+360] !== 8'h30) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 340"); end
+  if (bm[2*8192+361] !== 8'h52) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 341"); end
+  if (bm[2*8192+362] !== 8'h3f) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 342"); end
+  if (bm[2*8192+363] !== 8'hb0) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 343"); end
+  if (bm[2*8192+364] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 344"); end
+  if (bm[2*8192+365] !== 8'h18) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 345"); end
+  if (bm[2*8192+366] !== 8'h70) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 346"); end
+  if (bm[2*8192+367] !== 8'hea) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 347"); end
+  if (bm[2*8192+368] !== 8'h79) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 348"); end
+  if (bm[2*8192+369] !== 8'hb5) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 349"); end
+  if (bm[2*8192+370] !== 8'h8a) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 350"); end
+  if (bm[2*8192+371] !== 8'h16) begin fails=fails+1; if (fails<6) $display("FAIL kpk_c11 byte 351"); end
+  bm[0*8192+9] = 8'h8e;
+  bm[0*8192+10] = 8'h07;
+  bm[0*8192+11] = 8'hd8;
+  bm[0*8192+12] = 8'h09;
+  bm[0*8192+13] = 8'hfb;
+  bm[0*8192+14] = 8'hf9;
+  bm[0*8192+15] = 8'hc6;
+  bm[0*8192+16] = 8'hec;
+  bm[0*8192+17] = 8'hab;
+  bm[0*8192+18] = 8'h40;
+  bm[0*8192+19] = 8'hf0;
+  bm[0*8192+20] = 8'hb3;
+  bm[0*8192+21] = 8'h2d;
+  bm[0*8192+22] = 8'h2a;
+  bm[0*8192+23] = 8'h7c;
+  bm[0*8192+24] = 8'hc0;
+  bm[0*8192+25] = 8'h90;
+  bm[0*8192+26] = 8'ha1;
+  bm[0*8192+27] = 8'h7f;
+  bm[0*8192+28] = 8'h9d;
+  bm[0*8192+29] = 8'hb2;
+  bm[0*8192+30] = 8'h39;
+  bm[0*8192+31] = 8'he3;
+  bm[0*8192+32] = 8'h3d;
+  bm[0*8192+33] = 8'h94;
+  bm[0*8192+34] = 8'hf6;
+  bm[0*8192+35] = 8'hd5;
+  bm[0*8192+36] = 8'hdd;
+  bm[0*8192+37] = 8'h01;
+  bm[0*8192+38] = 8'h53;
+  bm[0*8192+39] = 8'hf1;
+  bm[0*8192+40] = 8'h0a;
+  bm[0*8192+41] = 8'h7d;
+  bm[0*8192+42] = 8'h5f;
+  bm[0*8192+43] = 8'hec;
+  bm[0*8192+44] = 8'h70;
+  bm[0*8192+45] = 8'hea;
+  bm[0*8192+46] = 8'h01;
+  bm[0*8192+47] = 8'hbd;
+  bm[0*8192+48] = 8'h09;
+  bm[0*8192+49] = 8'hc0;
+  bm[0*8192+50] = 8'he2;
+  bm[0*8192+51] = 8'h58;
+  bm[0*8192+52] = 8'h04;
+  bm[0*8192+53] = 8'h15;
+  bm[0*8192+54] = 8'h8a;
+  bm[0*8192+55] = 8'hbd;
+  bm[0*8192+56] = 8'h8e;
+  bm[0*8192+57] = 8'h89;
+  bm[0*8192+58] = 8'h18;
+  bm[0*8192+59] = 8'h9c;
+  bm[0*8192+60] = 8'hcb;
+  bm[0*8192+61] = 8'h96;
+  bm[0*8192+62] = 8'h4b;
+  bm[0*8192+63] = 8'hfb;
+  bm[0*8192+64] = 8'h44;
+  bm[0*8192+65] = 8'h35;
+  bm[0*8192+66] = 8'h81;
+  bm[0*8192+67] = 8'h21;
+  bm[0*8192+68] = 8'hf5;
+  bm[0*8192+69] = 8'hf4;
+  bm[0*8192+70] = 8'hfe;
+  bm[0*8192+71] = 8'h30;
+  bm[0*8192+72] = 8'h5b;
+  bm[0*8192+73] = 8'hd8;
+  bm[0*8192+74] = 8'h1b;
+  bm[0*8192+75] = 8'hb8;
+  bm[0*8192+76] = 8'h29;
+  bm[0*8192+77] = 8'h7d;
+  bm[0*8192+78] = 8'h55;
+  bm[0*8192+79] = 8'h6d;
+  bm[0*8192+80] = 8'h54;
+  bm[0*8192+81] = 8'h6d;
+  bm[0*8192+82] = 8'h7b;
+  bm[0*8192+83] = 8'h49;
+  bm[0*8192+84] = 8'h72;
+  bm[0*8192+85] = 8'h7d;
+  bm[0*8192+86] = 8'h2e;
+  bm[0*8192+87] = 8'h03;
+  bm[0*8192+88] = 8'h27;
+  bm[0*8192+89] = 8'h81;
+  bm[0*8192+90] = 8'h69;
+  bm[0*8192+91] = 8'hff;
+  bm[0*8192+92] = 8'h53;
+  bm[0*8192+93] = 8'hdd;
+  bm[0*8192+94] = 8'h28;
+  bm[0*8192+95] = 8'h38;
+  bm[0*8192+96] = 8'h9a;
+  bm[0*8192+97] = 8'h5b;
+  bm[0*8192+98] = 8'h98;
+  bm[0*8192+99] = 8'h36;
+  bm[0*8192+100] = 8'h37;
+  bm[0*8192+101] = 8'hf1;
+  bm[0*8192+102] = 8'h67;
+  bm[0*8192+103] = 8'hd7;
+  bm[0*8192+104] = 8'h94;
+  bm[0*8192+105] = 8'hc2;
+  bm[0*8192+106] = 8'hfd;
+  bm[0*8192+107] = 8'h35;
+  bm[0*8192+108] = 8'h36;
+  bm[0*8192+109] = 8'h77;
+  bm[0*8192+110] = 8'h92;
+  bm[0*8192+111] = 8'h9d;
+  bm[0*8192+112] = 8'hf8;
+  bm[0*8192+113] = 8'h8c;
+  bm[0*8192+114] = 8'h55;
+  bm[0*8192+115] = 8'h9a;
+  bm[0*8192+116] = 8'h53;
+  bm[0*8192+117] = 8'hbd;
+  bm[0*8192+118] = 8'hc2;
+  bm[0*8192+119] = 8'ha5;
+  bm[0*8192+120] = 8'h51;
+  bm[0*8192+121] = 8'hc6;
+  bm[0*8192+122] = 8'hc8;
+  bm[0*8192+123] = 8'heb;
+  bm[0*8192+124] = 8'h31;
+  bm[0*8192+125] = 8'hd8;
+  bm[0*8192+126] = 8'hf5;
+  bm[0*8192+127] = 8'h49;
+  bm[0*8192+128] = 8'h64;
+  bm[0*8192+129] = 8'h53;
+  bm[0*8192+130] = 8'hf8;
+  bm[0*8192+131] = 8'hb8;
+  bm[0*8192+132] = 8'hf5;
+  bm[0*8192+133] = 8'h15;
+  bm[0*8192+134] = 8'h3a;
+  bm[0*8192+135] = 8'hee;
+  bm[0*8192+136] = 8'h75;
+  bm[0*8192+137] = 8'h8f;
+  bm[0*8192+138] = 8'h3a;
+  bm[0*8192+139] = 8'h89;
+  bm[0*8192+140] = 8'h84;
+  bm[0*8192+141] = 8'h6c;
+  bm[0*8192+142] = 8'h8e;
+  bm[0*8192+143] = 8'hff;
+  bm[0*8192+144] = 8'h64;
+  bm[0*8192+145] = 8'h19;
+  bm[0*8192+146] = 8'h04;
+  bm[0*8192+147] = 8'h23;
+  bm[0*8192+148] = 8'h4e;
+  bm[0*8192+149] = 8'h7d;
+  bm[0*8192+150] = 8'ha6;
+  bm[0*8192+151] = 8'h01;
+  bm[0*8192+152] = 8'h95;
+  bm[0*8192+153] = 8'hda;
+  bm[0*8192+154] = 8'ha7;
+  bm[0*8192+155] = 8'h33;
+  bm[0*8192+156] = 8'haf;
+  bm[0*8192+157] = 8'h6b;
+  bm[0*8192+158] = 8'h0d;
+  bm[0*8192+159] = 8'hf1;
+  bm[0*8192+160] = 8'h90;
+  bm[0*8192+161] = 8'h46;
+  bm[0*8192+162] = 8'h7e;
+  bm[0*8192+163] = 8'hdf;
+  bm[0*8192+164] = 8'hb7;
+  bm[0*8192+165] = 8'h19;
+  bm[0*8192+166] = 8'hbf;
+  bm[0*8192+167] = 8'he2;
+  bm[0*8192+168] = 8'h47;
+  bm[0*8192+169] = 8'h74;
+  bm[0*8192+170] = 8'h19;
+  bm[0*8192+171] = 8'hb6;
+  bm[0*8192+172] = 8'hc9;
+  bm[0*8192+173] = 8'h0c;
+  bm[0*8192+174] = 8'hdd;
+  bm[0*8192+175] = 8'h9f;
+  bm[0*8192+176] = 8'h8c;
+  bm[0*8192+177] = 8'hc4;
+  bm[0*8192+178] = 8'hb2;
+  bm[0*8192+179] = 8'h3f;
+  bm[0*8192+180] = 8'h87;
+  bm[0*8192+181] = 8'hcd;
+  bm[0*8192+182] = 8'hd7;
+  bm[0*8192+183] = 8'h7f;
+  bm[0*8192+184] = 8'hd5;
+  bm[0*8192+185] = 8'h7b;
+  bm[0*8192+186] = 8'hd6;
+  bm[0*8192+187] = 8'he7;
+  bm[0*8192+188] = 8'h43;
+  bm[0*8192+189] = 8'h66;
+  bm[0*8192+190] = 8'h4f;
+  bm[0*8192+191] = 8'h4b;
+  bm[0*8192+192] = 8'h6f;
+  bm[0*8192+193] = 8'he8;
+  bm[0*8192+194] = 8'h60;
+  bm[0*8192+195] = 8'hb4;
+  bm[0*8192+196] = 8'h51;
+  bm[0*8192+197] = 8'ha6;
+  bm[0*8192+198] = 8'hb7;
+  bm[0*8192+199] = 8'he8;
+  bm[0*8192+200] = 8'h1c;
+  bm[0*8192+201] = 8'hc4;
+  bm[0*8192+202] = 8'ha6;
+  bm[0*8192+203] = 8'h7d;
+  bm[0*8192+204] = 8'hd7;
+  bm[0*8192+205] = 8'h09;
+  bm[0*8192+206] = 8'h6e;
+  bm[0*8192+207] = 8'h5a;
+  bm[0*8192+208] = 8'h34;
+  bm[0*8192+209] = 8'h3d;
+  bm[0*8192+210] = 8'h8c;
+  bm[0*8192+211] = 8'h97;
+  bm[0*8192+212] = 8'h4d;
+  bm[0*8192+213] = 8'h59;
+  bm[0*8192+214] = 8'ha6;
+  bm[0*8192+215] = 8'h2b;
+  bm[0*8192+216] = 8'h8d;
+  bm[0*8192+217] = 8'hf3;
+  bm[0*8192+218] = 8'hd7;
+  bm[0*8192+219] = 8'ha6;
+  bm[0*8192+220] = 8'h41;
+  bm[0*8192+221] = 8'h11;
+  bm[0*8192+222] = 8'h2b;
+  bm[0*8192+223] = 8'he1;
+  bm[0*8192+224] = 8'h15;
+  bm[0*8192+225] = 8'h1a;
+  bm[0*8192+226] = 8'hde;
+  bm[0*8192+227] = 8'hc9;
+  bm[0*8192+228] = 8'hb6;
+  bm[0*8192+229] = 8'hef;
+  bm[0*8192+230] = 8'hc7;
+  bm[0*8192+231] = 8'h42;
+  bm[0*8192+232] = 8'h9c;
+  bm[0*8192+233] = 8'hc2;
+  bm[0*8192+234] = 8'h9e;
+  bm[0*8192+235] = 8'h1c;
+  bm[0*8192+236] = 8'h8c;
+  bm[0*8192+237] = 8'h71;
+  bm[0*8192+238] = 8'hec;
+  bm[0*8192+239] = 8'h17;
+  bm[0*8192+240] = 8'h2e;
+  bm[0*8192+241] = 8'h83;
+  bm[0*8192+242] = 8'h3e;
+  bm[0*8192+243] = 8'hc9;
+  bm[0*8192+244] = 8'hdd;
+  bm[0*8192+245] = 8'he9;
+  bm[0*8192+246] = 8'h60;
+  bm[0*8192+247] = 8'h38;
+  bm[0*8192+248] = 8'he1;
+  bm[0*8192+249] = 8'h70;
+  bm[0*8192+250] = 8'h7e;
+  bm[0*8192+251] = 8'h08;
+  bm[0*8192+252] = 8'hdf;
+  bm[0*8192+253] = 8'h3d;
+  bm[0*8192+254] = 8'h4d;
+  bm[0*8192+255] = 8'h8a;
+  bm[0*8192+256] = 8'he1;
+  bm[0*8192+257] = 8'hc8;
+  bm[0*8192+258] = 8'h00;
+  bm[0*8192+259] = 8'h13;
+  bm[0*8192+260] = 8'h9d;
+  bm[0*8192+261] = 8'hbc;
+  bm[0*8192+262] = 8'hf1;
+  bm[0*8192+263] = 8'h7d;
+  bm[0*8192+264] = 8'h85;
+  bm[0*8192+265] = 8'hf0;
+  bm[0*8192+266] = 8'he2;
+  bm[0*8192+267] = 8'hb6;
+  bm[0*8192+268] = 8'h26;
+  bm[0*8192+269] = 8'h35;
+  bm[0*8192+270] = 8'h6e;
+  bm[0*8192+271] = 8'he5;
+  bm[0*8192+272] = 8'hc4;
+  bm[0*8192+273] = 8'hc6;
+  bm[0*8192+274] = 8'h56;
+  bm[0*8192+275] = 8'h13;
+  bm[0*8192+276] = 8'h24;
+  bm[0*8192+277] = 8'h00;
+  bm[0*8192+278] = 8'hc2;
+  bm[0*8192+279] = 8'h18;
+  bm[0*8192+280] = 8'ha2;
+  bm[0*8192+281] = 8'h18;
+  bm[0*8192+282] = 8'h7e;
+  bm[0*8192+283] = 8'h06;
+  bm[0*8192+284] = 8'h1e;
+  bm[0*8192+285] = 8'h9f;
+  bm[0*8192+286] = 8'h90;
+  bm[0*8192+287] = 8'h27;
+  bm[0*8192+288] = 8'h7f;
+  bm[0*8192+289] = 8'h93;
+  bm[0*8192+290] = 8'h3a;
+  bm[0*8192+291] = 8'ha8;
+  bm[0*8192+292] = 8'h96;
+  bm[0*8192+293] = 8'h01;
+  bm[0*8192+294] = 8'he7;
+  bm[0*8192+295] = 8'he1;
+  bm[0*8192+296] = 8'h23;
+  bm[0*8192+297] = 8'h2c;
+  bm[0*8192+298] = 8'h60;
+  bm[0*8192+299] = 8'h65;
+  bm[0*8192+300] = 8'h69;
+  bm[0*8192+301] = 8'h6d;
+  bm[0*8192+302] = 8'hb1;
+  bm[0*8192+303] = 8'h3c;
+  bm[0*8192+304] = 8'hd8;
+  bm[0*8192+305] = 8'hac;
+  bm[0*8192+306] = 8'hf4;
+  bm[0*8192+307] = 8'hb6;
+  bm[0*8192+308] = 8'h15;
+  bm[0*8192+309] = 8'h3d;
+  bm[0*8192+310] = 8'hc5;
+  bm[0*8192+311] = 8'h31;
+  bm[0*8192+312] = 8'ha9;
+  bm[0*8192+313] = 8'heb;
+  bm[0*8192+314] = 8'h8a;
+  bm[0*8192+315] = 8'hdc;
+  bm[0*8192+316] = 8'h27;
+  bm[0*8192+317] = 8'h3c;
+  bm[0*8192+318] = 8'hba;
+  bm[0*8192+319] = 8'hc4;
+  bm[0*8192+320] = 8'hb5;
+  bm[0*8192+321] = 8'ha6;
+  bm[0*8192+322] = 8'h9c;
+  bm[0*8192+323] = 8'hd0;
+  bm[0*8192+324] = 8'h07;
+  bm[0*8192+325] = 8'h73;
+  bm[0*8192+326] = 8'ha7;
+  bm[0*8192+327] = 8'h03;
+  bm[0*8192+328] = 8'h8f;
+  bm[0*8192+329] = 8'h9c;
+  bm[0*8192+330] = 8'h39;
+  bm[0*8192+331] = 8'h25;
+  bm[0*8192+332] = 8'h8b;
+  bm[0*8192+333] = 8'h05;
+  bm[0*8192+334] = 8'hc5;
+  bm[0*8192+335] = 8'hb7;
+  bm[0*8192+336] = 8'hdb;
+  bm[0*8192+337] = 8'hb2;
+  bm[0*8192+338] = 8'hd0;
+  bm[0*8192+339] = 8'hca;
+  bm[0*8192+340] = 8'h8e;
+  bm[0*8192+341] = 8'h51;
+  bm[0*8192+342] = 8'h77;
+  bm[0*8192+343] = 8'h80;
+  bm[0*8192+344] = 8'h43;
+  bm[0*8192+345] = 8'h01;
+  bm[0*8192+346] = 8'h1f;
+  bm[0*8192+347] = 8'ha7;
+  bm[0*8192+348] = 8'h4c;
+  bm[0*8192+349] = 8'h4b;
+  bm[0*8192+350] = 8'h79;
+  bm[0*8192+351] = 8'h15;
+  bm[0*8192+352] = 8'hba;
+  bm[0*8192+353] = 8'hcd;
+  bm[0*8192+354] = 8'h31;
+  bm[0*8192+355] = 8'hc9;
+  bm[0*8192+356] = 8'h67;
+  bm[0*8192+357] = 8'h72;
+  bm[0*8192+358] = 8'h8d;
+  bm[0*8192+359] = 8'hff;
+  bm[0*8192+360] = 8'h8d;
+  go(11,5,0,9,0,0,0,11,1); $display("kupk_dc11: %0d clk", cyc-c0); n=n+1;
+  expv = 8192'h0000073500000cd2000004b300000a8a0000077800000bb900000bcc000008e5000003d30000052300000a2600000021000002d8000003070000039000000b0900000a99000007a800000c1500000703000004800000077100000bb4000007690000002f00000306000009d90000082f00000a480000049e000000f5000003a20000020500000b980000097e0000042f0000016f0000080d0000046800000b4d000008c6000009d90000023f00000b1d000007a2000008f1000008f70000064e00000bbc000000a4000008a3000005f3000002d7000007810000035f00000b920000005300000c3b0000020f00000284000001a0000000ea000003ed00000b0300000a00000002340000072d000003ee000005980000061c0000011c000009a80000099300000bcf000009c20000076700000140000001f500000c9100000b6e0000066b000006dc000003f6000009d80000080300000b9b00000cb30000052b000001360000050e00000507000002e700000bff000003f80000008f00000ce50000094800000402000006d500000239000000f2000006f10000005500000b1e00000c5e0000055900000bdc0000091100000b0b00000a0f00000c6f0000071300000596000003fe00000b59000003f000000357000005e800000b4d00000a440000092a0000005e00000169000007a500000c84000001b90000081700000a8900000ad700000cef00000c5d000000bb00000cc2000004fe0000028f00000cc8000000a6000003f1000006d200000bcf00000668000004da0000053800000ccb0000066a000002ab0000030f0000015c0000097e000007cf000008180000043200000015000002a30000043e0000038e000003540000091000000ce900000a70000006bb000003bf0000085100000bfa00000b900000008d00000aea000001930000043c000001bd0000065e000008f60000018e00000b9a00000148000002ac000009e300000be900000bb5000008b000000a8a00000400000003bf00000bb9000002bd00000c1700000863000008e000000673000007e600000b1800000094000007d4000009d1000002ce0000088700000c85000009c7000007ed0000052b0000065e0000076e000004d000000b1b00000398000008ab00000c6d000002cb00000169000009e500000a5e00000ce5000004070000075a0000003e0000088f00000cc3000004b400000916000002da000006ef00000a1f00000c81000003620000003700000a1c000008f1000000fc00000a9100000c74000009f00000071b00000659000004720000044e0000002f00000b3d00000cc30000041c00000992000002ed00000790000004df000003690000009c00000326000008910000094400000c340000004400000cc2000007350000081c000006c0000004e000000c48;
+  for (i=0;i<256;i=i+1) if (pm.mem[5*256+i] !== expv[32*i +: 32]) begin fails=fails+1; if (fails<6) $display("FAIL kupk_dc11 coeff %0d got %h exp %h", i, pm.mem[5*256+i], expv[32*i +: 32]); end
+  expv = 8192'h000006cc00000477000009dd000004ff00000063000004dd0000064900000730000001d70000074a000002f7000008ab00000be600000025000008ad000008bc00000c3c0000053200000424000005f200000c80000002340000089a000002690000059c0000059b000001cb00000c780000087000000377000007a500000b7e00000229000001860000031a00000779000007cb000004b200000983000003650000012e000004e300000ae30000055d0000017b0000076900000cf7000003d60000020c0000019d00000964000001f30000087c0000065f0000068f000009530000035e0000018c0000092400000c6600000bb00000062b00000b1200000bd10000096100000cbb00000a8b00000b8300000157000001900000069a000009910000078f000004100000001900000a25000001ee00000114000000d7000009400000025800000a09000000a900000cd60000008400000c6d00000c240000010c00000b9a000005df00000c7e000004b100000bf8000007430000095c000001da0000029e00000109000004840000063100000a46000000b90000007e0000056700000bb5000004c6000000fd000009850000006f000005eb0000085f0000069300000c2f00000b63000007250000045200000c1e000007310000019000000b25000002300000063b00000a07000009d900000af70000077000000ce80000089100000314000000400000031a000000040000092900000c12000005ff000009b200000578000000fe00000a920000019200000c5e000001e400000c75000004f20000062700000c0f0000033800000c1c00000c34000003ad00000cd100000c7000000a190000047b00000627000007d500000bea0000035300000c11000009fa0000067e0000051d000003f8000008380000028700000bae000001d10000052b000004d000000b26000004ba00000291000001a600000785000008210000057000000199000008e8000009b2000005d70000065c0000029700000997000008510000009f0000037b00000cca00000b8300000ab2000003a2000001a300000b1300000b29000002550000098f0000093200000694000001140000092f0000055a0000033a000001a30000042800000790000003c2000005a3000005b900000be80000081a00000728000003f70000070e00000a2e000008cc0000076e00000348000004a100000ba6000000d6000008730000017c000002a200000726000006f40000039000000a51000006a40000097f0000063a000002b400000af90000016600000c3300000cb9000005ba000008e000000457000004c20000094600000c480000043a0000059500000bbb000007f900000a47000000050000064900000897000005e300000b310000077b000006d90000084e000001b70000084200000616;
+  for (i=0;i<256;i=i+1) pm.mem[3*256+i] = expv[32*i +: 32];
+  go(10,3,1,3,0,0,0,12,0); $display("kpk12: %0d clk", cyc-c0); n=n+1;
+  if (bm[1*8192+3] !== 8'h16) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 0"); end
+  if (bm[1*8192+4] !== 8'h26) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 1"); end
+  if (bm[1*8192+5] !== 8'h84) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 2"); end
+  if (bm[1*8192+6] !== 8'hb7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 3"); end
+  if (bm[1*8192+7] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 4"); end
+  if (bm[1*8192+8] !== 8'h84) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 5"); end
+  if (bm[1*8192+9] !== 8'hd9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 6"); end
+  if (bm[1*8192+10] !== 8'hb6) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 7"); end
+  if (bm[1*8192+11] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 8"); end
+  if (bm[1*8192+12] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 9"); end
+  if (bm[1*8192+13] !== 8'h3b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 10"); end
+  if (bm[1*8192+14] !== 8'h5e) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 11"); end
+  if (bm[1*8192+15] !== 8'h97) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 12"); end
+  if (bm[1*8192+16] !== 8'h98) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 13"); end
+  if (bm[1*8192+17] !== 8'h64) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 14"); end
+  if (bm[1*8192+18] !== 8'h05) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 15"); end
+  if (bm[1*8192+19] !== 8'h70) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 16"); end
+  if (bm[1*8192+20] !== 8'ha4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 17"); end
+  if (bm[1*8192+21] !== 8'hf9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 18"); end
+  if (bm[1*8192+22] !== 8'hb7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 19"); end
+  if (bm[1*8192+23] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 20"); end
+  if (bm[1*8192+24] !== 8'h95) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 21"); end
+  if (bm[1*8192+25] !== 8'ha5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 22"); end
+  if (bm[1*8192+26] !== 8'h43) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 23"); end
+  if (bm[1*8192+27] !== 8'h48) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 24"); end
+  if (bm[1*8192+28] !== 8'h6c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 25"); end
+  if (bm[1*8192+29] !== 8'h94) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 26"); end
+  if (bm[1*8192+30] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 27"); end
+  if (bm[1*8192+31] !== 8'h74) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 28"); end
+  if (bm[1*8192+32] !== 8'h45) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 29"); end
+  if (bm[1*8192+33] !== 8'he0) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 30"); end
+  if (bm[1*8192+34] !== 8'ha8) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 31"); end
+  if (bm[1*8192+35] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 32"); end
+  if (bm[1*8192+36] !== 8'hb9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 33"); end
+  if (bm[1*8192+37] !== 8'h3c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 34"); end
+  if (bm[1*8192+38] !== 8'hc3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 35"); end
+  if (bm[1*8192+39] !== 8'h66) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 36"); end
+  if (bm[1*8192+40] !== 8'h91) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 37"); end
+  if (bm[1*8192+41] !== 8'haf) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 38"); end
+  if (bm[1*8192+42] !== 8'hb4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 39"); end
+  if (bm[1*8192+43] !== 8'ha2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 40"); end
+  if (bm[1*8192+44] !== 8'h63) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 41"); end
+  if (bm[1*8192+45] !== 8'h7f) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 42"); end
+  if (bm[1*8192+46] !== 8'h49) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 43"); end
+  if (bm[1*8192+47] !== 8'h6a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 44"); end
+  if (bm[1*8192+48] !== 8'h51) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 45"); end
+  if (bm[1*8192+49] !== 8'h0a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 46"); end
+  if (bm[1*8192+50] !== 8'h39) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 47"); end
+  if (bm[1*8192+51] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 48"); end
+  if (bm[1*8192+52] !== 8'h66) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 49"); end
+  if (bm[1*8192+53] !== 8'h72) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 50"); end
+  if (bm[1*8192+54] !== 8'ha2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 51"); end
+  if (bm[1*8192+55] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 52"); end
+  if (bm[1*8192+56] !== 8'h17) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 53"); end
+  if (bm[1*8192+57] !== 8'h73) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 54"); end
+  if (bm[1*8192+58] !== 8'h68) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 55"); end
+  if (bm[1*8192+59] !== 8'h0d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 56"); end
+  if (bm[1*8192+60] !== 8'ha6) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 57"); end
+  if (bm[1*8192+61] !== 8'h1b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 58"); end
+  if (bm[1*8192+62] !== 8'h4a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 59"); end
+  if (bm[1*8192+63] !== 8'h48) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 60"); end
+  if (bm[1*8192+64] !== 8'he3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 61"); end
+  if (bm[1*8192+65] !== 8'h76) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 62"); end
+  if (bm[1*8192+66] !== 8'hcc) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 63"); end
+  if (bm[1*8192+67] !== 8'he8) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 64"); end
+  if (bm[1*8192+68] !== 8'ha2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 65"); end
+  if (bm[1*8192+69] !== 8'h0e) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 66"); end
+  if (bm[1*8192+70] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 67"); end
+  if (bm[1*8192+71] !== 8'h3f) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 68"); end
+  if (bm[1*8192+72] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 69"); end
+  if (bm[1*8192+73] !== 8'ha7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 70"); end
+  if (bm[1*8192+74] !== 8'h81) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 71"); end
+  if (bm[1*8192+75] !== 8'he8) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 72"); end
+  if (bm[1*8192+76] !== 8'h9b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 73"); end
+  if (bm[1*8192+77] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 74"); end
+  if (bm[1*8192+78] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 75"); end
+  if (bm[1*8192+79] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 76"); end
+  if (bm[1*8192+80] !== 8'h3c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 77"); end
+  if (bm[1*8192+81] !== 8'h90) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 78"); end
+  if (bm[1*8192+82] !== 8'h87) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 79"); end
+  if (bm[1*8192+83] !== 8'h42) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 80"); end
+  if (bm[1*8192+84] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 81"); end
+  if (bm[1*8192+85] !== 8'ha1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 82"); end
+  if (bm[1*8192+86] !== 8'h33) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 83"); end
+  if (bm[1*8192+87] !== 8'h5a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 84"); end
+  if (bm[1*8192+88] !== 8'hf5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 85"); end
+  if (bm[1*8192+89] !== 8'h92) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 86"); end
+  if (bm[1*8192+90] !== 8'h14) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 87"); end
+  if (bm[1*8192+91] !== 8'h41) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 88"); end
+  if (bm[1*8192+92] !== 8'h69) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 89"); end
+  if (bm[1*8192+93] !== 8'h32) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 90"); end
+  if (bm[1*8192+94] !== 8'hf9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 91"); end
+  if (bm[1*8192+95] !== 8'h98) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 92"); end
+  if (bm[1*8192+96] !== 8'h55) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 93"); end
+  if (bm[1*8192+97] !== 8'h92) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 94"); end
+  if (bm[1*8192+98] !== 8'hb2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 95"); end
+  if (bm[1*8192+99] !== 8'h13) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 96"); end
+  if (bm[1*8192+100] !== 8'h3b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 97"); end
+  if (bm[1*8192+101] !== 8'h1a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 98"); end
+  if (bm[1*8192+102] !== 8'ha2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 99"); end
+  if (bm[1*8192+103] !== 8'h23) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 100"); end
+  if (bm[1*8192+104] !== 8'hab) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 101"); end
+  if (bm[1*8192+105] !== 8'h83) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 102"); end
+  if (bm[1*8192+106] !== 8'hab) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 103"); end
+  if (bm[1*8192+107] !== 8'hcc) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 104"); end
+  if (bm[1*8192+108] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 105"); end
+  if (bm[1*8192+109] !== 8'hf3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 106"); end
+  if (bm[1*8192+110] !== 8'h09) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 107"); end
+  if (bm[1*8192+111] !== 8'h51) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 108"); end
+  if (bm[1*8192+112] !== 8'h78) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 109"); end
+  if (bm[1*8192+113] !== 8'h99) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 110"); end
+  if (bm[1*8192+114] !== 8'h97) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 111"); end
+  if (bm[1*8192+115] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 112"); end
+  if (bm[1*8192+116] !== 8'h65) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 113"); end
+  if (bm[1*8192+117] !== 8'hd7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 114"); end
+  if (bm[1*8192+118] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 115"); end
+  if (bm[1*8192+119] !== 8'h9b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 116"); end
+  if (bm[1*8192+120] !== 8'he8) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 117"); end
+  if (bm[1*8192+121] !== 8'h98) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 118"); end
+  if (bm[1*8192+122] !== 8'h19) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 119"); end
+  if (bm[1*8192+123] !== 8'h70) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 120"); end
+  if (bm[1*8192+124] !== 8'h15) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 121"); end
+  if (bm[1*8192+125] !== 8'h82) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 122"); end
+  if (bm[1*8192+126] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 123"); end
+  if (bm[1*8192+127] !== 8'h67) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 124"); end
+  if (bm[1*8192+128] !== 8'h1a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 125"); end
+  if (bm[1*8192+129] !== 8'h91) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 126"); end
+  if (bm[1*8192+130] !== 8'ha2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 127"); end
+  if (bm[1*8192+131] !== 8'h4b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 128"); end
+  if (bm[1*8192+132] !== 8'h26) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 129"); end
+  if (bm[1*8192+133] !== 8'h0b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 130"); end
+  if (bm[1*8192+134] !== 8'h4d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 131"); end
+  if (bm[1*8192+135] !== 8'h2b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 132"); end
+  if (bm[1*8192+136] !== 8'h15) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 133"); end
+  if (bm[1*8192+137] !== 8'h1d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 134"); end
+  if (bm[1*8192+138] !== 8'hae) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 135"); end
+  if (bm[1*8192+139] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 136"); end
+  if (bm[1*8192+140] !== 8'h28) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 137"); end
+  if (bm[1*8192+141] !== 8'h38) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 138"); end
+  if (bm[1*8192+142] !== 8'h88) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 139"); end
+  if (bm[1*8192+143] !== 8'h3f) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 140"); end
+  if (bm[1*8192+144] !== 8'h1d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 141"); end
+  if (bm[1*8192+145] !== 8'he5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 142"); end
+  if (bm[1*8192+146] !== 8'h67) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 143"); end
+  if (bm[1*8192+147] !== 8'hfa) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 144"); end
+  if (bm[1*8192+148] !== 8'h19) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 145"); end
+  if (bm[1*8192+149] !== 8'hc1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 146"); end
+  if (bm[1*8192+150] !== 8'h53) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 147"); end
+  if (bm[1*8192+151] !== 8'ha3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 148"); end
+  if (bm[1*8192+152] !== 8'hbe) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 149"); end
+  if (bm[1*8192+153] !== 8'hd5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 150"); end
+  if (bm[1*8192+154] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 151"); end
+  if (bm[1*8192+155] !== 8'h62) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 152"); end
+  if (bm[1*8192+156] !== 8'h7b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 153"); end
+  if (bm[1*8192+157] !== 8'h94) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 154"); end
+  if (bm[1*8192+158] !== 8'ha1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 155"); end
+  if (bm[1*8192+159] !== 8'h70) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 156"); end
+  if (bm[1*8192+160] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 157"); end
+  if (bm[1*8192+161] !== 8'hcd) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 158"); end
+  if (bm[1*8192+162] !== 8'had) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 159"); end
+  if (bm[1*8192+163] !== 8'h43) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 160"); end
+  if (bm[1*8192+164] !== 8'hc3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 161"); end
+  if (bm[1*8192+165] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 162"); end
+  if (bm[1*8192+166] !== 8'h8c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 163"); end
+  if (bm[1*8192+167] !== 8'h33) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 164"); end
+  if (bm[1*8192+168] !== 8'h0f) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 165"); end
+  if (bm[1*8192+169] !== 8'h7c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 166"); end
+  if (bm[1*8192+170] !== 8'h62) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 167"); end
+  if (bm[1*8192+171] !== 8'hf2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 168"); end
+  if (bm[1*8192+172] !== 8'h54) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 169"); end
+  if (bm[1*8192+173] !== 8'hc7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 170"); end
+  if (bm[1*8192+174] !== 8'he4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 171"); end
+  if (bm[1*8192+175] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 172"); end
+  if (bm[1*8192+176] !== 8'hc5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 173"); end
+  if (bm[1*8192+177] !== 8'h92) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 174"); end
+  if (bm[1*8192+178] !== 8'h21) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 175"); end
+  if (bm[1*8192+179] !== 8'ha9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 176"); end
+  if (bm[1*8192+180] !== 8'hfe) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 177"); end
+  if (bm[1*8192+181] !== 8'h80) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 178"); end
+  if (bm[1*8192+182] !== 8'h57) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 179"); end
+  if (bm[1*8192+183] !== 8'hb2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 180"); end
+  if (bm[1*8192+184] !== 8'hf9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 181"); end
+  if (bm[1*8192+185] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 182"); end
+  if (bm[1*8192+186] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 183"); end
+  if (bm[1*8192+187] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 184"); end
+  if (bm[1*8192+188] !== 8'h92) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 185"); end
+  if (bm[1*8192+189] !== 8'h04) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 186"); end
+  if (bm[1*8192+190] !== 8'ha0) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 187"); end
+  if (bm[1*8192+191] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 188"); end
+  if (bm[1*8192+192] !== 8'h40) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 189"); end
+  if (bm[1*8192+193] !== 8'h40) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 190"); end
+  if (bm[1*8192+194] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 191"); end
+  if (bm[1*8192+195] !== 8'h91) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 192"); end
+  if (bm[1*8192+196] !== 8'h88) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 193"); end
+  if (bm[1*8192+197] !== 8'hce) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 194"); end
+  if (bm[1*8192+198] !== 8'h70) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 195"); end
+  if (bm[1*8192+199] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 196"); end
+  if (bm[1*8192+200] !== 8'haf) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 197"); end
+  if (bm[1*8192+201] !== 8'hd9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 198"); end
+  if (bm[1*8192+202] !== 8'h79) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 199"); end
+  if (bm[1*8192+203] !== 8'ha0) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 200"); end
+  if (bm[1*8192+204] !== 8'h3b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 201"); end
+  if (bm[1*8192+205] !== 8'h06) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 202"); end
+  if (bm[1*8192+206] !== 8'h23) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 203"); end
+  if (bm[1*8192+207] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 204"); end
+  if (bm[1*8192+208] !== 8'h0b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 205"); end
+  if (bm[1*8192+209] !== 8'h19) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 206"); end
+  if (bm[1*8192+210] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 207"); end
+  if (bm[1*8192+211] !== 8'he7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 208"); end
+  if (bm[1*8192+212] !== 8'hc1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 209"); end
+  if (bm[1*8192+213] !== 8'h52) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 210"); end
+  if (bm[1*8192+214] !== 8'h54) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 211"); end
+  if (bm[1*8192+215] !== 8'h72) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 212"); end
+  if (bm[1*8192+216] !== 8'h63) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 213"); end
+  if (bm[1*8192+217] !== 8'hfb) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 214"); end
+  if (bm[1*8192+218] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 215"); end
+  if (bm[1*8192+219] !== 8'h93) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 216"); end
+  if (bm[1*8192+220] !== 8'hf6) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 217"); end
+  if (bm[1*8192+221] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 218"); end
+  if (bm[1*8192+222] !== 8'heb) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 219"); end
+  if (bm[1*8192+223] !== 8'hf5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 220"); end
+  if (bm[1*8192+224] !== 8'h06) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 221"); end
+  if (bm[1*8192+225] !== 8'h85) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 222"); end
+  if (bm[1*8192+226] !== 8'hd9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 223"); end
+  if (bm[1*8192+227] !== 8'h0f) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 224"); end
+  if (bm[1*8192+228] !== 8'hc6) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 225"); end
+  if (bm[1*8192+229] !== 8'h54) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 226"); end
+  if (bm[1*8192+230] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 227"); end
+  if (bm[1*8192+231] !== 8'h67) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 228"); end
+  if (bm[1*8192+232] !== 8'he5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 229"); end
+  if (bm[1*8192+233] !== 8'h07) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 230"); end
+  if (bm[1*8192+234] !== 8'hb9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 231"); end
+  if (bm[1*8192+235] !== 8'h60) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 232"); end
+  if (bm[1*8192+236] !== 8'ha4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 233"); end
+  if (bm[1*8192+237] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 234"); end
+  if (bm[1*8192+238] !== 8'h46) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 235"); end
+  if (bm[1*8192+239] !== 8'h48) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 236"); end
+  if (bm[1*8192+240] !== 8'h09) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 237"); end
+  if (bm[1*8192+241] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 238"); end
+  if (bm[1*8192+242] !== 8'h29) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 239"); end
+  if (bm[1*8192+243] !== 8'hda) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 240"); end
+  if (bm[1*8192+244] !== 8'hc1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 241"); end
+  if (bm[1*8192+245] !== 8'h95) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 242"); end
+  if (bm[1*8192+246] !== 8'h43) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 243"); end
+  if (bm[1*8192+247] !== 8'h87) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 244"); end
+  if (bm[1*8192+248] !== 8'hbf) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 245"); end
+  if (bm[1*8192+249] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 246"); end
+  if (bm[1*8192+250] !== 8'he4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 247"); end
+  if (bm[1*8192+251] !== 8'hc7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 248"); end
+  if (bm[1*8192+252] !== 8'hdf) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 249"); end
+  if (bm[1*8192+253] !== 8'ha5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 250"); end
+  if (bm[1*8192+254] !== 8'hb9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 251"); end
+  if (bm[1*8192+255] !== 8'h0c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 252"); end
+  if (bm[1*8192+256] !== 8'h41) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 253"); end
+  if (bm[1*8192+257] !== 8'hc2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 254"); end
+  if (bm[1*8192+258] !== 8'h6d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 255"); end
+  if (bm[1*8192+259] !== 8'h4c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 256"); end
+  if (bm[1*8192+260] !== 8'h08) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 257"); end
+  if (bm[1*8192+261] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 258"); end
+  if (bm[1*8192+262] !== 8'h9c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 259"); end
+  if (bm[1*8192+263] !== 8'h0a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 260"); end
+  if (bm[1*8192+264] !== 8'h09) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 261"); end
+  if (bm[1*8192+265] !== 8'h8a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 262"); end
+  if (bm[1*8192+266] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 263"); end
+  if (bm[1*8192+267] !== 8'h40) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 264"); end
+  if (bm[1*8192+268] !== 8'h79) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 265"); end
+  if (bm[1*8192+269] !== 8'h0d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 266"); end
+  if (bm[1*8192+270] !== 8'h14) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 267"); end
+  if (bm[1*8192+271] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 268"); end
+  if (bm[1*8192+272] !== 8'h1e) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 269"); end
+  if (bm[1*8192+273] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 270"); end
+  if (bm[1*8192+274] !== 8'h9a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 271"); end
+  if (bm[1*8192+275] !== 8'h01) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 272"); end
+  if (bm[1*8192+276] !== 8'h10) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 273"); end
+  if (bm[1*8192+277] !== 8'hf4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 274"); end
+  if (bm[1*8192+278] !== 8'h78) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 275"); end
+  if (bm[1*8192+279] !== 8'h91) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 276"); end
+  if (bm[1*8192+280] !== 8'ha9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 277"); end
+  if (bm[1*8192+281] !== 8'h69) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 278"); end
+  if (bm[1*8192+282] !== 8'h90) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 279"); end
+  if (bm[1*8192+283] !== 8'h71) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 280"); end
+  if (bm[1*8192+284] !== 8'h15) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 281"); end
+  if (bm[1*8192+285] !== 8'h83) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 282"); end
+  if (bm[1*8192+286] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 283"); end
+  if (bm[1*8192+287] !== 8'ha8) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 284"); end
+  if (bm[1*8192+288] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 285"); end
+  if (bm[1*8192+289] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 286"); end
+  if (bm[1*8192+290] !== 8'h96) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 287"); end
+  if (bm[1*8192+291] !== 8'hd1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 288"); end
+  if (bm[1*8192+292] !== 8'h2b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 289"); end
+  if (bm[1*8192+293] !== 8'hb1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 290"); end
+  if (bm[1*8192+294] !== 8'h2b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 291"); end
+  if (bm[1*8192+295] !== 8'h06) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 292"); end
+  if (bm[1*8192+296] !== 8'hbb) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 293"); end
+  if (bm[1*8192+297] !== 8'h66) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 294"); end
+  if (bm[1*8192+298] !== 8'h4c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 295"); end
+  if (bm[1*8192+299] !== 8'h92) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 296"); end
+  if (bm[1*8192+300] !== 8'h8c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 297"); end
+  if (bm[1*8192+301] !== 8'he1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 298"); end
+  if (bm[1*8192+302] !== 8'h35) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 299"); end
+  if (bm[1*8192+303] !== 8'h53) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 300"); end
+  if (bm[1*8192+304] !== 8'hf9) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 301"); end
+  if (bm[1*8192+305] !== 8'h68) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 302"); end
+  if (bm[1*8192+306] !== 8'h5f) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 303"); end
+  if (bm[1*8192+307] !== 8'hc6) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 304"); end
+  if (bm[1*8192+308] !== 8'h87) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 305"); end
+  if (bm[1*8192+309] !== 8'hf3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 306"); end
+  if (bm[1*8192+310] !== 8'h41) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 307"); end
+  if (bm[1*8192+311] !== 8'h96) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 308"); end
+  if (bm[1*8192+312] !== 8'h9d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 309"); end
+  if (bm[1*8192+313] !== 8'hc1) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 310"); end
+  if (bm[1*8192+314] !== 8'h20) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 311"); end
+  if (bm[1*8192+315] !== 8'hd6) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 312"); end
+  if (bm[1*8192+316] !== 8'h73) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 313"); end
+  if (bm[1*8192+317] !== 8'hcf) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 314"); end
+  if (bm[1*8192+318] !== 8'h69) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 315"); end
+  if (bm[1*8192+319] !== 8'hb7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 316"); end
+  if (bm[1*8192+320] !== 8'h17) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 317"); end
+  if (bm[1*8192+321] !== 8'h5d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 318"); end
+  if (bm[1*8192+322] !== 8'h35) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 319"); end
+  if (bm[1*8192+323] !== 8'hae) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 320"); end
+  if (bm[1*8192+324] !== 8'he3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 321"); end
+  if (bm[1*8192+325] !== 8'he4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 322"); end
+  if (bm[1*8192+326] !== 8'h12) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 323"); end
+  if (bm[1*8192+327] !== 8'h65) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 324"); end
+  if (bm[1*8192+328] !== 8'h33) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 325"); end
+  if (bm[1*8192+329] !== 8'h98) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 326"); end
+  if (bm[1*8192+330] !== 8'hb2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 327"); end
+  if (bm[1*8192+331] !== 8'hb4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 328"); end
+  if (bm[1*8192+332] !== 8'h7c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 329"); end
+  if (bm[1*8192+333] !== 8'h79) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 330"); end
+  if (bm[1*8192+334] !== 8'ha7) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 331"); end
+  if (bm[1*8192+335] !== 8'h31) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 332"); end
+  if (bm[1*8192+336] !== 8'h86) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 333"); end
+  if (bm[1*8192+337] !== 8'h91) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 334"); end
+  if (bm[1*8192+338] !== 8'h22) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 335"); end
+  if (bm[1*8192+339] !== 8'h7e) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 336"); end
+  if (bm[1*8192+340] !== 8'h5b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 337"); end
+  if (bm[1*8192+341] !== 8'h7a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 338"); end
+  if (bm[1*8192+342] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 339"); end
+  if (bm[1*8192+343] !== 8'h03) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 340"); end
+  if (bm[1*8192+344] !== 8'h87) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 341"); end
+  if (bm[1*8192+345] !== 8'h78) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 342"); end
+  if (bm[1*8192+346] !== 8'hbc) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 343"); end
+  if (bm[1*8192+347] !== 8'h1c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 344"); end
+  if (bm[1*8192+348] !== 8'h9b) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 345"); end
+  if (bm[1*8192+349] !== 8'hc5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 346"); end
+  if (bm[1*8192+350] !== 8'h59) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 347"); end
+  if (bm[1*8192+351] !== 8'h69) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 348"); end
+  if (bm[1*8192+352] !== 8'ha2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 349"); end
+  if (bm[1*8192+353] !== 8'h89) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 350"); end
+  if (bm[1*8192+354] !== 8'h34) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 351"); end
+  if (bm[1*8192+355] !== 8'h02) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 352"); end
+  if (bm[1*8192+356] !== 8'hc8) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 353"); end
+  if (bm[1*8192+357] !== 8'hf2) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 354"); end
+  if (bm[1*8192+358] !== 8'h45) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 355"); end
+  if (bm[1*8192+359] !== 8'h42) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 356"); end
+  if (bm[1*8192+360] !== 8'h32) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 357"); end
+  if (bm[1*8192+361] !== 8'hc5) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 358"); end
+  if (bm[1*8192+362] !== 8'hc3) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 359"); end
+  if (bm[1*8192+363] !== 8'hbc) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 360"); end
+  if (bm[1*8192+364] !== 8'hd8) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 361"); end
+  if (bm[1*8192+365] !== 8'h8a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 362"); end
+  if (bm[1*8192+366] !== 8'h25) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 363"); end
+  if (bm[1*8192+367] !== 8'h60) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 364"); end
+  if (bm[1*8192+368] !== 8'hbe) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 365"); end
+  if (bm[1*8192+369] !== 8'hab) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 366"); end
+  if (bm[1*8192+370] !== 8'h78) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 367"); end
+  if (bm[1*8192+371] !== 8'h2f) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 368"); end
+  if (bm[1*8192+372] !== 8'h4a) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 369"); end
+  if (bm[1*8192+373] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 370"); end
+  if (bm[1*8192+374] !== 8'h1d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 371"); end
+  if (bm[1*8192+375] !== 8'h30) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 372"); end
+  if (bm[1*8192+376] !== 8'h97) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 373"); end
+  if (bm[1*8192+377] !== 8'h64) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 374"); end
+  if (bm[1*8192+378] !== 8'hdd) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 375"); end
+  if (bm[1*8192+379] !== 8'h34) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 376"); end
+  if (bm[1*8192+380] !== 8'h06) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 377"); end
+  if (bm[1*8192+381] !== 8'hff) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 378"); end
+  if (bm[1*8192+382] !== 8'hd4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 379"); end
+  if (bm[1*8192+383] !== 8'h9d) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 380"); end
+  if (bm[1*8192+384] !== 8'h77) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 381"); end
+  if (bm[1*8192+385] !== 8'hc4) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 382"); end
+  if (bm[1*8192+386] !== 8'h6c) begin fails=fails+1; if (fails<6) $display("FAIL kpk12 byte 383"); end
+  bm[2*8192+0] = 8'haa;
+  bm[2*8192+1] = 8'h8a;
+  bm[2*8192+2] = 8'hf0;
+  bm[2*8192+3] = 8'h63;
+  bm[2*8192+4] = 8'h00;
+  bm[2*8192+5] = 8'h46;
+  bm[2*8192+6] = 8'hb7;
+  bm[2*8192+7] = 8'hf7;
+  bm[2*8192+8] = 8'hd1;
+  bm[2*8192+9] = 8'he0;
+  bm[2*8192+10] = 8'had;
+  bm[2*8192+11] = 8'h7b;
+  bm[2*8192+12] = 8'h19;
+  bm[2*8192+13] = 8'h58;
+  bm[2*8192+14] = 8'h2f;
+  bm[2*8192+15] = 8'h2b;
+  bm[2*8192+16] = 8'h7c;
+  bm[2*8192+17] = 8'h14;
+  bm[2*8192+18] = 8'h57;
+  bm[2*8192+19] = 8'h51;
+  bm[2*8192+20] = 8'h52;
+  bm[2*8192+21] = 8'h04;
+  bm[2*8192+22] = 8'hd5;
+  bm[2*8192+23] = 8'h60;
+  bm[2*8192+24] = 8'h19;
+  bm[2*8192+25] = 8'h57;
+  bm[2*8192+26] = 8'hd6;
+  bm[2*8192+27] = 8'h7b;
+  bm[2*8192+28] = 8'hda;
+  bm[2*8192+29] = 8'h3f;
+  bm[2*8192+30] = 8'h57;
+  bm[2*8192+31] = 8'hea;
+  bm[2*8192+32] = 8'hae;
+  bm[2*8192+33] = 8'h85;
+  bm[2*8192+34] = 8'hdb;
+  bm[2*8192+35] = 8'h69;
+  bm[2*8192+36] = 8'hc8;
+  bm[2*8192+37] = 8'h1b;
+  bm[2*8192+38] = 8'he9;
+  bm[2*8192+39] = 8'hfa;
+  bm[2*8192+40] = 8'hdc;
+  bm[2*8192+41] = 8'h3c;
+  bm[2*8192+42] = 8'hc8;
+  bm[2*8192+43] = 8'h98;
+  bm[2*8192+44] = 8'h1c;
+  bm[2*8192+45] = 8'hd3;
+  bm[2*8192+46] = 8'h85;
+  bm[2*8192+47] = 8'hc9;
+  bm[2*8192+48] = 8'h55;
+  bm[2*8192+49] = 8'ha9;
+  bm[2*8192+50] = 8'h93;
+  bm[2*8192+51] = 8'h54;
+  bm[2*8192+52] = 8'hc8;
+  bm[2*8192+53] = 8'h00;
+  bm[2*8192+54] = 8'hc2;
+  bm[2*8192+55] = 8'ha4;
+  bm[2*8192+56] = 8'hd9;
+  bm[2*8192+57] = 8'h3d;
+  bm[2*8192+58] = 8'h35;
+  bm[2*8192+59] = 8'h39;
+  bm[2*8192+60] = 8'he2;
+  bm[2*8192+61] = 8'h7f;
+  bm[2*8192+62] = 8'h0a;
+  bm[2*8192+63] = 8'h8d;
+  bm[2*8192+64] = 8'hec;
+  bm[2*8192+65] = 8'h9b;
+  bm[2*8192+66] = 8'h03;
+  bm[2*8192+67] = 8'hb6;
+  bm[2*8192+68] = 8'hb6;
+  bm[2*8192+69] = 8'h23;
+  bm[2*8192+70] = 8'h1a;
+  bm[2*8192+71] = 8'h22;
+  bm[2*8192+72] = 8'h67;
+  bm[2*8192+73] = 8'h73;
+  bm[2*8192+74] = 8'h30;
+  bm[2*8192+75] = 8'h6e;
+  bm[2*8192+76] = 8'h80;
+  bm[2*8192+77] = 8'hd3;
+  bm[2*8192+78] = 8'h45;
+  bm[2*8192+79] = 8'h2f;
+  bm[2*8192+80] = 8'h75;
+  bm[2*8192+81] = 8'h6c;
+  bm[2*8192+82] = 8'h85;
+  bm[2*8192+83] = 8'hd2;
+  bm[2*8192+84] = 8'hd4;
+  bm[2*8192+85] = 8'h94;
+  bm[2*8192+86] = 8'h6e;
+  bm[2*8192+87] = 8'hd8;
+  bm[2*8192+88] = 8'h5d;
+  bm[2*8192+89] = 8'h89;
+  bm[2*8192+90] = 8'ha5;
+  bm[2*8192+91] = 8'h2a;
+  bm[2*8192+92] = 8'h36;
+  bm[2*8192+93] = 8'h34;
+  bm[2*8192+94] = 8'hca;
+  bm[2*8192+95] = 8'h8d;
+  bm[2*8192+96] = 8'hb9;
+  bm[2*8192+97] = 8'he6;
+  bm[2*8192+98] = 8'h08;
+  bm[2*8192+99] = 8'h37;
+  bm[2*8192+100] = 8'hc3;
+  bm[2*8192+101] = 8'h01;
+  bm[2*8192+102] = 8'h85;
+  bm[2*8192+103] = 8'h27;
+  bm[2*8192+104] = 8'h72;
+  bm[2*8192+105] = 8'h9b;
+  bm[2*8192+106] = 8'hb5;
+  bm[2*8192+107] = 8'h96;
+  bm[2*8192+108] = 8'hdc;
+  bm[2*8192+109] = 8'h05;
+  bm[2*8192+110] = 8'h53;
+  bm[2*8192+111] = 8'h26;
+  bm[2*8192+112] = 8'he8;
+  bm[2*8192+113] = 8'hab;
+  bm[2*8192+114] = 8'hed;
+  bm[2*8192+115] = 8'h6b;
+  bm[2*8192+116] = 8'he3;
+  bm[2*8192+117] = 8'he1;
+  bm[2*8192+118] = 8'hae;
+  bm[2*8192+119] = 8'h35;
+  bm[2*8192+120] = 8'hff;
+  bm[2*8192+121] = 8'h7d;
+  bm[2*8192+122] = 8'h9f;
+  bm[2*8192+123] = 8'h31;
+  bm[2*8192+124] = 8'h19;
+  bm[2*8192+125] = 8'he7;
+  bm[2*8192+126] = 8'h8f;
+  bm[2*8192+127] = 8'he3;
+  bm[2*8192+128] = 8'he2;
+  bm[2*8192+129] = 8'h9b;
+  bm[2*8192+130] = 8'h51;
+  bm[2*8192+131] = 8'hcc;
+  bm[2*8192+132] = 8'h2a;
+  bm[2*8192+133] = 8'h4f;
+  bm[2*8192+134] = 8'hac;
+  bm[2*8192+135] = 8'h06;
+  bm[2*8192+136] = 8'hbd;
+  bm[2*8192+137] = 8'h83;
+  bm[2*8192+138] = 8'hfc;
+  bm[2*8192+139] = 8'h20;
+  bm[2*8192+140] = 8'h0f;
+  bm[2*8192+141] = 8'h29;
+  bm[2*8192+142] = 8'hcc;
+  bm[2*8192+143] = 8'h49;
+  bm[2*8192+144] = 8'h1d;
+  bm[2*8192+145] = 8'h9d;
+  bm[2*8192+146] = 8'h83;
+  bm[2*8192+147] = 8'hb8;
+  bm[2*8192+148] = 8'h5f;
+  bm[2*8192+149] = 8'ha0;
+  bm[2*8192+150] = 8'he7;
+  bm[2*8192+151] = 8'hf7;
+  bm[2*8192+152] = 8'h77;
+  bm[2*8192+153] = 8'hde;
+  bm[2*8192+154] = 8'h82;
+  bm[2*8192+155] = 8'hc1;
+  bm[2*8192+156] = 8'hd1;
+  bm[2*8192+157] = 8'h88;
+  bm[2*8192+158] = 8'hef;
+  bm[2*8192+159] = 8'h20;
+  bm[2*8192+160] = 8'ha3;
+  bm[2*8192+161] = 8'h09;
+  bm[2*8192+162] = 8'hd4;
+  bm[2*8192+163] = 8'hdb;
+  bm[2*8192+164] = 8'h85;
+  bm[2*8192+165] = 8'hcb;
+  bm[2*8192+166] = 8'h23;
+  bm[2*8192+167] = 8'h95;
+  bm[2*8192+168] = 8'h30;
+  bm[2*8192+169] = 8'hdc;
+  bm[2*8192+170] = 8'h3f;
+  bm[2*8192+171] = 8'hc6;
+  bm[2*8192+172] = 8'h03;
+  bm[2*8192+173] = 8'ha7;
+  bm[2*8192+174] = 8'h9d;
+  bm[2*8192+175] = 8'hfe;
+  bm[2*8192+176] = 8'h81;
+  bm[2*8192+177] = 8'h19;
+  bm[2*8192+178] = 8'h7d;
+  bm[2*8192+179] = 8'ha5;
+  bm[2*8192+180] = 8'h99;
+  bm[2*8192+181] = 8'h74;
+  bm[2*8192+182] = 8'h08;
+  bm[2*8192+183] = 8'hfc;
+  bm[2*8192+184] = 8'h9c;
+  bm[2*8192+185] = 8'h36;
+  bm[2*8192+186] = 8'h20;
+  bm[2*8192+187] = 8'h9c;
+  bm[2*8192+188] = 8'h9b;
+  bm[2*8192+189] = 8'h76;
+  bm[2*8192+190] = 8'h57;
+  bm[2*8192+191] = 8'hae;
+  bm[2*8192+192] = 8'ha8;
+  bm[2*8192+193] = 8'h30;
+  bm[2*8192+194] = 8'h3b;
+  bm[2*8192+195] = 8'hc0;
+  bm[2*8192+196] = 8'ha9;
+  bm[2*8192+197] = 8'h7f;
+  bm[2*8192+198] = 8'h03;
+  bm[2*8192+199] = 8'h10;
+  bm[2*8192+200] = 8'haf;
+  bm[2*8192+201] = 8'hbf;
+  bm[2*8192+202] = 8'h94;
+  bm[2*8192+203] = 8'h32;
+  bm[2*8192+204] = 8'ha6;
+  bm[2*8192+205] = 8'hcb;
+  bm[2*8192+206] = 8'h9b;
+  bm[2*8192+207] = 8'hb0;
+  bm[2*8192+208] = 8'h71;
+  bm[2*8192+209] = 8'h13;
+  bm[2*8192+210] = 8'hea;
+  bm[2*8192+211] = 8'h2e;
+  bm[2*8192+212] = 8'h4f;
+  bm[2*8192+213] = 8'h0d;
+  bm[2*8192+214] = 8'h04;
+  bm[2*8192+215] = 8'h2b;
+  bm[2*8192+216] = 8'h87;
+  bm[2*8192+217] = 8'h9f;
+  bm[2*8192+218] = 8'he1;
+  bm[2*8192+219] = 8'h87;
+  bm[2*8192+220] = 8'h6c;
+  bm[2*8192+221] = 8'hd4;
+  bm[2*8192+222] = 8'he4;
+  bm[2*8192+223] = 8'h55;
+  bm[2*8192+224] = 8'h6a;
+  bm[2*8192+225] = 8'hfa;
+  bm[2*8192+226] = 8'hcb;
+  bm[2*8192+227] = 8'h9c;
+  bm[2*8192+228] = 8'had;
+  bm[2*8192+229] = 8'hc9;
+  bm[2*8192+230] = 8'h26;
+  bm[2*8192+231] = 8'ha3;
+  bm[2*8192+232] = 8'hbb;
+  bm[2*8192+233] = 8'h38;
+  bm[2*8192+234] = 8'hd5;
+  bm[2*8192+235] = 8'h0b;
+  bm[2*8192+236] = 8'hc3;
+  bm[2*8192+237] = 8'h2e;
+  bm[2*8192+238] = 8'h16;
+  bm[2*8192+239] = 8'h0b;
+  bm[2*8192+240] = 8'h4b;
+  bm[2*8192+241] = 8'h4f;
+  bm[2*8192+242] = 8'hc1;
+  bm[2*8192+243] = 8'h92;
+  bm[2*8192+244] = 8'h04;
+  bm[2*8192+245] = 8'h27;
+  bm[2*8192+246] = 8'h3c;
+  bm[2*8192+247] = 8'h80;
+  bm[2*8192+248] = 8'h86;
+  bm[2*8192+249] = 8'h76;
+  bm[2*8192+250] = 8'he7;
+  bm[2*8192+251] = 8'ha4;
+  bm[2*8192+252] = 8'h58;
+  bm[2*8192+253] = 8'h32;
+  bm[2*8192+254] = 8'hfe;
+  bm[2*8192+255] = 8'hd5;
+  bm[2*8192+256] = 8'hfe;
+  bm[2*8192+257] = 8'hf6;
+  bm[2*8192+258] = 8'he8;
+  bm[2*8192+259] = 8'h10;
+  bm[2*8192+260] = 8'hb4;
+  bm[2*8192+261] = 8'h1c;
+  bm[2*8192+262] = 8'he4;
+  bm[2*8192+263] = 8'h74;
+  bm[2*8192+264] = 8'had;
+  bm[2*8192+265] = 8'h6b;
+  bm[2*8192+266] = 8'hb2;
+  bm[2*8192+267] = 8'h0e;
+  bm[2*8192+268] = 8'h53;
+  bm[2*8192+269] = 8'h7e;
+  bm[2*8192+270] = 8'h0a;
+  bm[2*8192+271] = 8'h01;
+  bm[2*8192+272] = 8'ha7;
+  bm[2*8192+273] = 8'hb2;
+  bm[2*8192+274] = 8'h35;
+  bm[2*8192+275] = 8'haf;
+  bm[2*8192+276] = 8'hcd;
+  bm[2*8192+277] = 8'h77;
+  bm[2*8192+278] = 8'h5d;
+  bm[2*8192+279] = 8'hd0;
+  bm[2*8192+280] = 8'h55;
+  bm[2*8192+281] = 8'hc5;
+  bm[2*8192+282] = 8'h5a;
+  bm[2*8192+283] = 8'h42;
+  bm[2*8192+284] = 8'hda;
+  bm[2*8192+285] = 8'h69;
+  bm[2*8192+286] = 8'hfe;
+  bm[2*8192+287] = 8'hc1;
+  bm[2*8192+288] = 8'h06;
+  bm[2*8192+289] = 8'h19;
+  bm[2*8192+290] = 8'h8c;
+  bm[2*8192+291] = 8'h5e;
+  bm[2*8192+292] = 8'h75;
+  bm[2*8192+293] = 8'h98;
+  bm[2*8192+294] = 8'h4d;
+  bm[2*8192+295] = 8'h95;
+  bm[2*8192+296] = 8'hf7;
+  bm[2*8192+297] = 8'h92;
+  bm[2*8192+298] = 8'h13;
+  bm[2*8192+299] = 8'h93;
+  bm[2*8192+300] = 8'h81;
+  bm[2*8192+301] = 8'hb4;
+  bm[2*8192+302] = 8'h47;
+  bm[2*8192+303] = 8'h03;
+  bm[2*8192+304] = 8'h16;
+  bm[2*8192+305] = 8'ha0;
+  bm[2*8192+306] = 8'h50;
+  bm[2*8192+307] = 8'h30;
+  bm[2*8192+308] = 8'ha6;
+  bm[2*8192+309] = 8'hfc;
+  bm[2*8192+310] = 8'hc0;
+  bm[2*8192+311] = 8'h38;
+  bm[2*8192+312] = 8'h9f;
+  bm[2*8192+313] = 8'hf7;
+  bm[2*8192+314] = 8'he4;
+  bm[2*8192+315] = 8'hb0;
+  bm[2*8192+316] = 8'h68;
+  bm[2*8192+317] = 8'h8a;
+  bm[2*8192+318] = 8'h3c;
+  bm[2*8192+319] = 8'h20;
+  bm[2*8192+320] = 8'h47;
+  bm[2*8192+321] = 8'h86;
+  bm[2*8192+322] = 8'h8d;
+  bm[2*8192+323] = 8'h07;
+  bm[2*8192+324] = 8'h77;
+  bm[2*8192+325] = 8'h6e;
+  bm[2*8192+326] = 8'h6a;
+  bm[2*8192+327] = 8'hfd;
+  bm[2*8192+328] = 8'h03;
+  bm[2*8192+329] = 8'h63;
+  bm[2*8192+330] = 8'hba;
+  bm[2*8192+331] = 8'hbc;
+  bm[2*8192+332] = 8'hea;
+  bm[2*8192+333] = 8'h83;
+  bm[2*8192+334] = 8'h71;
+  bm[2*8192+335] = 8'h4c;
+  bm[2*8192+336] = 8'hb0;
+  bm[2*8192+337] = 8'h1d;
+  bm[2*8192+338] = 8'h61;
+  bm[2*8192+339] = 8'h5e;
+  bm[2*8192+340] = 8'h74;
+  bm[2*8192+341] = 8'h50;
+  bm[2*8192+342] = 8'hdb;
+  bm[2*8192+343] = 8'h64;
+  bm[2*8192+344] = 8'ha4;
+  bm[2*8192+345] = 8'hf9;
+  bm[2*8192+346] = 8'h98;
+  bm[2*8192+347] = 8'h34;
+  bm[2*8192+348] = 8'hf0;
+  bm[2*8192+349] = 8'h91;
+  bm[2*8192+350] = 8'hde;
+  bm[2*8192+351] = 8'h43;
+  bm[2*8192+352] = 8'h42;
+  bm[2*8192+353] = 8'h71;
+  bm[2*8192+354] = 8'he6;
+  bm[2*8192+355] = 8'hc8;
+  bm[2*8192+356] = 8'h4b;
+  bm[2*8192+357] = 8'he1;
+  bm[2*8192+358] = 8'hd2;
+  bm[2*8192+359] = 8'hdd;
+  bm[2*8192+360] = 8'h70;
+  bm[2*8192+361] = 8'h0c;
+  bm[2*8192+362] = 8'h25;
+  bm[2*8192+363] = 8'he0;
+  bm[2*8192+364] = 8'he8;
+  bm[2*8192+365] = 8'hd3;
+  bm[2*8192+366] = 8'he3;
+  bm[2*8192+367] = 8'h07;
+  bm[2*8192+368] = 8'hf6;
+  bm[2*8192+369] = 8'haf;
+  bm[2*8192+370] = 8'ha2;
+  bm[2*8192+371] = 8'h56;
+  bm[2*8192+372] = 8'h8d;
+  bm[2*8192+373] = 8'h64;
+  bm[2*8192+374] = 8'h82;
+  bm[2*8192+375] = 8'hb5;
+  bm[2*8192+376] = 8'hac;
+  bm[2*8192+377] = 8'h48;
+  bm[2*8192+378] = 8'h58;
+  bm[2*8192+379] = 8'h0d;
+  bm[2*8192+380] = 8'hcc;
+  bm[2*8192+381] = 8'hb5;
+  bm[2*8192+382] = 8'h38;
+  bm[2*8192+383] = 8'h5f;
+  go(11,5,2,0,0,0,0,12,0); $display("kupk12: %0d clk", cyc-c0); n=n+1;
+  expv = 8192'h000005f3000008b500000cc0000000570000048a00000cb5000008260000048d0000056a000002af0000025f000007e30000003d000008e00000025000000c70000000dc000002e1000004bc000008e60000071400000243000000e8000001f000000349000008f900000a46000004db000005070000045e00000611000000af000004c700000183000001aa00000cba00000630000003fd000006a6000001760000007800000085000004720000003c000008a6000008b00000014e0000079f0000038c000000fc00000a630000005000000a01000006030000047b000004810000093100000392000002780000054d000009870000055e000008c10000090600000c1f00000168000000a30000025a00000c55000005d0000005d7000007cd00000af3000005b200000a700000010a000007e50000030e00000b2600000bad0000074e0000041c00000b41000000e80000026e000001d4000002e20000025800000a4e00000776000008680000003c000002700000049200000c140000024a000000b10000062e00000c3000000bd50000038b00000ba30000026c000009ad000009cc00000bfa000006a5000005e40000004500000c870000011800000286000002b00000040d000004f2000001e900000137000001b0000009bc00000ba600000329000004bf00000af100000003000007fa000009c0000003b3000000a800000ae500000776000009b900000c200000036900000cfc000000870000049900000a57000000180000081f0000019c00000a70000003c6000003fd00000c3000000952000003cb0000085d00000bd40000009a00000320000001f7000008d100000c18000002de0000077f000007e700000a05000002b7000008390000001c0000049c00000c29000000f2000000fc0000083b0000000500000ac40000022900000cc50000019b0000012d0000038f0000017000000931000009f7000000fe0000035a000001e00000013500000bed00000abe0000082600000530000005dc0000096b0000059b00000722000007850000001c000003370000008e000006b9000008dc00000a340000036200000aa500000895000000d7000006e9000004d4000000270000056c0000075200000244000000370000006e00000307000003670000022100000a2300000b6b00000603000009be00000c8d000000a7000002e1000003930000053d00000099000004c20000000c000008540000093a0000095500000c98000005d3000001c9000008c8000003cd00000cfa0000019000000bc80000069d00000b8500000aee00000a57000003fd00000a7b00000064000007190000060d0000050400000525000001570000014700000c2b000002f500000819000007ba000000df0000001e000007b700000460000000630000020700000aaa;
+  for (i=0;i<256;i=i+1) if (pm.mem[5*256+i] !== expv[32*i +: 32]) begin fails=fails+1; if (fails<6) $display("FAIL kupk12 coeff %0d got %h exp %h", i, pm.mem[5*256+i], expv[32*i +: 32]); end
   if (fails==0) $display("ALL PASS (%0d ops)", n); else $display("FAILED (%0d)", fails);
   $finish;
 end

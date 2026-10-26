@@ -21,9 +21,13 @@ OPS = dict(NOP=0x00, PNTT=0x02, PINTT=0x03, PMUL=0x04, PMULA=0x05, PADD=0x06, PS
            # ---- RSA big-number unit (1024-bit registers r0..r15; see pq_rsa.v) ----
            RLDB=0xA0, RSTB=0xA1, RRNG=0xA2, RSETI=0xA3, RMOV=0xA4, RMSEL=0xA5, RR2=0xA6, RMUL=0xA7, RADDM=0xA8, RSUBM=0xA9,
            REXP=0xAA, RSIEVE=0xAB, RREM1=0xAC, RCMP=0xAD, REQ=0xAE, RISZ=0xAF, RSUBI=0xB0, RSHR1=0xB1, RMULF=0xB2, RMASK=0xB3,
-           RKINV=0xB4, RDP=0xB5, RSUB=0xB6, RADD2=0xB7, RCSUB=0xB8, UPKW1=0xB9, BFILL=0x9F)
+           RKINV=0xB4, RDP=0xB5, RSUB=0xB6, RADD2=0xB7, RCSUB=0xB8, UPKW1=0xB9, BFILL=0x9F,
+           # ---- ML-KEM (see ref/kem/kem_prog.py) ----
+           PMULM=0x20, PMULN=0x21, PCOMB=0x2E, KEM=0x22, SMPK=0x23, SMPC=0x24, KPAR=0x25, SETR=0x26, INCR=0x27, LTK=0x28, LTI=0x29,
+           SHABSX=0x2A, CHKLN=0x2B, FINK=0x2C, NCLR=0x2D,
+           PSCL=0xBA, KPK=0xBB, KUPK=0xBC, BCPYF=0xBD, BCPYN=0xBE)
 IMMN = {n: 1 for n, v in OPS.items() if v >= 0x80}
-IMMN["BCMP"] = 2; IMMN["BCPY"] = 2; IMMN["WIMM"] = 2; IMMN["BFILL"] = 2
+IMMN["BCMP"] = 2; IMMN["BCPY"] = 2; IMMN["WIMM"] = 2; IMMN["BFILL"] = 2; IMMN["BCPYF"] = 2; IMMN["BCPYN"] = 2
 for _n in ("RMSEL", "RR2", "RMUL", "RADDM", "RSUBM", "REXP", "RSIEVE", "RCMP", "REQ", "RISZ", "RSHR1", "RMULF", "RMASK", "RSUB", "RADD2", "RCSUB", "RMOV", "RRNG"): IMMN[_n] = 0
 RX, TX, SC, SK = 0, 1, 2, 3
 def desc(space, off, ln=0): return (space << 30) | (off << 17) | (ln << 4)
@@ -49,6 +53,39 @@ class Dev:
         self.trng = trng or (lambda n: bytes(n)); self.fin = None; self.uid = bytes(range(0xA0, 0xB0))
     def mem(self, space): return (self.rx, self.tx, self.sc)[space]
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "kem"))
+import kem_model as KM, mlkem
+SLOT_OPS = {"PNTT", "PINTT", "PMUL", "PMULA", "PADD", "PSUB", "PRED", "PCADDQ", "PCLR", "PCOPY", "P2R", "PDEC", "MKHINT", "PSCL", "PMULM", "PMULN", "PCOMB"}
+SLOT_A_OPS = {"SMPU", "SMPE", "SMPG", "SMPB", "SMPK", "SMPC", "KPK", "KUPK", "CHKN"}
+def s32_(x): x &= 0xFFFFFFFF; return x - (1 << 32) if x >> 31 else x
+class Sha3Stream:
+    def __init__(self, bits): self.h = hashlib.sha3_256() if bits == 256 else hashlib.sha3_512(); self.fin = False; self.pos = 0; self.buf = b""
+    def absorb(self, d): assert not self.fin; self.h.update(d)
+    def take(self, n):
+        self.fin = True; self.buf = self.h.digest(); r = self.buf[self.pos:self.pos + n]; self.pos += n; assert len(r) == n; return r
+def kem_sample_ntt(st):
+    a = []
+    while len(a) < 256:
+        b = st.take(3); d1 = b[0] + 256 * (b[1] & 15); d2 = (b[1] >> 4) + 16 * b[2]
+        if d1 < KM.Q: a.append(d1)
+        if d2 < KM.Q and len(a) < 256: a.append(d2)
+    return a
+def mlkem_pack(x, d, compress):
+    return mlkem.byte_encode([KM.compress_hw(v, d) for v in x] if compress else x, d)
+def mlkem_unpack(b, d, decompress):
+    v = mlkem.byte_decode(b, d)                       # d = 12 reduces mod q
+    return [KM.decompress_hw(y, d) for y in v] if decompress else v
+def KD(K_, x, d=0, src=False):
+    """byte descriptor with the ML-KEM modes: [3:2] offset add (1: 384k, 2: 32*du*k, 3: 768k), [1:0] length mode
+    (byte ops: 1 ct length, 2 384k+32, 3 384k) / index select (pack ops: 1 ri, 2 rj, stride 32*d)"""
+    sp, off, ln = (x >> 30) & 3, (x >> 17) & 0x1FFF, (x >> 4) & 0x1FFF
+    k = K_["k"]; mo, lo = (x >> 2) & 3, x & 3
+    off += (0, 384 * k, 32 * K_["du"] * k, 768 * k)[mo]
+    if d:                                             # pack op: d is the field width, lo selects the index register
+        off += (0, K_["ri"], K_["rj"], 0)[lo] * 32 * d
+    elif not src:
+        ln = (ln, 32 * (K_["du"] * k + K_["dv"]), 384 * k + 32, 384 * k)[lo]
+    return sp, off, ln
 def run(code, pc, dev, maxsteps=10**9):
     pm = {}                                   # slot -> list of 256 ints
     G = lambda s: pm.setdefault(s, [0] * 256)
@@ -56,22 +93,61 @@ def run(code, pc, dev, maxsteps=10**9):
     if not hasattr(dev, 'big'): dev.big = [0] * 16; dev.modn = 1; dev.flagtrace = []
     big = dev.big; M1024 = (1 << 1024) - 1; R1024 = 1 << 1024
     P = dict(eta=2, g1=17, g2=88, tau=39, L=4, omega=80)
+    K_ = dict(on=0, k=2, eta1=3, du=10, dv=4, ri=0, rj=0, nctr=0)       # ML-KEM state
     steps = 0
     def sh(): nonlocal st; return st
     while steps < maxsteps:
         steps += 1
         w = code[pc]; op = w >> 24; a = (w >> 18) & 63; b = (w >> 12) & 63; c = (w >> 6) & 63; d = w & 63
         name = REV[op]; n = IMMN.get(name, 0); imm = code[pc + 1:pc + 1 + n]; pc += 1 + n
-        def D(x): return ((x >> 30) & 3, (x >> 17) & 0x1FFF, (x >> 4) & 0x1FFF)
+        def D(x, d=0, src=False): return KD(K_, x, d, src)
+        def RS(f):                                   # indexed slot: bit 5; bit 4 selects rj; bits 3:2 = base/4; slot = base + index
+            return f if f < 32 else (f & 12) + ((K_["rj"] if f & 16 else K_["ri"]) & 3)
+        if name in SLOT_OPS: a, b, c = RS(a), RS(b), RS(c)
+        elif name in SLOT_A_OPS: a = RS(a)
         if name == "NOP": pass
-        elif name == "PNTT": pm[a] = M.op_ntt(G(a))
-        elif name == "PINTT": pm[a] = M.op_intt(G(a))
+        elif name == "PMULM": pm[a] = KM.pmulm(G(a), G(b), G(c))
+        elif name == "PMULN": pm[a] = KM.pmuln(G(a), G(b), G(c))
+        elif name == "PCOMB": pm[a] = KM.pcomb(G(b), G(c))
+        elif name == "PSCL": pm[a] = KM.pscl(G(a), s32_(imm[0]))
+        elif name == "KEM": K_["on"] = a & 1
+        elif name == "SMPK": pm[a] = kem_sample_ntt(st)
+        elif name == "SMPC": eta_ = K_["eta1"] if b == 0 else b; pm[a] = KM.cbd_signed(st.take(64 * eta_), eta_)
+        elif name == "KPAR": K_.update(k=a, eta1=b, du=c, dv=d)
+        elif name == "SETR": K_["ri" if a == 0 else "rj"] = b
+        elif name == "INCR": K_["ri" if a == 0 else "rj"] += 1
+        elif name == "LTK": flag = int(K_["ri" if a == 0 else "rj"] < K_["k"])
+        elif name == "LTI": flag = int(K_["ri" if a == 0 else "rj"] < b)
+        elif name == "NCLR": K_["nctr"] = 0
+        elif name == "SHABSX":
+            v = (K_["ri"], K_["rj"], K_["nctr"], K_["k"])[a]
+            if a == 2: K_["nctr"] += 1
+            st.absorb(bytes([v & 255]))
+        elif name == "CHKLN":
+            kk = K_["k"]; exp = (384 * kk + 32, 384 * kk + 64, 768 * kk + 128 + 32 * (K_["du"] * kk + K_["dv"]))[a]
+            flag = int(dev.plen != exp)
+        elif name == "FINK":
+            kk = K_["k"]; dev.fin = (a, (32, 32 + 32 * (K_["du"] * kk + K_["dv"]), 1152 * kk + 160)[b]); dev.pm = pm; return steps
+        elif name == "KPK":
+            b = {13: K_["du"], 14: K_["dv"]}.get(b, b); sp, off, ln = D(imm[0], b); x = G(a)
+            assert all(0 <= v < KM.Q for v in x), "KPK needs canonical coefficients"
+            data = mlkem_pack(x, b, c)
+            if sp == 3: st.absorb(data)
+            else: dev.mem(sp)[off:off + len(data)] = data
+        elif name == "KUPK":
+            b = {13: K_["du"], 14: K_["dv"]}.get(b, b); sp, off, ln = D(imm[0], b)
+            pm[a] = mlkem_unpack(bytes(dev.mem(sp)[off:off + 32 * b]), b, c)
+        elif name == "BCPYF" or name == "BCPYN":
+            s1, o1, l1 = D(imm[0]); s2, o2, _ = D(imm[1], 0, True)
+            if flag == (1 if name == "BCPYF" else 0): dev.mem(s1)[o1:o1 + l1] = bytes(dev.mem(s2)[o2:o2 + l1])
+        elif name == "PNTT": pm[a] = KM.ntt(G(a)) if K_["on"] else M.op_ntt(G(a))
+        elif name == "PINTT": pm[a] = KM.intt(G(a)) if K_["on"] else M.op_intt(G(a))
         elif name == "PMUL": pm[a] = M.op_pmul(G(b), G(c))
         elif name == "PMULA": pm[a] = M.op_add(G(a), M.op_pmul(G(b), G(c)))
         elif name == "PADD": pm[a] = M.op_add(G(b), G(c))
         elif name == "PSUB": pm[a] = M.op_sub(G(b), G(c))
         elif name == "PRED": pm[a] = M.op_reduce(G(a))
-        elif name == "PCADDQ": pm[a] = M.op_caddq(G(a))
+        elif name == "PCADDQ": pm[a] = [x + (KM.Q if x < 0 else 0) for x in G(a)] if K_["on"] else M.op_caddq(G(a))
         elif name == "PCLR": pm[a] = [0] * 256
         elif name == "PCOPY": pm[a] = list(G(b))
         elif name == "P2R": src = G(c); pm[a], pm[b] = M.op_power2round(src)
@@ -81,7 +157,7 @@ def run(code, pc, dev, maxsteps=10**9):
         elif name == "SMPE": pm[a] = M.op_sample_eta(st, P["eta"])
         elif name == "SMPG": pm[a] = M.op_sample_gamma1(st, P["g1"])
         elif name == "SMPB": pm[a] = M.op_sample_ball(st, P["tau"])
-        elif name == "SHINIT": st = M.Stream(128 if a == 0 else 256)
+        elif name == "SHINIT": st = M.Stream(128 if a == 0 else 256) if a < 2 else Sha3Stream(256 if a == 2 else 512)
         elif name == "SHFIN": st.fin = True
         elif name == "SHABSM": st.absorb(dev.master)
         elif name == "HCLR": hcnt = 0; hk = 0
@@ -171,7 +247,7 @@ def run(code, pc, dev, maxsteps=10**9):
             if flag: pc = imm[0]
         elif name == "JNF":
             if not flag: pc = imm[0]
-        elif name == "FIN": dev.fin = (a, imm[0] & 0xFFFF); return steps
+        elif name == "FIN": dev.fin = (a, imm[0] & 0xFFFF); dev.pm = pm; return steps
         elif name == "CHKLEN": flag = int(dev.plen != imm[0])
         elif name == "CHKLT": flag = int(dev.plen < imm[0])
         elif name == "HCHK": flag |= int(hk > imm[0])
@@ -384,7 +460,7 @@ def prog_rsa(base=0):
     A.label("bad_len"); A.op("FIN", 2, 0, 0, 0, 0)
     A.code = A.link(); return A
 
-CAPS_PQ = int(os.environ.get('PQ_CAPS', '0x700'), 16)       # capability bits reported by `ping` (the build script ORs in the other units)
+CAPS_PQ = int(os.environ.get('PQ_CAPS', '0xF00'), 16)       # capability bits reported by `ping` (the build script ORs in the other units)
 def prog_info(base):
     A = Asm(base); A.entries = {}
     A.entries["ping"] = base
@@ -451,10 +527,13 @@ def build_image():
         S = prog_sign(ps, len(words)); words += S.code; cmds[0x68 + p] = S.entries["trng"]; cmds[0x6C + p] = S.entries["expl"]
     if not debug:
         R_ = prog_rsa(4096); words += [0] * (4096 - len(words)); words += R_.code; cmds[0x70] = R_.entries["gen"]; cmds[0x71] = R_.entries["pub"]; cmds[0x72] = R_.entries["sign"]
+        import kem_prog
+        KP = kem_prog.prog_kem(len(words)); words += KP.code
+        for c, n in kem_prog.CMDS.items(): cmds[c] = KP.entries[n]
     if debug:
         D = prog_debug(len(words)); words += D.code
         for c, n in DBG.items(): cmds[c] = D.entries[n]
-    assert len(words) <= 4096 + 512, len(words)
+    assert len(words) <= 4096 + 1024, len(words)
     return words, cmds
 
 def write_image(outdir):

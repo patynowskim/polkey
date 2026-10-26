@@ -1,6 +1,6 @@
 `default_nettype none
 // SHAKE128 / SHAKE256 sponge with byte-stream absorb and squeeze (on the lane-serial keccak_core).
-//   init(mode)   : mode 0 = SHAKE128 (rate 168), 1 = SHAKE256 (rate 136); clears the state
+//   init(mode)   : mode 0 = SHAKE128 (rate 168), 1 = SHAKE256 (rate 136), 2 = SHA3-256 (136), 3 = SHA3-512 (72); clears the state
 //   in_valid/in_byte (when in_ready) : absorb one byte
 //   finalize (when in_ready)         : pad + permute; afterwards the unit squeezes
 //   out_take (when out_ready)        : consume the byte at out_byte; permutes automatically at the rate boundary
@@ -8,7 +8,7 @@ module shake_unit (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        init,
-    input  wire        mode,
+    input  wire [1:0]  mode,
     input  wire        in_valid,
     input  wire [7:0]  in_byte,
     output wire        in_ready,
@@ -18,9 +18,10 @@ module shake_unit (
     output wire [7:0]  out_byte,
     output wire        idle
 );
-reg        m256;
-wire [4:0] rate_lanes = m256 ? 5'd17 : 5'd21;          // rate / 8
-wire [7:0] rate_bytes = m256 ? 8'd136 : 8'd168;
+reg [1:0]  md;
+wire [4:0] rate_lanes = (md == 2'd0) ? 5'd21 : (md == 2'd3) ? 5'd9 : 5'd17;          // rate / 8
+wire [7:0] rate_bytes = (md == 2'd0) ? 8'd168 : (md == 2'd3) ? 8'd72 : 8'd136;
+wire [7:0] dsep       = md[1] ? 8'h06 : 8'h1F;                                  // SHA-3 / SHAKE domain separation
 reg  [4:0] lp;                                          // lane pointer
 reg  [2:0] bc;                                          // bytes staged in sw
 reg  [55:0] sw;
@@ -41,14 +42,14 @@ assign out_byte  = kc_rd[8*pos[2:0] +: 8];
 assign idle      = (st == S_ABS) && core_ok;
 
 wire        last_lane = (lp + 5'd1 == rate_lanes);
-wire [63:0] pad_lane  = {8'd0, sw} | (64'h1F << {bc, 3'b000}) | (last_lane ? 64'h8000000000000000 : 64'd0);
+wire [63:0] pad_lane  = {8'd0, sw} | ({56'd0, dsep} << {bc, 3'b000}) | (last_lane ? 64'h8000000000000000 : 64'd0);
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin st <= S_ABS; kc_perm <= 0; kc_xor <= 0; kc_clear <= 0; lp <= 0; bc <= 0; pos <= 0; m256 <= 0; sw <= 0;
+    if (!rst_n) begin st <= S_ABS; kc_perm <= 0; kc_xor <= 0; kc_clear <= 0; lp <= 0; bc <= 0; pos <= 0; md <= 0; sw <= 0;
                       after_sq <= 0; cool <= 0; rdw <= 0; end
     else begin
         kc_perm <= 0; kc_xor <= 0; kc_clear <= 0;
         if (cool != 2'd0) cool <= cool - 2'd1;
-        if (init) begin m256 <= mode; lp <= 0; bc <= 0; sw <= 0; pos <= 0; st <= S_CLR0; end
+        if (init) begin md <= mode; lp <= 0; bc <= 0; sw <= 0; pos <= 0; st <= S_CLR0; end
         else case (st)
         S_CLR0: if (core_ok) begin kc_clear <= 1; cool <= 2'd3; st <= S_CLR; end      // a running permutation must finish first
         S_CLR: if (core_ok) st <= S_ABS;

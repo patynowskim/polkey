@@ -5,7 +5,11 @@ module ram8k (
     input  wire we, input wire [12:0] wa, input wire [7:0] wd,
     input  wire [12:0] ra, output reg [7:0] rq
 );
+`ifdef EXP_SMALLRAM
+reg [7:0] mem [0:2047];            // placement experiment only (not functional)
+`else
 reg [7:0] mem [0:8191];
+`endif
 always @(posedge clk) begin
     if (we) mem[wa] <= wd;
     rq <= mem[ra];

@@ -5,7 +5,7 @@ module uart_tx #(parameter CPB = 18)(
     input  wire start, input wire [7:0] data,
     output reg  busy, output reg done, output reg tx
 );
-reg [15:0] c; reg [3:0] n; reg [9:0] sh;
+reg [$clog2(CPB+1)-1:0] c; reg [3:0] n; reg [9:0] sh;
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin busy<=0; done<=0; tx<=1; c<=0; n<=0; sh<=10'h3ff; end
     else begin
@@ -28,7 +28,7 @@ module uart_rx #(parameter CPB = 18)(
     input  wire clk, input wire rst_n, input wire rx,
     output reg  valid, output reg [7:0] data
 );
-reg r0, r1; reg [15:0] c; reg [3:0] n; reg act; reg [7:0] sh;
+reg r0, r1; reg [$clog2(CPB+1)-1:0] c; reg [3:0] n; reg act; reg [7:0] sh;
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin r0<=1; r1<=1; valid<=0; act<=0; c<=0; n<=0; data<=0; sh<=0; end
     else begin

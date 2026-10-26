@@ -24,23 +24,25 @@ module pq_poly (
     output reg         we,
     output reg  [13:0] wa,
     output reg  [31:0] wd,
-    input  wire [31:0] rq
+    input  wire [31:0] rq,
+    input  wire        kem                    // ML-KEM mode (q = 3329, 7-layer NTT, kem zetas, basemul ops)
 );
 localparam signed [31:0] Q = 32'sd8380417;
 localparam OP_NTT=0, OP_INTT=1, OP_PMUL=2, OP_PMULA=3, OP_PADD=4, OP_PSUB=5, OP_PRED=6, OP_PCADDQ=7, OP_PCLR=8,
-           OP_PCOPY=9, OP_P2R=10, OP_PDEC=11, OP_MKHINT=12, OP_CHKN=13;
+           OP_PCOPY=9, OP_P2R=10, OP_PDEC=11, OP_MKHINT=12, OP_CHKN=13, OP_PMULM=14, OP_PMULN=15, OP_PSCL=16, OP_PCOMB=17;
 
 // ---------------- zeta ROM (block RAM) ----------------
-(* ram_style="block" *) reg signed [31:0] zrom [0:255];
+(* ram_style="block" *) reg signed [31:0] zrom [0:511];                 // 0..255 ML-DSA, 256..383 ML-KEM
 initial begin
 `include "pq_zetas.vh"
+`include "pq_kzetas.vh"
 end
-reg [7:0] za; reg signed [31:0] zq;
+reg [8:0] za; reg signed [31:0] zq;
 always @(posedge clk) zq <= zrom[za];
 
 // ---------------- Montgomery pipe ----------------
 reg m_in; reg signed [31:0] m_a, m_b; wire m_out; wire signed [31:0] m_r;
-pq_mont mont (.clk(clk), .in_v(m_in), .a(m_a), .b(m_b), .out_v(m_out), .r(m_r));
+pq_mont mont (.clk(clk), .in_v(m_in), .a(m_a), .b(m_b), .kem(kem), .out_v(m_out), .r(m_r));
 
 // ---------------- element-wise arithmetic ----------------
 function signed [31:0] f_reduce32(input signed [31:0] a);
@@ -48,7 +50,7 @@ function signed [31:0] f_reduce32(input signed [31:0] a);
     begin x = {a[31], a} + 33'sd4194304; t = x >>> 23; f_reduce32 = a - ((t <<< 23) - (t <<< 13) + t); end   // t*Q as shifts and adds (a multiplier here was mis-mapped to a DSP)
 endfunction
 function signed [31:0] f_caddq(input signed [31:0] a);
-    f_caddq = a + (a[31] ? Q : 32'sd0);
+    f_caddq = a + (a[31] ? (kem ? 32'sd3329 : Q) : 32'sd0);
 endfunction
 reg signed [31:0] r0, r1, r2;                 // operands
 reg signed [31:0] res0, res1;
@@ -87,6 +89,12 @@ reg        inv;
 
 reg  [5:0] sl0, sl1, sl2;
 wire [5:0] rslot = (rk == 2'd0) ? sl0 : (rk == 2'd1) ? sl1 : sl2;
+// ML-KEM basemul = PMULM + PMULN accumulations (index-transformed second/third operand reads) and a PCOMB per row:
+//   M[j] += a[j] * b[j & ~1]     N[j] += a[j ^ 1] * b[j | 1]     out[j] = M[j] + N[j] * gamma_j   (gamma_j = +-zeta[64 + (j >> 2)] for even j, 1 for odd j)
+wire       kmn   = (op_r == OP_PMULN);
+wire       kmx   = (op_r == OP_PMULM) || kmn;
+wire [7:0] ridx  = (kmx && rk == 2'd1 && kmn) ? {i[7:1], ~i[0]} : (kmx && rk == 2'd2) ? {i[7:1], kmn} : i[7:0];
+wire signed [31:0] gz = i[0] ? 32'sd1353 : (i[1] ? -zq : zq);   // 1353 = 2^32 mod q: mont(x, 1353) == x mod q
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin st <= S_IDLE; busy <= 0; done <= 0; we <= 0; m_in <= 0; flag_or <= 0; hint_cnt <= 0; ra <= 0; wa <= 0; wd <= 0; za <= 0; end
@@ -97,14 +105,16 @@ always @(posedge clk or negedge rst_n) begin
             busy <= 1; op_r <= op; a_r <= sa; b_r <= sb; c_r <= sc; flag_or <= 0; hint_cnt <= 0; i <= 0; rk <= 0;
             case (op)
               OP_NTT, OP_INTT: begin
-                  inv <= (op == OP_INTT); ln <= (op == OP_INTT) ? 9'd1 : 9'd128; bstart <= 0; j <= 0;
-                  k <= (op == OP_INTT) ? 9'd256 : 9'd0; st <= S_NB;
+                  inv <= (op == OP_INTT); ln <= (op == OP_INTT) ? (kem ? 9'd2 : 9'd1) : 9'd128; bstart <= 0; j <= 0;
+                  k <= (op == OP_INTT) ? (kem ? 9'd128 : 9'd256) : 9'd0; st <= S_NB;
               end
               OP_PCLR: st <= S_CLRW;
               default: begin
                   case (op)                                                    // read plan
                     OP_PMUL, OP_PADD, OP_PSUB, OP_MKHINT: begin nr <= 2; sl0 <= sb; sl1 <= sc; sl2 <= sc; end
                     OP_PMULA:                             begin nr <= 3; sl0 <= sa; sl1 <= sb; sl2 <= sc; end
+                    OP_PMULM, OP_PMULN:                   begin nr <= 3; sl0 <= sa; sl1 <= sb; sl2 <= sc; end
+                    OP_PCOMB:                             begin nr <= 2; sl0 <= sb; sl1 <= sc; sl2 <= sc; end
                     OP_PCOPY:                             begin nr <= 1; sl0 <= sb; sl1 <= sb; sl2 <= sb; end
                     OP_P2R, OP_PDEC:                      begin nr <= 1; sl0 <= sc; sl1 <= sc; sl2 <= sc; end
                     default:                              begin nr <= 1; sl0 <= sa; sl1 <= sa; sl2 <= sa; end   // PRED PCADDQ CHKN
@@ -114,7 +124,7 @@ always @(posedge clk or negedge rst_n) begin
             endcase
         end
         // ---------------- element-wise ----------------
-        S_RD:  begin ra <= {rslot, i[7:0]}; st <= S_RDW; end
+        S_RD:  begin ra <= {rslot, ridx}; za <= {3'b101, i[7:2]}; st <= S_RDW; end
         S_RDW: st <= S_RDC;
         S_RDC: begin
             case (rk) 2'd0: r0 <= rq; 2'd1: r1 <= rq; default: r2 <= rq; endcase
@@ -123,7 +133,9 @@ always @(posedge clk or negedge rst_n) begin
         S_CALC: begin
             case (op_r)
               OP_PMUL:  begin m_in <= 1; m_a <= r0; m_b <= r1; st <= S_MUL; end
-              OP_PMULA: begin m_in <= 1; m_a <= r1; m_b <= r2; st <= S_MUL; end
+              OP_PMULA, OP_PMULM, OP_PMULN: begin m_in <= 1; m_a <= r1; m_b <= r2; st <= S_MUL; end
+              OP_PSCL:  begin m_in <= 1; m_a <= bound; m_b <= r0; st <= S_MUL; end
+              OP_PCOMB: begin m_in <= 1; m_a <= r1; m_b <= gz; st <= S_MUL; end
               OP_PADD:  begin res0 <= r0 + r1; st <= S_WR0; end
               OP_PSUB:  begin res0 <= r0 - r1; st <= S_WR0; end
               OP_PRED:  begin res0 <= f_reduce32(r0); st <= S_WR0; end
@@ -136,7 +148,7 @@ always @(posedge clk or negedge rst_n) begin
               default:  st <= S_NEXT;
             endcase
         end
-        S_MUL: if (m_out) begin res0 <= (op_r == OP_PMULA) ? r0 + m_r : m_r; st <= S_WR0; end
+        S_MUL: if (m_out) begin res0 <= (op_r == OP_PMULA || op_r == OP_PMULM || op_r == OP_PMULN || op_r == OP_PCOMB) ? r0 + m_r : m_r; st <= S_WR0; end
         S_WR0: begin
             we <= 1; wa <= {a_r, i[7:0]}; wd <= res0;
             st <= (op_r == OP_P2R || op_r == OP_PDEC) ? S_WR1 : S_NEXT;
@@ -153,13 +165,13 @@ always @(posedge clk or negedge rst_n) begin
         // ---------------- NTT / inverse NTT ----------------
         S_NB: begin                                                           // start of a block: next zeta
             if (!inv) begin
-                if (ln == 9'd0) begin st <= S_IDLE; busy <= 0; done <= 1; end
+                if (ln == 9'd0 || (kem && ln == 9'd1)) begin st <= S_IDLE; busy <= 0; done <= 1; end
                 else if (bstart >= 9'd256) begin ln <= ln >> 1; bstart <= 0; end
-                else begin za <= k[7:0] + 8'd1; k <= k + 9'd1; j <= 0; st <= S_ZW; end
+                else begin za <= {kem, k[7:0] + 8'd1}; k <= k + 9'd1; j <= 0; st <= S_ZW; end
             end else begin
                 if (ln >= 9'd256) begin i <= 0; st <= S_SC; end              // all layers done -> final scaling
                 else if (bstart >= 9'd256) begin ln <= ln << 1; bstart <= 0; end
-                else begin za <= k[7:0] - 8'd1; k <= k - 9'd1; j <= 0; st <= S_ZW; end
+                else begin za <= {kem, k[7:0] - 8'd1}; k <= k - 9'd1; j <= 0; st <= S_ZW; end
             end
         end
         S_ZW: st <= S_NR1;                                                    // zrom address presented
@@ -196,7 +208,7 @@ always @(posedge clk or negedge rst_n) begin
         S_SC:  begin ra <= {a_r, i[7:0]}; st <= S_SCR; end
         S_SCR: st <= S_SCW;
         S_SCW: st <= S_SCC;
-        S_SCC: begin m_in <= 1; m_a <= 32'sd41978; m_b <= rq; st <= S_SCM; end
+        S_SCC: begin m_in <= 1; m_a <= kem ? -32'sd1121 : 32'sd41978; m_b <= rq; st <= S_SCM; end
         S_SCM: if (m_out) begin we <= 1; wa <= {a_r, i[7:0]}; wd <= m_r; st <= S_SCWR; end
         S_SCWR: begin
             if (i == 9'd255) begin st <= S_IDLE; busy <= 0; done <= 1; end

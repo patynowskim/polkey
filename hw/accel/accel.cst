@@ -3,6 +3,8 @@ IO_LOC "clk" 4;
 IO_PORT "clk" IO_TYPE=LVCMOS33 PULL_MODE=UP;
 IO_LOC "btn_s1" 88;
 IO_PORT "btn_s1" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_LOC "btn_s2" 87;
+IO_PORT "btn_s2" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 IO_LOC "led0" 15;
 IO_PORT "led0" IO_TYPE=LVCMOS33 DRIVE=8;
 IO_LOC "led1" 16;
@@ -24,3 +26,19 @@ IO_LOC "spi_cs_n" 27;
 IO_PORT "spi_cs_n" IO_TYPE=LVCMOS33 PULL_MODE=UP;
 IO_LOC "spi_miso" 28;
 IO_PORT "spi_miso" IO_TYPE=LVCMOS33 DRIVE=8;
+
+// Peripheral bridge (pf_unit): fingerprint sensor UART (57600 8N1) and SSD1306 OLED SPI. ASSUMED header pins - verify against the board.
+IO_LOC "fp_tx" 29;
+IO_PORT "fp_tx" IO_TYPE=LVCMOS33 DRIVE=8;
+IO_LOC "fp_rx" 30;
+IO_PORT "fp_rx" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+IO_LOC "oled_sck" 31;
+IO_PORT "oled_sck" IO_TYPE=LVCMOS33 DRIVE=8;
+IO_LOC "oled_mosi" 32;
+IO_PORT "oled_mosi" IO_TYPE=LVCMOS33 DRIVE=8;
+IO_LOC "oled_cs_n" 33;
+IO_PORT "oled_cs_n" IO_TYPE=LVCMOS33 DRIVE=8;
+IO_LOC "oled_dc" 34;
+IO_PORT "oled_dc" IO_TYPE=LVCMOS33 DRIVE=8;
+IO_LOC "oled_res_n" 35;
+IO_PORT "oled_res_n" IO_TYPE=LVCMOS33 DRIVE=8;

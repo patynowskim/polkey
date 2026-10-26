@@ -6,8 +6,8 @@ parameter CPB = 18; parameter USE_SPI = 0; parameter HAS_AES = 1; parameter HAS_
 reg clk = 0; always #18.518 clk = ~clk;         // 27 MHz
 reg btn = 0; wire led0, led1, led2, utx; reg urx = 1;
 reg sck = 0, mosi = 0, csn = 1; wire miso;
-accel_top #(.CPB(CPB), .HAS_AES(HAS_AES), .HAS_SYM(HAS_SYM), .HAS_ECC(HAS_ECC), .HAS_PQ(HAS_PQ)) dut (.clk(clk), .btn_s1(btn), .led0(led0), .led1(led1), .led2(led2),
-                            .uart_tx_pin(utx), .uart_rx_pin(urx), .spi_sck(sck), .spi_mosi(mosi), .spi_cs_n(csn), .spi_miso(miso));
+accel_top #(.CPB(CPB), .HAS_AES(HAS_AES), .HAS_SYM(HAS_SYM), .HAS_ECC(HAS_ECC), .HAS_PQ(HAS_PQ)) dut (.clk(clk), .btn_s1(btn), .btn_s2(1'b0), .led0(led0), .led1(led1), .led2(led2),
+                            .uart_tx_pin(utx), .uart_rx_pin(urx), .spi_sck(sck), .spi_mosi(mosi), .spi_cs_n(csn), .spi_miso(miso), .fp_tx(), .fp_rx(1'b1), .oled_sck(), .oled_mosi(), .oled_cs_n(), .oled_dc(), .oled_res_n());
 
 // UART receiver model
 reg [7:0] rxq [0:16383]; integer rxn = 0; reg [7:0] rsh; integer ri;

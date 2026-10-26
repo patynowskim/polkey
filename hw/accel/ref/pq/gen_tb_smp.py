@@ -16,6 +16,13 @@ for mode, g in ((3, 17), (4, 19)):
     seed = rb(66); st = M.Stream(256); st.absorb(seed); add(f"gamma1_{g}", mode, 256, seed, M.op_sample_gamma1(st, g))
 for ct, tau in ((32, 39), (48, 49), (64, 60)):
     seed = rb(ct); st = M.Stream(256); st.absorb(seed); add(f"ball_tau{tau}", 5, 256, seed, M.op_sample_ball(st, tau), tau)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "kem"))
+import mlkem, kem_model as KM
+for _ in range(3):
+    seed = rb(34); add("kem_sample_ntt", 6, 128, seed, mlkem.sample_ntt(seed))
+for eta in (2, 3):
+    for _ in range(2):
+        seed = rb(33); add(f"kem_cbd{eta}", 7, 256, seed, KM.cbd_signed(mlkem.PRF(eta, seed[:32], seed[32]), eta), eta)
 o = ["`timescale 1ns/1ps", "module tb_pq_smp;", "reg clk=0, rst_n=0; always #5 clk=~clk;",
      "reg sh_init=0, sh_mode=0, sh_in_valid=0, sh_fin=0; reg [7:0] sh_in_byte=0; wire sh_in_ready, out_ready, sh_idle; wire [7:0] out_byte; wire out_take;",
      "shake_unit sh(clk, rst_n, sh_init, sh_mode, sh_in_valid, sh_in_byte, sh_in_ready, sh_fin, out_take, out_ready, out_byte, sh_idle);",

@@ -19,6 +19,21 @@ function [13:0] pq_entry(input [7:0] c);
     8'h70: pq_entry = {1'b1, 13'd4096};
     8'h71: pq_entry = {1'b1, 13'd4326};
     8'h72: pq_entry = {1'b1, 13'd4367};
+    8'h80: pq_entry = {1'b1, 13'd4516};
+    8'h81: pq_entry = {1'b1, 13'd4524};
+    8'h82: pq_entry = {1'b1, 13'd4532};
+    8'h84: pq_entry = {1'b1, 13'd4520};
+    8'h85: pq_entry = {1'b1, 13'd4528};
+    8'h86: pq_entry = {1'b1, 13'd4536};
+    8'h88: pq_entry = {1'b1, 13'd4540};
+    8'h89: pq_entry = {1'b1, 13'd4557};
+    8'h8a: pq_entry = {1'b1, 13'd4574};
+    8'h8c: pq_entry = {1'b1, 13'd4548};
+    8'h8d: pq_entry = {1'b1, 13'd4565};
+    8'h8e: pq_entry = {1'b1, 13'd4582};
+    8'h90: pq_entry = {1'b1, 13'd4591};
+    8'h91: pq_entry = {1'b1, 13'd4595};
+    8'h92: pq_entry = {1'b1, 13'd4599};
     default: pq_entry = 14'd0;
   endcase
 endfunction

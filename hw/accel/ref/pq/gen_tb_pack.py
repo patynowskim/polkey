@@ -23,6 +23,16 @@ t = rp(-4095, 4096); add(name="upkt0", op=6, slot=5, space=0, base=9, par=(0, 0,
 h = [0] * 256
 for j in random.sample(range(256), 7): h[j] = 1
 add(name="pkh", op=7, slot=3, space=1, base=500, par=(0, 0, 0, 20, 2), poly=h, hint=(h, 20, 2))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "kem"))
+import mlkem
+for d in (1, 4, 5, 10, 11):
+    x = rp(0, mlkem.Q - 1); x[0] = 0; x[1] = mlkem.Q - 1; x[2] = 1665
+    add(name=f"kpk_c{d}", op=10, slot=3, space=2, base=20, par=(0, 0, 0, d, 1), poly=x,
+        ebytes=mlkem.byte_encode([mlkem.compress(v, d) for v in x], d))
+    y = rp(0, (1 << d) - 1); add(name=f"kupk_dc{d}", op=11, slot=5, space=0, base=9, par=(0, 0, 0, d, 1),
+        inbytes=(0, 9, mlkem.byte_encode(y, d)), epoly=[mlkem.decompress(v, d) for v in y])
+x = rp(0, mlkem.Q - 1); add(name="kpk12", op=10, slot=3, space=1, base=3, par=(0, 0, 0, 12, 0), poly=x, ebytes=mlkem.byte_encode(x, 12))
+y = rp(0, 4095); add(name="kupk12", op=11, slot=5, space=2, base=0, par=(0, 0, 0, 12, 0), inbytes=(2, 0, mlkem.byte_encode(y, 12)), epoly=[v % mlkem.Q for v in y])
 o = ["`timescale 1ns/1ps", "module tb_pq_pack;", "reg clk=0, rst_n=0; always #5 clk=~clk;",
      "reg start=0; reg [3:0] op=0; reg [5:0] slot=0; reg [1:0] space=0; reg [12:0] base=0; reg eta4=0,g1sel=0,g2sel=0; reg [7:0] omega=80; reg [5:0] hidx=0; reg hk_clr=0;",
      "wire busy, done, hk_over, bw_en, sh_in_valid; wire [13:0] ra, wa; wire we; wire [31:0] wd, rq; wire [1:0] bw_space, br_space; wire [12:0] bw_addr, br_addr; wire [7:0] bw_data, sh_in_byte; reg [7:0] br_data;",

@@ -4,7 +4,7 @@ reg clk=0, rst_n=0; always #5 clk=~clk;
 reg start=0; reg [4:0] op=0; reg [5:0] sa=0,sb=0,sc=0; reg g2sel=0; reg [31:0] bound=0;
 wire busy, done, flag_or; wire [8:0] hint_cnt; wire [13:0] ra, wa; wire we; wire [31:0] wd, rq;
 pq_pm pm(.clk(clk), .we(we), .wa(wa), .wd(wd), .ra(ra), .rq(rq));
-pq_poly dut(clk,rst_n,start,op,sa,sb,sc,g2sel,bound,busy,done,flag_or,hint_cnt,ra,we,wa,wd,rq);
+pq_poly dut(clk,rst_n,start,op,sa,sb,sc,g2sel,bound,busy,done,flag_or,hint_cnt,ra,we,wa,wd,rq,1'b0);
 integer fails=0, n=0, i, c0, cyc=0; always @(posedge clk) cyc<=cyc+1; reg seen=0; always @(posedge clk) if (done) seen<=1;
 task setp(input [5:0] s, input [8191:0] v); begin for (i=0;i<256;i=i+1) pm.mem[s*256+i] = v[32*i +: 32]; end endtask
 task chk(input [5:0] s, input [8191:0] v, input [255:0] nm); begin for (i=0;i<256;i=i+1) if (pm.mem[s*256+i] !== v[32*i +: 32]) begin

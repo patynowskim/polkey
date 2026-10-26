@@ -45,7 +45,7 @@ localparam [8:0] BLK = 9'd0, KEY = 9'd16, IST = 9'd32, OST = 9'd40, CUR = 9'd48,
 initial begin
 `include "sha2_rom.vh"
 end
-reg  [8:0]  ra, wa, obase; reg [63:0] wd; reg we; reg [63:0] rq;
+reg  [8:0]  ra, wa, obase = CUR; reg [63:0] wd; reg we; reg [63:0] rq;
 wire [8:0]  ram_ra = busy ? ra : (obase + {6'd0, dg_ra});
 always @(posedge clk) begin
     if (we) hm[wa] <= wd;
@@ -53,7 +53,7 @@ always @(posedge clk) begin
 end
 assign dg_q = rq;
 
-reg  [1:0]  md;
+reg  [1:0]  md = M_SHA;
 wire        m512 = (md == M_SHA512);
 
 // ======================= compression engine state =======================
@@ -112,7 +112,7 @@ localparam A_IPAD=0, A_OPAD=1, A_BLK=2, A_OUTER=3, A_L1=4, A_L2=5;
 reg [3:0]  st, resume; reg [2:0] aft; reg [6:0] sn;
 reg [31:0] iters_r, jcnt;
 reg [31:0] total; reg [63:0] lsh;
-reg [6:0]  cnt; reg [2:0] bc; reg [63:0] sh64;
+reg [6:0]  cnt = 0; reg [2:0] bc = 0; reg [63:0] sh64 = 0;
 reg [63:0] wword; reg [8:0] waddr; reg wph;
 reg [4:0]  nkw; reg [6:0] kcnt; reg [31:0] kw32;
 reg        first, padding, last, dpad, tcopy, nolen; reg [1:0] pstage; reg [31:0] pbi;
@@ -143,8 +143,7 @@ end endtask
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-        cp <= 0; c_done <= 0; c_go <= 0; st <= U_IDLE; busy <= 0; done <= 0; overrun <= 0; we <= 0; wph <= 0; bc <= 0; cnt <= 0;
-        md <= M_SHA; obase <= CUR; sh64 <= 64'd0;
+        cp <= 0; c_done <= 0; c_go <= 0; st <= U_IDLE; busy <= 0; done <= 0; overrun <= 0; we <= 0; wph <= 0;
     end else begin
         c_done <= 0; c_go <= 0; done <= 0; we <= 0;
         if (in_valid && st != U_STREAM) overrun <= 1;

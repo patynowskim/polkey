@@ -7,11 +7,13 @@
 //   op 8 ABSI   absorb the byte imm[7:0]                 op 9 ABSNZ  absorb imm[15:0] as 2 bytes little endian
 //   op 10 ABSM  absorb the 32-byte MASTER key           op 11 WUID  write the 16-byte device UID to [sp1:off1)
 //   op 12 WIMM  write imm[15:0] (2 bytes, big endian) to [sp1:off1)   op 13 BFILL  fill [sp1:off1, len) with imm[7:0]
+//   op 14 CPYC  like CPY, but the bytes are only written when `cond` is set (constant time, ML-KEM implicit rejection)
 // Byte bus: br_addr in cycle t -> br_data valid in cycle t+1 or t+2 (addresses are held for 3 cycles).
 module pq_bytes #(parameter [255:0] MASTER = 256'h0, parameter [127:0] UID = 128'h0)(
     input  wire        clk,
     input  wire        rst_n,
     input  wire        start,
+    input  wire        cond,
     input  wire [3:0]  op,
     input  wire [1:0]  sp1,
     input  wire [12:0] off1,
@@ -47,7 +49,7 @@ localparam S_IDLE=0, S_STEP=1, S_RA=2, S_RAW=3, S_RAC=4, S_RB=5, S_RBW=6, S_RBC=
            S_SQG=10, S_SQT=11, S_WR=12, S_NEXT=13, S_RNGW=14, S_AFTER=15;
 reg [3:0]  st, back;
 reg [3:0]  op_r; reg [1:0] s1, s2; reg [12:0] o1, o2, n, k; reg [15:0] im;
-reg [7:0]  a, b, ks;
+reg [7:0]  a, b, ks; reg cr;
 reg [31:0] rw;
 wire [7:0] mbyte = MASTER[255 - 8*k[4:0] -: 8];
 wire [7:0] ubyte = UID[127 - 8*k[3:0] -: 8];
@@ -59,7 +61,7 @@ always @(posedge clk or negedge rst_n) begin
         if (flag_clr) flag_diff <= 0;
         case (st)
         S_IDLE: if (start) begin
-            busy <= 1; op_r <= op; s1 <= sp1; o1 <= off1; s2 <= sp2; o2 <= off2; im <= imm; k <= 0;
+            busy <= 1; cr <= cond; op_r <= op; s1 <= sp1; o1 <= off1; s2 <= sp2; o2 <= off2; im <= imm; k <= 0;
             case (op)
               4'd7:  begin n <= plen[12:0] - off1; end
               4'd8:  n <= 13'd1;
@@ -78,7 +80,7 @@ always @(posedge clk or negedge rst_n) begin
               4'd1:        begin st <= S_SQG; back <= S_WR; end
               4'd2:        begin st <= S_RA;  back <= S_SQG; end                 // read, then squeeze + xor
               4'd3:        begin st <= S_RA;  back <= S_RB; end
-              4'd4:        begin st <= S_RB;  back <= S_WR; end
+              4'd4, 4'd14: begin st <= S_RB;  back <= S_WR; end
               4'd5:        begin a <= 8'd0; st <= S_WR; end
               4'd6:        begin
                   if (k[1:0] == 2'd0) st <= S_RNGW;                              // need a fresh TRNG word
@@ -119,7 +121,7 @@ always @(posedge clk or negedge rst_n) begin
         end
         S_SQT: st <= S_WR;
         // ---- write a to (s1, o1+k) ----
-        S_WR: begin bw_en <= 1; bw_space <= s1; bw_addr <= o1 + k; bw_data <= a; st <= S_NEXT; end
+        S_WR: begin bw_en <= (op_r != 4'd14) || cr; bw_space <= s1; bw_addr <= o1 + k; bw_data <= a; st <= S_NEXT; end
         S_NEXT: begin k <= k + 13'd1; st <= S_STEP; end
         S_RNGW: if (trng_valid) begin rw <= trng_data; a <= trng_data[7:0]; st <= S_WR; end
         S_AFTER: begin busy <= 0; done <= 1; st <= S_IDLE; end

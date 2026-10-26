@@ -2,6 +2,7 @@
 // ML-DSA samplers, consuming the squeeze stream of shake_unit and writing a polynomial:
 //   mode 0 uniform mod q (rej_uniform, 3 bytes / candidate)        mode 1 eta=2 (rej_eta)      mode 2 eta=4
 //   mode 3 gamma1 = 2^17 (18-bit fields)   mode 4 gamma1 = 2^19 (20-bit fields)
+//   mode 6 ML-KEM SampleNTT (two 12-bit candidates per 3 bytes, < 3329)   mode 7 ML-KEM CBD (eta = tau: 2 or 3; signed values)
 //   mode 5 SampleInBall (tau +-1 coefficients; the destination slot must be zero beforehand)
 // The output is identical to the sequential-stream semantics of PQClean (block boundaries do not matter).
 module pq_smp (
@@ -37,7 +38,8 @@ reg [63:0] signs; reg [3:0] sc;
 reg [8:0]  bi_i;
 reg        phase_hi;
 
-wire [4:0]  nb  = (m == 3'd3) ? 5'd18 : 5'd20;
+reg        eta3;
+wire [4:0]  nb  = (m == 3'd3) ? 5'd18 : (m == 3'd7) ? (eta3 ? 5'd6 : 5'd4) : 5'd20;
 wire [31:0] g1c = (m == 3'd3) ? 32'd131072 : 32'd524288;
 wire [3:0]  nib = phase_hi ? cur[7:4] : cur[3:0];
 // nib mod 5 for nib < 15: a plain table (a multiplier-based form was mapped to a DSP block and misbehaved on the FPGA)
@@ -51,7 +53,11 @@ always @(*) case (nib)
 endcase
 wire        eta_ok = (m == 3'd1) ? (nib < 4'd15) : (nib < 4'd9);
 wire [31:0] eta_val = (m == 3'd1) ? (32'd2 - {28'd0, nq5}) : (32'd4 - {28'd0, nib});
-wire [22:0] ucand = {cur[6:0], u1, u0};                           // first byte = LSB; top bit of the third byte dropped
+wire [22:0] ucand = {cur[6:0], u1, u0};
+wire [11:0] kcand = phase_hi ? {cur, u1[7:4]} : {u1[3:0], u0};      // SampleNTT candidates d1 / d2
+wire [2:0]  cb_x  = eta3 ? ({2'd0, acc[0]} + {2'd0, acc[1]} + {2'd0, acc[2]}) : ({2'd0, acc[0]} + {2'd0, acc[1]});
+wire [2:0]  cb_y  = eta3 ? ({2'd0, acc[3]} + {2'd0, acc[4]} + {2'd0, acc[5]}) : ({2'd0, acc[2]} + {2'd0, acc[3]});
+wire [31:0] cbd_v = {29'd0, cb_x} - {29'd0, cb_y};                           // first byte = LSB; top bit of the third byte dropped
 
 task fetch(input [3:0] nxt); begin ret_st <= nxt; st <= S_FETCH; end endtask
 
@@ -61,7 +67,7 @@ always @(posedge clk or negedge rst_n) begin
         done <= 0; we <= 0; out_take <= 0;
         case (st)
         S_IDLE: if (start) begin
-            busy <= 1; m <= mode; d_r <= dst; ctr <= 0; bi <= 0; acc <= 0; accb <= 0; phase_hi <= 0; sc <= 0; signs <= 0;
+            busy <= 1; m <= mode; eta3 <= (tau == 8'd3); d_r <= dst; ctr <= 0; bi <= 0; acc <= 0; accb <= 0; phase_hi <= 0; sc <= 0; signs <= 0;
             bi_i <= 9'd256 - {1'b0, tau};
             if (mode == 3'd5) fetch(S_B1); else fetch(S_GOT);
         end
@@ -70,7 +76,7 @@ always @(posedge clk or negedge rst_n) begin
         S_TAKEN: st <= ret_st;                                      // the sponge advances on this edge
         S_GOT: begin
             case (m)
-            3'd0: begin
+            3'd0, 3'd6: begin
                 if (bi == 2'd0)      begin u0 <= cur; bi <= 2'd1; fetch(S_GOT); end
                 else if (bi == 2'd1) begin u1 <= cur; bi <= 2'd2; fetch(S_GOT); end
                 else                 begin bi <= 2'd0; st <= S_N1; end
@@ -84,6 +90,12 @@ always @(posedge clk or negedge rst_n) begin
                 if (ucand < 23'd8380417) begin
                     we <= 1; wa <= {d_r, ctr[7:0]}; wd <= {9'd0, ucand}; ctr <= ctr + 9'd1; st <= S_WAITW;
                 end else fetch(S_GOT);
+            end else if (m == 3'd6) begin                           // ML-KEM SampleNTT: d1 then d2
+                if (kcand < 12'd3329 && ctr < 9'd256) begin
+                    we <= 1; wa <= {d_r, ctr[7:0]}; wd <= {20'd0, kcand}; ctr <= ctr + 9'd1;
+                end
+                if (!phase_hi) begin phase_hi <= 1; st <= S_N1; end
+                else begin phase_hi <= 0; st <= S_WAITW; end
             end else begin                                          // eta: low nibble first, then high nibble
                 if (eta_ok && ctr < 9'd256) begin
                     we <= 1; wa <= {d_r, ctr[7:0]}; wd <= eta_val; ctr <= ctr + 9'd1;
@@ -94,12 +106,12 @@ always @(posedge clk or negedge rst_n) begin
         end
         S_WAITW: begin
             if (ctr >= 9'd256) begin busy <= 0; done <= 1; st <= S_IDLE; end
-            else if (m >= 3'd3) st <= S_GRD;
+            else if (m >= 3'd3 && m != 3'd6) st <= S_GRD;
             else fetch(S_GOT);
         end
         S_GRD: begin                                                // gamma1: emit a coefficient when enough bits are buffered
             if (accb >= {1'b0, nb}) begin
-                we <= 1; wa <= {d_r, ctr[7:0]}; wd <= g1c - (acc & ((32'd1 << nb) - 32'd1));
+                we <= 1; wa <= {d_r, ctr[7:0]}; wd <= (m == 3'd7) ? cbd_v : g1c - (acc & ((32'd1 << nb) - 32'd1));
                 acc <= acc >> nb; accb <= accb - {1'b0, nb}; ctr <= ctr + 9'd1; st <= S_WAITW;
             end else fetch(S_GOT);
         end

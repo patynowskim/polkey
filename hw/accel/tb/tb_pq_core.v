@@ -54,6 +54,7 @@ initial begin
             for (j = 0; j < el; j = j + 1) if (txm[j] !== ex[j]) begin bad = bad + 1; if (bad < 6) $display("   byte %0d got %h exp %h", j, txm[j], ex[j]); end
         end
         if ($test$plusargs("dump")) begin $sformat(fn, "%0s/got_%0d.hex", vd, t); dumpf = $fopen(fn, "w"); for (j = 0; j < tx_len; j = j + 1) $fwrite(dumpf, "%02x\n", txm[j]); $fclose(dumpf); end
+        if ($test$plusargs("pmdump")) begin $sformat(fn, "%0s/pm_%0d.txt", vd, t); dumpf = $fopen(fn, "w"); for (j = 0; j < 14*256; j = j + 1) $fwrite(dumpf, "%08x\n", dut.pm.mem[j]); for (j = 0; j < 256; j = j + 1) $fwrite(dumpf, "%02x\n", dut.sc[j]); $fclose(dumpf); end
         if (bad) begin fails = fails + 1; $display("FAIL %0s (status %0d, len %0d, %0d bad)", name, status, tx_len, bad); end
         else $display("PASS %0s  (%0d clk, %0d bytes)", name, cyc - c0, tx_len);
     end

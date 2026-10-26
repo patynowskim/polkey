@@ -11,7 +11,7 @@ and neither has the SPI link to the ESP32.
 
 | profile | build | contents | LUT4 | BSRAM | caps |
 |---|---|---|---|---|---|
-| **`main`** | `./hw/accel/build_accel.sh main` | **all key operations in one bitstream**: P-256 (keygen, ECDSA sign/verify, ECDH), Ed25519, ML-DSA-44/65/87 (keygen, sign), RSA-2048 (keygen, RS256 sign), SHA-512, TRNG, UID, wrapped-key store | 68 % | 44/46 | `0x7F0` |
+| **`main`** | `./hw/accel/build_accel.sh main` | **all key operations in one bitstream**: P-256 (keygen, ECDSA sign/verify, ECDH), Ed25519, ML-DSA-44/65/87 (keygen, sign), ML-KEM-512/768/1024 (keygen, encaps, decaps), RSA-2048 (keygen, RS256 sign), SHA-512, TRNG, UID, wrapped-key store | ~75 % | 46/46 | `0xFF0` |
 | `sym`  | `./hw/accel/build_accel.sh sym`  | SHA-256, HMAC-SHA256, PBKDF2-HMAC-SHA256, AES-256 CBC and GCM, TRNG, UID | 50 % | 10/46 | `0x00F` |
 | `asym` / `pq` | `build_accel.sh asym` / `pq` | the two halves of `main` on their own (smaller, used for debugging) | 31 % / 49 % | 18 / 39 | `0x0F0` / `0x700` |
 | `full`, `all` | `build_accel.sh full` / `all` | `main` + SHA-256/HMAC/PBKDF2 (+ AES) - **do not place & route** (see below) | 82 % / >100 % | | |
@@ -56,7 +56,16 @@ ESP32 defaults SCK 14, MOSI 15, MISO 21, CS 18 (override with `-D FPGA_PIN_SCK=.
 
 ### Info (every bitstream)
 `0x01` ping -> `"TROACC01"` + caps(4)  |  `0x02` UID (16 B)  |  `0x03` 32 random bytes (TRNG; `sym` only: payload n LE16, n bytes)
-caps bits: `0x07` SHA-256/HMAC/PBKDF2, `0x08` AES, `0xF0` P-256/Ed25519/SHA-512, `0x300` ML-DSA, `0x400` RSA-2048.
+caps bits: `0x07` SHA-256/HMAC/PBKDF2, `0x08` AES, `0xF0` P-256/Ed25519/SHA-512, `0x300` ML-DSA, `0x400` RSA-2048, `0x800` ML-KEM.
+
+### Peripheral bridge (every bitstream, `rtl/pf_unit.v`)
+The BL616 has no free GPIOs, so the fingerprint sensor and the SSD1306 OLED hang on FPGA pins (`accel.cst`, assumed header pins - verify):
+FPGA 29 = fp_tx (to the sensor RX), 30 = fp_rx, 31 = oled_sck, 32 = oled_mosi, 33 = oled_cs_n, 34 = oled_dc, 35 = oled_res_n (3.3 V logic).
+| cmd | payload | response |
+|---|---|---|
+| 0x06 FP_XFER | gap_ms, timeout_ms LE16, max_rx LE16, tx bytes | received bytes (57600 8N1; ends at max_rx, after gap_ms of silence, or at timeout_ms) |
+| 0x07 OLED | ctl, data... | - (ctl bit0 = DC, bit1 = RES level, bit2 = apply RES; data shifted out SPI mode 0 with CS low) |
+Simulation: `tb/tb_pf_unit.v` (`iverilog -g2012 tb/tb_pf_unit.v rtl/pf_unit.v rtl/uart.v`). Firmware: `hw/bl616/fidokey/src/fp.c`, `oled.c`.
 
 ### `sym`
 | cmd | payload | response |
@@ -87,6 +96,9 @@ generated at first build (`hw/tro/build/master.hex`) and baked into the bitstrea
 | 0x50 | data | SHA-512 |
 | 0x60+p / 0x64+p | - / seed(32) | blob \| public key - ML-DSA keygen (p = 0, 1, 2 -> ML-DSA-44, 65, 87; TRNG seed / given seed) |
 | 0x68+p / 0x6C+p | blob \| 32 zero bytes \| msg / blob \| rnd(32) \| msg | signature (hedged with the TRNG / explicit randomness); bad blob tag -> AUTH_FAIL |
+| 0x80+p / 0x84+p | - / d(32) z(32) | blob \| ek - ML-KEM keygen (p = 0, 1, 2 -> ML-KEM-512, 768, 1024; TRNG seed / given seed) |
+| 0x88+p / 0x8C+p | ek / ek \| m(32) | K(32) \| ciphertext - ML-KEM encaps (TRNG / given message m); an ek that fails the FIPS 203 modulus check -> status 3 |
+| 0x90+p | blob \| ciphertext | K(32) - ML-KEM decaps with implicit rejection (a bad ciphertext gives the pseudo-random K of FIPS 203, not an error); bad blob tag -> AUTH_FAIL |
 | 0x70 | - | blob(672) \| n(256) - RSA-2048 keygen (e = 65537, two 1024-bit primes with the top two bits set; typically 10-60 s) |
 | 0x71 | blob | n(256) |
 | 0x72 | blob \| SHA-256 digest(32) | 256-byte RSASSA-PKCS1-v1_5 signature (CRT with a fault check, ~1 s) |
@@ -96,9 +108,20 @@ signatures 2420 / 3309 / 4627. Timings (27 MHz, simulation cycle counts; ML-DSA/
 verify 0.80 s, ECDH 0.40 s; Ed25519 sign 0.44 s; ML-DSA-44 keygen 0.08 s, sign ~0.1-1 s (rejection sampling), ML-DSA-87 sign up to ~1.5 s;
 RSA keygen 13.6 s (measured, one sample), sign ~1 s.
 
+ML-KEM (FIPS 203; `ref/kem/mlkem.py` is the plain reference and agrees with OpenSSL >= 3.5 in both directions, `ref/kem/check_openssl.py`):
+the decapsulation key never leaves the FPGA - the keygen blob is `nonce(16) | z(32) | H(ek)(32) | s(384k) | ek(384k+32) | tag(16)`
+(SHAKE256 keystream / MAC under the device master, like ML-DSA), i.e. `768k + 128` bytes for k = 2/3/4; ek = `384k+32`,
+ct = `32(du*k+dv)` = 768 / 1088 / 1568 bytes. Encaps checks that ek decodes and re-encodes to itself (status 3 otherwise). Cycle counts at
+27 MHz (simulation): ML-KEM-768 keygen 0.53 M, encaps 0.47 M, decaps 0.73 M clocks (20 / 17 / 27 ms); ML-KEM-1024 0.78 M / 0.69 M / 1.03 M.
+It runs on the ML-DSA polynomial engine in a KEM mode (7-layer NTT with the Montgomery constants for q = 3329, `PMULM`/`PMULN`/`PCOMB`
+instead of a base-case multiplier, `PSCL`), the existing Keccak sponge (now with SHA3-256/512), two sampler modes (SampleNTT, CBD) and
+`KPK`/`KUPK` (d-bit packing with a serial Compress/Decompress). The microcode (`ref/kem/kem_prog.py`, ~450 words) uses loop counters and
+indexed slots / descriptors (new sequencer ISA, see `ref/pq/pq_asm.py`) so all three parameter sets share the code. Through the BL616:
+CTAPHID vendor command 0xC3 (`hw/bl616/fidokey/src/kem_cmd.c`, vault PIN required), test `hw/bl616/tools/kem_test.py`.
+
 ## Architecture
 * `rtl/accel_top.v` - UART + SPI link (`uart.v`, `spi_slave.v`, `frame_io.v`: CRC, 8 KiB RX/TX RAM), TRNG + UID (`tro_lite.v`),
-  command-class routing (0x1_/0x2_ symmetric, 0x3_-0x5_ ECC, 0x6_/0x7_ ML-DSA/RSA, 0x0_ info), the shared **bignum engine** and one
+  command-class routing (0x1_/0x2_ symmetric, 0x3_-0x5_ ECC, 0x6_/0x7_ ML-DSA/RSA, 0x8_/0x9_ ML-KEM, 0x0_ info), the shared **bignum engine** and one
   command processor per unit. Parameters `HAS_SYM`, `HAS_AES`, `HAS_ECC`, `HAS_PQ` select the profile.
 * `rtl_pq/bn_engine.v` - 16-bit-limb pipelined Montgomery engine (one word per clock, DSP multipliers) with a 2048 x 16-bit
   register file in block RAM. RSA mode: 64-limb registers, ops `RMSEL RR2 RMUL RADDM RSUBM RCSUB REXP RSIEVE RREM1 RMULF RKINV RDP ...`
@@ -162,3 +185,9 @@ FPGA that wrapped it.
   without it (FPGA missing, different board, `MASTER` lost) they cannot sign, and an encrypted backup restores
   blobs, not usable keys. The firmware never silently falls back for such a credential; it logs an error and fails.
   New credentials are created as software keys while no FPGA answers.
+
+## Hardware gate (important)
+Equal RTL built with different placer seeds gives bitstreams that pass timing analysis but compute wrong results on the chip
+in a fraction of the cases (wrong P-256 arithmetic, failing ML-DSA). Never trust a build before `hwtest/gate.sh` and
+`hwtest/stress.sh`; hardware-verified builds are kept in `golden/` (see its README). Clocks above 27 MHz come from the rPLL
+(`PLL_MUL`/`PLL_DIV`, f = 27 MHz * MUL / DIV); 54 MHz is verified, 72 MHz and above currently fails ML-DSA.

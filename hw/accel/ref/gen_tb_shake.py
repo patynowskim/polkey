@@ -8,11 +8,14 @@ for mode,fn in ((0,hashlib.shake_128),(1,hashlib.shake_256)):
         for outl in (1,32,200,500):
             if random.random()<0.5 or outl==32:
                 d=rb(inl); cases.append((mode,d,fn(d).digest(outl),outl))
+for mode,fn in ((2,hashlib.sha3_256),(3,hashlib.sha3_512)):
+    for inl in (0,1,8,33,71,72,73,135,136,137,200,1088//8+5):
+        d=rb(inl); e=fn(d).digest(); cases.append((mode,d,e,len(e)))
 o=["`timescale 1ns/1ps","module tb_shake;","reg clk=0, rst_n=0; always #5 clk=~clk;",
-"reg init=0, mode=0, in_valid=0, finalize=0, out_take=0; reg [7:0] in_byte=0; wire in_ready, out_ready, idle; wire [7:0] out_byte;",
+"reg init=0; reg [1:0] mode=0; reg in_valid=0, finalize=0, out_take=0; reg [7:0] in_byte=0; wire in_ready, out_ready, idle; wire [7:0] out_byte;",
 "shake_unit dut(clk,rst_n,init,mode,in_valid,in_byte,in_ready,finalize,out_take,out_ready,out_byte,idle);",
 "integer fails=0, n=0, j; reg [4095:0] got; reg [7:0] b;",
-"task run(input m, input [4095:0] d, input integer il, input integer ol, input [4095:0] exp); begin",
+"task run(input [1:0] m, input [4095:0] d, input integer il, input integer ol, input [4095:0] exp); begin",
 "  @(negedge clk); mode=m; init=1; @(negedge clk); init=0; @(negedge clk);",
 "  for (j=0;j<il;j=j+1) begin while(!in_ready) @(negedge clk); in_valid=1; in_byte=d[4095-8*j -: 8]; @(negedge clk); in_valid=0; end",
 "  while(!in_ready) @(negedge clk); finalize=1; @(negedge clk); finalize=0;",

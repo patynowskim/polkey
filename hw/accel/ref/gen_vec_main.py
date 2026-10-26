@@ -15,7 +15,7 @@ def wrap512(secret):
     return nonce + ct + hmac.new(MASTER, b"M" + nonce + ct, hashlib.sha512).digest()[:16]
 tests = []
 def T(name, rq, ex, mask=None): tests.append((name, rq, ex, mask))
-CAPS = int(os.environ.get("MAIN_CAPS", "0x7F0"), 16)
+CAPS = int(os.environ.get("MAIN_CAPS", "0xFF0"), 16)
 T("ping", req(0x01), rsp(0, b"TROACC01" + CAPS.to_bytes(4, "big")))
 T("uid", req(0x02), rsp(0, UIDB))
 T("rand", req(0x03), b"\x5A" + rsp(0, bytes(32))[1:4] + bytes(32) + bytes(2), bytes([1, 1, 1, 1]) + bytes(32) + bytes(2))
@@ -44,7 +44,28 @@ p, q = rprime(), rprime(); e = 65537
 sk_rsa = b"".join(v.to_bytes(128, "big") for v in (p, q, pow(e, -1, p - 1), pow(e, -1, q - 1), pow(q, -1, p)))
 rblob = A.wrap_py(MASTER, sk_rsa, nonce)
 T("rsa_pub", req(0x71, rblob), rsp(0, (p * q).to_bytes(256, "big")))
+# --- ML-KEM (FIPS 203): expected values from the plain reference ---
+sys.path.insert(0, os.path.join(HERE, "kem")); import mlkem
+for p_, lvl in ((0, 512), (1, 768), (2, 1024)):
+    if os.environ.get("KEM_LEVELS") and str(lvl) not in os.environ["KEM_LEVELS"].split(","): continue
+    k_ = mlkem.PARAMS[lvl][0]; d_, z_, m_ = rb(32), rb(32), rb(32)
+    ek_, dk_ = mlkem.keygen(d_, z_, lvl); K_, c_ = mlkem.encaps(ek_, m_, lvl)
+    plain = z_ + hashlib.sha3_256(ek_).digest() + dk_[:384 * k_] + ek_
+    kblob = A.wrap_py(MASTER, plain, nonce)
+    T(f"kem{lvl}_keygen", req(0x84 + p_, d_ + z_), rsp(0, bytes(len(kblob)) + ek_), bytes([1, 1, 1, 1]) + bytes(len(kblob)) + bytes([1]) * len(ek_) + bytes(2))
+    T(f"kem{lvl}_encaps", req(0x8C + p_, ek_ + m_), rsp(0, K_ + c_))
+    T(f"kem{lvl}_decaps", req(0x90 + p_, kblob + c_), rsp(0, K_))
+    bad_c = bytearray(c_); bad_c[3] ^= 1
+    T(f"kem{lvl}_reject", req(0x90 + p_, kblob + bytes(bad_c)), rsp(0, mlkem.decaps(dk_, bytes(bad_c), lvl)))
+T("kem_route_badlen", req(0x88, b""), rsp(2))
+T("kem_route_badlen2", req(0x91, rb(5)), rsp(2))
 T("bad_len", req(0x32, rb(10)), rsp(2))
+# user presence unit (the testbench never presses S2)
+T("ux_read", req(0x04, b"\x00"), rsp(0, b"\x00"))
+T("ux_read_clear", req(0x04, b"\x01"), rsp(0, b"\x00"))
+T("ux_led", req(0x05, b"\x85"), rsp(0))
+T("ux_led_off", req(0x05, b"\x00"), rsp(0))
+T("ux_bad_len", req(0x04, b"\x00\x00"), rsp(2))
 only = sys.argv[2].split(",") if len(sys.argv) > 2 else None
 if only: tests = [t for t in tests if any(t[0].startswith(o) for o in only)]
 out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "tb", "vec_main")

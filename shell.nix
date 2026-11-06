@@ -8,7 +8,7 @@ pkgs.mkShell {
     openfpgaloader
     python3Packages.apycula
     iverilog
-    (python3.withPackages (p: [ p.cryptography p.pyserial ]))
+    (python3.withPackages (p: [ p.cryptography p.pyserial p.tkinter ]))
   ];
 
   shellHook = ''

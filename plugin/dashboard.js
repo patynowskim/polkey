@@ -1,6 +1,9 @@
-let port, reader, keepReading = false;
-let aesKey = null;
-let localKeyPair = null;
+// Transport: WebUSB tunnel to the PolKey (BL616). The JSON messages of the old serial protocol travel in frames
+// [type][len lo][len hi][payload] over the vendor bulk interface (OUT endpoint 1, IN endpoint 2).
+const POLKEY_VID = 0x1209, POLKEY_PID = 0xC0CA;
+const TUNNEL_INTERFACE = 0, EP_OUT = 1, EP_IN = 2, TUNNEL_CMD = 0xF0, TUNNEL_CMD_MORE = 0xF1;
+let usbDev = null;
+let requestChain = Promise.resolve();
 let isConnected = false;
 let authState = "UNKNOWN";
 let pendingAutoGenerate = null;
@@ -36,65 +39,59 @@ function hexToBuffer(hex) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    const ports = await navigator.serial.getPorts();
-    if (ports.length > 0) await connect();
+    const devs = await navigator.usb.getDevices();
+    if (devs.some(d => d.vendorId === POLKEY_VID && d.productId === POLKEY_PID)) await connect();
 
-    navigator.serial.addEventListener('connect', async () => { if (!isConnected) await connect(); });
-    navigator.serial.addEventListener('disconnect', async () => { if (isConnected) await disconnect(); });
+    navigator.usb.addEventListener('connect', async () => { if (!isConnected) await connect(); });
+    navigator.usb.addEventListener('disconnect', async (e) => {
+        if (isConnected && usbDev && e.device === usbDev) await disconnect();
+    });
 });
 
 connectBtn.onclick = async () => {
-    if (port && port.readable) await disconnect();
+    if (isConnected) await disconnect();
     else await connect();
 };
 
 async function connect() {
     try {
-        const ports = await navigator.serial.getPorts();
-        if (ports.length > 0) port = ports[0];
-        else port = await navigator.serial.requestPort();
-        
-        await port.open({ baudRate: 115200 });
-        
+        const devs = await navigator.usb.getDevices();
+        usbDev = devs.find(d => d.vendorId === POLKEY_VID && d.productId === POLKEY_PID) ||
+                 await navigator.usb.requestDevice({ filters: [{ vendorId: POLKEY_VID, productId: POLKEY_PID }] });
+
+        await usbDev.open();
+        if (usbDev.configuration === null) await usbDev.selectConfiguration(1);
+        await usbDev.claimInterface(TUNNEL_INTERFACE);
+
         connectBtn.innerText = "Disconnect";
         inputField.disabled = false;
         sendBtn.disabled = false;
-        keepReading = true;
         isConnected = true;
-        aesKey = null;
 
-        readLoop();
-
-        localKeyPair = await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
-        const pubKeyRaw = await crypto.subtle.exportKey("raw", localKeyPair.publicKey);
-        
-        terminal.innerText += "[System] Initiating Handshake...\n";
-        await sendRaw(`DH_INIT:${bufferToHex(pubKeyRaw)}\n`);
+        terminal.innerText += "[System] Connected to PolKey.\n";
+        await sendSecure({ cmd: "RESTART_SYSTEM" });
     } catch (err) {
-        terminal.innerText += `[System Error] Initialization failed\n`;
+        terminal.innerText += `[System Error] Initialization failed: ${err && err.message ? err.message : err}\n`;
+        isConnected = false;
     }
 }
 
 async function disconnect() {
-    if (port && port.writable) {
+    if (usbDev && isConnected) {
         try {
             await sendSecure({ cmd: "DISCONNECT" });
             await new Promise(resolve => setTimeout(resolve, 100));
         } catch (err) {}
     }
-    keepReading = false;
     isConnected = false;
     setAuthState("UNKNOWN");
     pendingAutoGenerate = null;
     pendingGetPassword = null;
 
-    if (reader) {
-        await reader.cancel();
-        reader.releaseLock();
-    }
-    if (port) {
-        await port.close();
-        port = null;
+    if (usbDev) {
+        try { await usbDev.releaseInterface(TUNNEL_INTERFACE); } catch (e) {}
+        try { await usbDev.close(); } catch (e) {}
+        usbDev = null;
     }
     window.close();
 }
@@ -320,95 +317,56 @@ function fillCredentialsInTab(targetObj, passwordValue) {
     }
 }
 
-async function readLoop() {
-    reader = port.readable.getReader();
-    let rxBuffer = "";
+// One request at a time. The answer is a sequence of frames: 0xF1 = a JSON message (more may follow), 0xF0 with an
+// empty payload = answer complete. Messages are handed to the UI logic as they arrive (backup export streams).
+async function tunnelRequest(text, onMessage) {
+    const payload = new TextEncoder().encode(text);
+    const frame = new Uint8Array(3 + payload.length);
+    frame[0] = TUNNEL_CMD;
+    frame[1] = payload.length & 0xFF;
+    frame[2] = payload.length >> 8;
+    frame.set(payload, 3);
+    for (let off = 0; off < frame.length; off += 64) {
+        await usbDev.transferOut(EP_OUT, frame.slice(off, off + 64));
+    }
 
-    while (keepReading) {
-        try {
-            const { value, done } = await reader.read();
-            if (done) break;
-            
-            rxBuffer += new TextDecoder().decode(value);
-            let lines = rxBuffer.split('\n');
-            rxBuffer = lines.pop();
-
-            for (let line of lines) {
-                line = line.trim();
-                if (!line) continue;
-
-                if (line.includes("DH_ACK:")) {
-                    try {
-                        const rawHexData = line.split("DH_ACK:")[1].trim();
-                        let espPubKeyRaw = hexToBuffer(rawHexData);
-                        
-                        if (espPubKeyRaw.length === 64) {
-                            const normalizedKey = new Uint8Array(65);
-                            normalizedKey[0] = 0x04;
-                            normalizedKey.set(espPubKeyRaw, 1);
-                            espPubKeyRaw = normalizedKey;
-                        }
-                        
-                        const espPubKey = await crypto.subtle.importKey(
-                            "raw", espPubKeyRaw, { name: 'ECDH', namedCurve: 'P-256' }, true, []
-                        );
-                        
-                        const sharedSecret = await crypto.subtle.deriveBits(
-                            { name: 'ECDH', public: espPubKey }, localKeyPair.privateKey, 256
-                        );
-                        
-                        const hash = await crypto.subtle.digest("SHA-256", sharedSecret);
-                        aesKey = await crypto.subtle.importKey("raw", hash, {name: "AES-GCM"}, false, ["encrypt", "decrypt"]);
-                        
-                        terminal.innerText += "[System] Secure Tunnel Established.\n";
-                        await sendSecure({ cmd: "RESTART_SYSTEM" });
-                    } catch (cryptoErr) {
-                        terminal.innerText += `[System Error] Key exchange calculation broken\n`;
-                    }
-                } 
-                else if (line.includes("ENC:")) {
-                    if (!aesKey) continue;
-                    
-                    const cryptoData = line.split("ENC:")[1].trim();
-                    const parts = cryptoData.split(":");
-                    const iv = hexToBuffer(parts[0]);
-                    const cipherWithTag = hexToBuffer(parts[1]);
-                    
-                    try {
-                        const decrypted = await crypto.subtle.decrypt({name: "AES-GCM", iv: iv}, aesKey, cipherWithTag);
-                        const text = new TextDecoder().decode(decrypted);
-                        processIncomingLine(text);
-                    } catch (e) {}
-                } 
-                else {
-                    processIncomingLine(line);
-                }
+    let pending = new Uint8Array(0);
+    let deadline = Date.now() + 40000; // PBKDF2 (backup: 200000 iterations) can take several seconds
+    for (;;) {
+        // complete frames already buffered?
+        while (pending.length >= 3) {
+            const type = pending[0], len = pending[1] | (pending[2] << 8);
+            if (pending.length < 3 + len) break;
+            const body = pending.slice(3, 3 + len);
+            pending = pending.slice(3 + len);
+            if (type === TUNNEL_CMD) return; // end of answer
+            if (type === TUNNEL_CMD_MORE) {
+                onMessage(new TextDecoder().decode(body));
+                deadline = Date.now() + 40000;
             }
-        } catch (e) { break; }
+        }
+        if (Date.now() > deadline) throw new Error("timeout waiting for the key");
+        const res = await usbDev.transferIn(EP_IN, 64);
+        if (res.status !== "ok" || !res.data || res.data.byteLength === 0) continue;
+        const chunk = new Uint8Array(res.data.buffer, res.data.byteOffset, res.data.byteLength);
+        const merged = new Uint8Array(pending.length + chunk.length);
+        merged.set(pending);
+        merged.set(chunk, pending.length);
+        pending = merged;
     }
 }
 
-async function sendRaw(text) {
-    if (!port || !port.writable) return;
-    const writer = port.writable.getWriter();
-    await writer.write(new TextEncoder().encode(text));
-    writer.releaseLock();
-}
-
-async function sendSecure(payload) {
+function sendSecure(payload) {
     const text = (typeof payload === "object") ? JSON.stringify(payload) : payload;
-    if (!aesKey) {
-        await sendRaw(text + "\n");
-        return;
-    }
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    
-    const cipherBuffer = await crypto.subtle.encrypt(
-        { name: "AES-GCM", iv: iv }, aesKey, new TextEncoder().encode(text)
-    );
-    
-    const output = `ENC:${bufferToHex(iv)}:${bufferToHex(cipherBuffer)}\n`;
-    await sendRaw(output);
+    if (!usbDev || !isConnected) return Promise.resolve();
+    requestChain = requestChain.then(async () => {
+        try {
+            await tunnelRequest(text, processIncomingLine);
+        } catch (e) {
+            terminal.innerText += `[System Error] ${e && e.message ? e.message : e}\n`;
+        }
+    });
+    return requestChain;
 }
 
 const handleSendAction = async () => {
